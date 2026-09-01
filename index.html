@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>MD. Mehedi Hasan Moon — Computational Physics, SUST</title>
+<meta name="description" content="MS student at Shahjalal University of Science and Technology designing pi-stacked donor-acceptor triads for TADF OLED emitters using DFT and TD-DFT.">
+<meta property="og:title" content="MD. Mehedi Hasan Moon — Computational Physics, SUST">
+<meta property="og:description" content="Designing pi-stacked donor-acceptor triads for thermally activated delayed fluorescence.">
+<meta property="og:type" content="profile">
+<meta property="og:image" content="https://mehedi-hasan29.github.io/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MD. Mehedi Hasan Moon &mdash; Computational Physics, SUST">
+<meta name="twitter:description" content="Designing pi-stacked donor-acceptor triads for thermally activated delayed fluorescence.">
+<meta name="twitter:image" content="https://mehedi-hasan29.github.io/assets/og-card.png">
+<meta property="og:url" content="https://mehedi-hasan29.github.io">
+<meta name="author" content="MD. Mehedi Hasan Moon">
+<meta name="theme-color" content="#191339">
+<link rel="canonical" href="https://mehedi-hasan29.github.io">
+<link rel="alternate" type="application/rss+xml" title="Notes &mdash; MD. Mehedi Hasan Moon" href="https://mehedi-hasan29.github.io/feed.xml">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23141642%27/%3E%3Ccircle cx=%2711%27 cy=%2716%27 r=%275%27 fill=%27%239B87FF%27/%3E%3Ccircle cx=%2721%27 cy=%2716%27 r=%275%27 fill=%27%235CD79C%27/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+
+<style>
+/* ============ spectral token system ============ */
+:root{
+  --violet:#9B87FF;
+  --indigo:#7FA6FF;
+  --cyan:#5FD0E8;
+  --teal:#4FD5C0;
+  --green:#5CD79C;
+
+  --paper:#ECEAF4;
+  --soft:#C3C2D6;
+  --muted:#9091AC;
+  --line:rgba(236,234,244,.13);
+  --line-soft:rgba(236,234,244,.07);
+  --panel:rgba(236,234,244,.035);
+
+  --display:"Archivo",system-ui,sans-serif;
+  --body:"Newsreader",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --accent:var(--violet);
+  --shell:1180px;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  min-height:100%;
+  /* the Stokes shift: violet in, green out */
+  background:linear-gradient(180deg,#191339 0%,#151642 14%,#111C3A 38%,#0D2033 60%,#0A2129 80%,#08201F 100%);
+  background-attachment:scroll;
+  color:var(--paper);
+  font-family:var(--body);
+  font-size:18px;
+  font-optical-sizing:auto;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+svg{ max-width:100%; display:block; }
+a{ color:inherit; }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:4px; border-radius:3px; }
+sub{ font-size:.66em; }
+
+.skip{ position:absolute; left:-9999px; top:0; z-index:99; background:var(--green);
+  color:#0C0A22; padding:10px 18px; border-radius:0 0 6px 0; font-family:var(--mono); font-size:12px; }
+.skip:focus{ left:0; }
+.shell{ max-width:var(--shell); margin:0 auto; padding:0 40px; }
+
+.kicker{
+  font-family:var(--mono); font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin:0;
+}
+
+/* ============ spectrum rail (signature) ============ */
+.rail{
+  position:fixed; left:20px; top:110px; bottom:52px; width:3px;
+  border-radius:3px; z-index:40;
+  background:linear-gradient(180deg,#9B87FF 0%,#7FA6FF 30%,#5FD0E8 55%,#4FD5C0 78%,#5CD79C 100%);
+  opacity:.28;
+}
+.rail-marker{
+  position:fixed; left:17px; width:9px; height:56px; border-radius:9px; z-index:41;
+  background:var(--accent);
+  box-shadow:0 0 20px 2px var(--accent);
+  transition:top .12s linear, background .5s ease, box-shadow .5s ease;
+}
+.rail-nm{
+  position:fixed; left:36px; z-index:41;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.14em;
+  color:var(--muted); transition:top .12s linear;
+}
+
+/* ============ masthead ============ */
+.masthead{
+  position:sticky; top:0; z-index:50;
+  background:rgba(14,15,42,.62);
+  backdrop-filter:blur(16px) saturate(140%);
+  border-bottom:1px solid var(--line-soft);
+}
+.masthead .shell{ display:flex; align-items:center; justify-content:space-between; gap:24px; height:70px; }
+.wordmark{ text-decoration:none; display:flex; align-items:baseline; gap:12px; }
+.wordmark b{ font-family:var(--display); font-weight:700; font-size:15px;
+  font-variation-settings:"wdth" 112; letter-spacing:-.01em; }
+.wordmark span{ font-family:var(--mono); font-size:11px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); }
+.nav{ display:flex; gap:30px; }
+.nav a{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--muted); text-decoration:none; transition:color .2s;
+}
+.nav a:hover{ color:var(--paper); }
+.nav a[aria-current="true"]{ color:var(--accent); }
+
+/* ============ hero ============ */
+.hero{ padding:50px 0 54px; }
+.hero-grid{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.74fr);
+  gap:46px; align-items:stretch; }
+.hero-copy{ min-width:0; display:flex; flex-direction:column;
+  justify-content:space-between; gap:18px; }
+.hero-copy .lede{ margin:0; }
+.hero-copy .actions{ margin:0; }
+.hero-figs{ display:grid; gap:22px; min-width:0; align-content:start; }
+.hero-lead h1{ margin-top:20px; }
+.plate-side{ margin:0; max-width:none; }
+.plate-side .pane{ padding:0; }
+.plate-side .pane svg{ display:block; margin:0 auto; width:auto; max-width:100%; max-height:236px; }
+.hero-figs figure:last-child .pane svg{ max-height:none; width:100%; }
+.plate-side figcaption{ padding:11px 2px 0; font-size:11px; line-height:1.6; }
+.hero h1{
+  font-family:var(--display); font-weight:700;
+  font-size:clamp(1.9rem,3.6vw,2.85rem);
+  font-variation-settings:"wdth" 112;
+  line-height:1.14; letter-spacing:-.024em;
+  margin:26px 0 0; max-width:27ch; text-wrap:balance;
+}
+.hero h1 em{ font-style:normal; color:var(--green);
+  text-shadow:0 0 38px rgba(92,215,156,.5),0 0 12px rgba(92,215,156,.25); }
+.lede{
+  font-size:1.14rem; font-weight:300; color:var(--soft);
+  max-width:58ch; margin:24px 0 0;
+}
+.lede strong{ color:var(--paper); font-weight:500; }
+
+.actions{ display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+.btn{
+  font-family:var(--mono); font-size:12px; letter-spacing:.11em; text-transform:uppercase;
+  text-decoration:none; padding:13px 22px; border-radius:6px;
+  border:1px solid var(--line); color:var(--paper);
+  transition:border-color .2s,background .2s,transform .2s;
+}
+.btn:hover{ border-color:var(--accent); transform:translateY(-1px); }
+.btn-go{ background:var(--accent); border-color:var(--accent); color:#0C0A22; font-weight:500; }
+.btn-go:hover{ filter:brightness(1.1); }
+
+/* ============ Fig. 1 plate ============ */
+.plate{ margin:40px auto 0; max-width:1060px; padding:0;
+  border:0; background:none; border-radius:0; overflow:visible; }
+.pane{ padding:18px 16px; min-width:0; }
+.pane img{ display:block; width:100%; height:auto; border-radius:6px; }
+.pane a{ display:block; }
+.pane a:hover img{ opacity:.88; }
+.pane svg{ width:100%; height:auto; }
+.pane-label{ font-family:var(--mono); font-size:9.5px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--muted); margin:0 0 18px; }
+.plate figcaption{ font-family:var(--mono); font-size:11px; line-height:1.7;
+  letter-spacing:.07em; color:var(--muted); padding:12px 2px 0; border-top:0; }
+.plate figcaption b{ color:var(--green); font-weight:500; }
+
+.bond{ stroke:rgba(236,234,244,.45); stroke-width:1.7; fill:none; stroke-linecap:round; }
+.ring{ fill:rgba(236,234,244,.03); stroke:rgba(236,234,244,.45); stroke-width:1.7; }
+.ring-d{ stroke:var(--violet); fill:rgba(155,135,255,.07); }
+.ring-a{ stroke:var(--cyan);   fill:rgba(95,208,232,.07); }
+.spine{ stroke:rgba(236,234,244,.32); stroke-width:1.5; fill:rgba(236,234,244,.025); }
+.gapband{ fill:var(--green); opacity:.06; }
+.dimline{ stroke:rgba(236,234,244,.45); stroke-width:1; }
+.atomS{ fill:#E8B54A; } .atomO{ fill:#FF8A6B; } .atomN{ fill:#7FA6FF; }
+.lvl{ stroke:var(--paper); stroke-width:2; }
+.ax{ stroke:var(--line); stroke-width:1.1; fill:none; }
+.gd{ stroke:rgba(236,234,244,.16); stroke-width:1; stroke-dasharray:3 5; }
+.band{ fill:var(--green); opacity:0; animation:band 1.1s ease .3s forwards; }
+.abs{ stroke:var(--violet); stroke-width:1.7; fill:none; }
+.pf{ stroke:#6C7196; stroke-width:1.7; fill:none; }
+.df{ stroke:var(--green); stroke-width:2.6; fill:none; opacity:0; animation:app .9s ease 2.2s forwards; }
+.isc{ stroke:var(--muted); stroke-width:1.4; fill:none; stroke-dasharray:3 5; }
+.risc{ stroke:var(--green); stroke-width:2.2; fill:none; stroke-dasharray:150; stroke-dashoffset:150;
+  animation:trace 1.3s cubic-bezier(.4,0,.2,1) .85s forwards; }
+.risc-tip{ stroke:var(--green); stroke-width:2.2; fill:none; opacity:0; animation:app .3s ease 2.1s forwards; }
+.state{ font-family:var(--mono); font-size:13px; fill:var(--paper); font-weight:500; }
+.state tspan{ font-size:9px; }
+.note{ font-family:var(--mono); font-size:9.5px; fill:var(--muted); letter-spacing:.14em; }
+.note.g{ fill:var(--green); }
+.note.v{ fill:var(--violet); }
+.note.c{ fill:var(--cyan); }
+/* font sizes chosen per figure so all render at ~12.5px on screen */
+svg.molfig .note{ font-size:26px; letter-spacing:.03em; }
+svg.cycle  .note{ font-size:16px; letter-spacing:.09em; }
+svg.cycle  .state{ font-size:21px; }
+svg.cycle  .state tspan{ font-size:14px; }
+svg.hefig  .note{ font-size:17.5px; letter-spacing:.07em; }
+.note.tight{ letter-spacing:.02em; }
+.mol{ fill:rgba(236,234,244,.035); stroke-width:1.6; }
+.mol-d{ stroke:var(--violet); }
+.mol-a{ stroke:var(--cyan); }
+.bridge{ fill:none; stroke:#6C7196; stroke-width:1.8; }
+.tsct{ stroke:var(--green); stroke-width:1.3; stroke-dasharray:3 4; fill:none; }
+.halo{ fill:var(--green); opacity:.2; }
+@keyframes trace{ to{ stroke-dashoffset:0; } }
+@keyframes app{ to{ opacity:1; } }
+@keyframes band{ to{ opacity:.075; } }
+
+/* ============ section shell ============ */
+.section{ padding:52px 0; }
+.head{ display:flex; align-items:baseline; gap:20px; margin-bottom:26px;
+  padding-bottom:14px; border-bottom:1px solid var(--line); }
+.head h2{
+  font-family:var(--display); font-weight:700; font-size:clamp(1.05rem,2vw,1.28rem);
+  font-variation-settings:"wdth" 118; letter-spacing:.13em; text-transform:uppercase;
+  margin:0; color:var(--paper);
+}
+.head .of{ font-family:var(--mono); font-size:11px; color:var(--muted);
+  letter-spacing:.14em; margin-left:auto; }
+
+/* ============ about ============ */
+.about{ display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:60px; }
+.about p{ margin:0 0 22px; color:var(--soft); max-width:64ch; }
+.about p strong{ color:var(--paper); font-weight:500; }
+.facts{ margin:0; }
+.facts > div{ padding:14px 0; border-bottom:1px solid var(--line-soft); }
+.facts dt{ font-family:var(--mono); font-size:10px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+.facts dd{ margin:0; font-size:16px; line-height:1.5; }
+
+/* ============ focus rows ============ */
+.row{ display:grid; grid-template-columns:30px minmax(0,1fr) minmax(0,1.35fr); gap:34px;
+  padding:20px 0; border-bottom:1px solid var(--line-soft); align-items:start; }
+.row:last-child{ border-bottom:0; }
+.row .n{ font-family:var(--mono); font-size:11px; color:var(--accent); padding-top:9px; letter-spacing:.1em; }
+.row h3{ font-family:var(--display); font-weight:600; font-size:1.32rem;
+  font-variation-settings:"wdth" 108; letter-spacing:-.015em; margin:0; line-height:1.25; }
+.row p{ margin:0; color:var(--muted); font-size:16.5px; }
+
+/* ============ research entries ============ */
+.work{ padding:28px 0; border-bottom:1px solid var(--line-soft); }
+.work:last-child{ border-bottom:0; }
+.work .meta{ display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom:16px; }
+.stamp{ font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); border:1px solid var(--accent); border-radius:99px; padding:4px 12px; }
+.when{ font-family:var(--mono); font-size:11px; letter-spacing:.12em; color:var(--muted); }
+.work h3{ font-family:var(--display); font-weight:600; font-size:clamp(1.35rem,2.6vw,1.85rem);
+  font-variation-settings:"wdth" 106; letter-spacing:-.022em; line-height:1.22; margin:0 0 12px; max-width:26ch; }
+.who{ font-family:var(--mono); font-size:12px; letter-spacing:.04em; color:var(--soft); margin:0 0 18px; }
+.work p{ margin:0; color:var(--muted); max-width:66ch; font-size:16.5px; }
+.pts{ margin:16px 0 0; padding:0; list-style:none; max-width:66ch; }
+.pts li{ position:relative; padding-left:22px; margin-bottom:9px; color:var(--muted); font-size:16.5px; }
+.pts li::before{ content:""; position:absolute; left:0; top:12px; width:9px; height:1px; background:var(--accent); }
+.cite{ font-family:var(--mono); font-size:11px; letter-spacing:.11em; text-transform:uppercase;
+  padding:9px 16px; border-radius:6px; cursor:pointer; border:1px solid var(--line);
+  background:none; color:var(--muted); transition:border-color .2s, color .2s; }
+.cite:hover{ border-color:var(--accent); color:var(--paper); }
+.cite:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+.cite.done{ border-color:var(--green); color:var(--green); }
+@media print{ .cite{ display:none !important; } }
+.link-note{
+  display:inline-block; margin:0 22px 8px 0; font-family:var(--mono); font-size:11px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--accent); text-decoration:none;
+  border-bottom:1px solid transparent; transition:border-color .2s;
+}
+.link-note:hover{ border-bottom-color:var(--accent); }
+.chips{ display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
+.chip{ font-family:var(--mono); font-size:11px; letter-spacing:.05em; padding:5px 13px;
+  border:1px solid var(--line); border-radius:6px; color:var(--muted); }
+
+/* ============ notes ============ */
+
+
+/* ============ toolkit ============ */
+.kit > div{ display:grid; grid-template-columns:210px minmax(0,1fr); gap:40px;
+  padding:16px 0; border-bottom:1px solid var(--line-soft); align-items:baseline; }
+.kit > div:last-child{ border-bottom:0; }
+.kit dt{ font-family:var(--mono); font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--accent); }
+.kit dd{ margin:0; font-family:var(--mono); font-size:13.5px; line-height:2; color:var(--soft); }
+.kit dd i{ font-style:normal; color:var(--muted); padding:0 9px; }
+
+/* ============ timeline ============ */
+.tl{ position:relative; padding-left:38px; }
+.tl::before{ content:""; position:absolute; left:5px; top:8px; bottom:8px; width:1px; background:var(--line); }
+.tl article{ position:relative; padding-bottom:26px; }
+.tl article:last-child{ padding-bottom:0; }
+.tl article::before{ content:""; position:absolute; left:-38px; top:9px; width:11px; height:11px;
+  border-radius:99px; background:#0D1B33; border:2px solid var(--accent); }
+.tl .when{ display:block; margin-bottom:7px; }
+.tl h3{ font-family:var(--display); font-weight:600; font-size:1.2rem;
+  font-variation-settings:"wdth" 106; letter-spacing:-.012em; margin:0 0 6px; }
+.tl .who{ margin:0 0 8px; }
+.tl p{ margin:0; color:var(--muted); max-width:64ch; font-size:16.5px; }
+
+/* ============ honors ============ */
+.awards{ display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+.awards article{ border:1px solid var(--line); border-radius:10px; padding:26px 28px;
+  background:var(--panel); display:grid; grid-template-columns:34px minmax(0,1fr);
+  column-gap:18px; align-items:start; }
+.awards .badge{ grid-row:1 / span 3; width:32px; height:32px; color:var(--accent);
+  margin-top:2px; opacity:.9; }
+.awards .kicker{ align-self:center; }
+.awards h3{ font-family:var(--display); font-weight:600; font-size:1.08rem;
+  font-variation-settings:"wdth" 106; margin:8px 0 6px; }
+.awards p{ margin:0; color:var(--muted); font-size:15.5px; }
+
+/* ============ contact ============ */
+.contact{ padding:66px 0 52px; text-align:center; border-top:1px solid var(--line); }
+.contact h2{ font-family:var(--display); font-weight:700;
+  font-size:clamp(2.1rem,5.4vw,3.5rem); font-variation-settings:"wdth" 116;
+  letter-spacing:-.035em; line-height:1.04; margin:24px auto 20px; max-width:16ch; }
+.contact p{ max-width:52ch; margin:0 auto; color:var(--muted); }
+.contact .actions{ justify-content:center; }
+.foot{ border-top:1px solid var(--line-soft); padding:28px 0 40px;
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px;
+  font-family:var(--mono); font-size:11px; letter-spacing:.09em; color:var(--muted); }
+.foot a{ color:var(--muted); text-decoration:none; }
+.foot a:hover{ color:var(--paper); }
+
+/* ============ reveal ============ */
+.rv{ opacity:0; transform:translateY(18px); transition:opacity .7s ease,transform .7s ease; }
+.rv.on{ opacity:1; transform:none; }
+
+/* ============ responsive ============ */
+@media (max-width:1080px){
+  .rail,.rail-marker,.rail-nm{ display:none; }
+  .about{ grid-template-columns:1fr; gap:44px; }
+}
+@media (max-width:960px){
+  .hero-grid{ grid-template-columns:1fr; gap:38px; align-items:start; }
+  .hero-copy{ display:block; }
+  .hero-copy .lede{ margin:24px 0 0; }
+  .hero-copy .actions{ margin:30px 0 0; }
+  .hero-figs{ max-width:520px; margin:0 auto; width:100%; }
+}
+@media (max-width:860px){
+  .nav{ display:none; }
+  .row{ grid-template-columns:1fr; gap:12px; padding:26px 0; }
+  .row .n{ padding-top:0; }
+  .kit > div{ grid-template-columns:1fr; gap:10px; }
+  .awards{ grid-template-columns:1fr; }
+}
+@media (max-width:600px){
+  body{ font-size:17px; }
+  .shell{ padding:0 22px; }
+  .hero{ padding:64px 0 60px; }
+  .section{ padding:62px 0; }
+  .plate{ padding:18px 16px 14px; }
+  .head{ flex-wrap:wrap; gap:10px; }
+  .head .of{ margin-left:0; }
+}
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  *,*::before,*::after{ animation-duration:.001ms !important; animation-delay:0ms !important;
+    transition-duration:.001ms !important; }
+  .rv{ opacity:1; transform:none; }
+  .risc{ stroke-dashoffset:0; }
+  .df,.risc-tip{ opacity:1; }
+  .band{ opacity:.075; }
+}
+
+/* ============ inline figures (Fig. 2, Fig. 3) ============ */
+.work-split{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.44fr);
+  gap:44px; align-items:start; }
+.work-copy{ min-width:0; }
+.work-split .fig{ margin:0; max-width:none; }
+.work-split .fig .frame{ padding:0; }
+.work-split .fig svg{ display:block; margin:0 auto; width:auto; max-width:100%; max-height:236px; }
+.work-split .fig figcaption{ font-family:var(--mono); font-size:11px; line-height:1.7;
+  letter-spacing:.07em; color:var(--muted); padding:12px 2px 0; border-top:0; }
+.fig{ margin:24px auto 0; max-width:470px; padding:0;
+  border:0; background:none; border-radius:0; overflow:visible; }
+.fig svg{ width:100%; height:auto; }
+.fig img{ display:block; width:100%; height:auto; }
+.fig .frame{ padding:0; }
+.fig figcaption{
+  font-family:var(--mono); font-size:11.5px; line-height:1.8; color:var(--muted);
+  padding:18px 26px 22px; border-top:1px solid var(--line-soft);
+}
+.fig figcaption b{ color:var(--accent); font-weight:500; }
+.fig figcaption em{ font-style:normal; color:var(--soft); }
+
+.hole{ stroke:var(--indigo); fill:var(--indigo); }
+.elec{ stroke:#FF8A6B; fill:#FF8A6B; }
+.deck{ fill:rgba(236,234,244,.04); stroke:rgba(236,234,244,.28); stroke-width:1.4; }
+.dline{ stroke:var(--paper); stroke-width:1.2; stroke-dasharray:4 4; fill:none; }
+
+/* ============ notes ============ */
+.notes{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+.note-card{
+  display:block; text-decoration:none; padding:32px 30px;
+  border:1px solid var(--line); border-radius:12px; background:var(--panel);
+  transition:border-color .22s, transform .22s, background .22s;
+}
+.note-card:hover{ border-color:var(--accent); transform:translateY(-3px); }
+.note-card h3{
+  font-family:var(--display); font-weight:600; font-size:1.3rem;
+  font-variation-settings:"wdth" 106; letter-spacing:-.018em;
+  line-height:1.26; margin:14px 0 12px;
+}
+.note-card p{ margin:0; color:var(--muted); font-size:16px; }
+.note-card .go{
+  display:block; margin-top:22px; font-family:var(--mono); font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--accent);
+}
+
+/* ============ article pages ============ */
+.article{ max-width:760px; margin:0 auto; padding:76px 40px 40px; }
+.back{
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); text-decoration:none;
+}
+.back:hover{ color:var(--paper); }
+.article h1{
+  font-family:var(--display); font-weight:700; font-size:clamp(1.9rem,4vw,2.7rem);
+  font-variation-settings:"wdth" 110; letter-spacing:-.028em; line-height:1.14;
+  margin:26px 0 20px; text-wrap:balance;
+}
+.byline{
+  font-family:var(--mono); font-size:11px; letter-spacing:.12em; color:var(--muted);
+  padding-bottom:30px; border-bottom:1px solid var(--line); margin-bottom:44px;
+}
+.article h2{
+  font-family:var(--display); font-weight:600; font-size:1.32rem;
+  font-variation-settings:"wdth" 106; letter-spacing:-.018em;
+  margin:52px 0 16px; color:var(--paper);
+}
+.article p{ color:var(--soft); margin:0 0 22px; }
+.article ul,.article ol{ color:var(--soft); margin:0 0 22px; padding-left:22px; }
+.article li{ margin-bottom:11px; }
+.article li::marker{ color:var(--accent); }
+.article strong{ color:var(--paper); font-weight:500; }
+.article code{
+  font-family:var(--mono); font-size:.86em; color:var(--cyan);
+  background:rgba(95,208,232,.09); padding:2px 6px; border-radius:4px;
+}
+.article pre{
+  font-family:var(--mono); font-size:13px; line-height:1.75; color:var(--soft);
+  background:rgba(0,0,0,.28); border:1px solid var(--line);
+  border-radius:10px; padding:20px 22px; overflow-x:auto; margin:0 0 24px;
+}
+.article pre code{ background:none; padding:0; color:inherit; }
+.pull{
+  border-left:2px solid var(--accent); padding:4px 0 4px 24px;
+  margin:34px 0; color:var(--paper); font-size:1.1rem; line-height:1.6;
+}
+.caveat{
+  border:1px solid var(--line); border-radius:10px; padding:22px 24px;
+  background:var(--panel); color:var(--muted); font-size:16px; margin:34px 0;
+}
+.caveat b{ color:var(--accent); font-weight:500; font-family:var(--mono);
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  display:block; margin-bottom:8px; }
+.endnote{
+  margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
+  font-family:var(--mono); font-size:12px; color:var(--muted); line-height:1.9;
+}
+.endnote a{ color:var(--accent); text-decoration:none; }
+
+@media (max-width:860px){
+  .notes{ grid-template-columns:1fr; }
+}
+@media (max-width:600px){
+  .article{ padding:48px 22px 30px; }
+  .fig .frame{ padding:16px; }
+  .fig figcaption{ padding:16px 18px 20px; }
+}
+
+@media (max-width:960px){
+  .work-split{ grid-template-columns:1fr; gap:28px; }
+  .work-split .fig{ max-width:420px; margin:0 auto; }
+  .work-split .fig svg{ max-height:none; }
+}
+
+/* ============ currently strip ============ */
+.now{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:22px 0; }
+.now-grid{ display:grid; grid-template-columns:130px minmax(0,1fr); gap:32px; align-items:start; }
+.now-label{ font-family:var(--mono); font-size:10.5px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--green); padding-top:3px; }
+.now ul{ margin:0; padding:0; list-style:none; display:grid; gap:9px; }
+.now li{ position:relative; padding-left:20px; color:var(--soft); font-size:16px; }
+.now li::before{ content:""; position:absolute; left:0; top:12px; width:9px; height:1px; background:var(--green); }
+.now time{ font-family:var(--mono); font-size:10.5px; color:var(--muted); letter-spacing:.08em; }
+
+/* ============ research statement ============ */
+.statement{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.52fr); gap:56px; align-items:start; }
+.statement p{ color:var(--soft); margin:0 0 20px; max-width:60ch; }
+.statement p:first-child{ font-size:1.14rem; color:var(--paper); font-weight:400; }
+.statement .aside{ border-left:1px solid var(--line); padding-left:26px; }
+.statement .aside h3{ font-family:var(--mono); font-size:10.5px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--accent); font-weight:400; margin:0 0 14px; }
+.statement .aside p{ font-size:15px; color:var(--muted); margin:0 0 14px; }
+
+/* ============ delta-E explorer ============ */
+.explorer{ margin:40px auto 0; max-width:840px; border:1px solid var(--line);
+  border-radius:12px; background:var(--panel); padding:24px 26px 22px; }
+.exp-top{ display:flex; flex-wrap:wrap; align-items:baseline; gap:14px; margin-bottom:6px; }
+.exp-top h3{ font-family:var(--display); font-weight:600; font-size:1.18rem;
+  font-variation-settings:"wdth" 106; margin:0; letter-spacing:-.015em; }
+.exp-top span{ font-family:var(--mono); font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--muted); margin-left:auto; }
+.exp-intro{ margin:0 0 18px; color:var(--muted); font-size:15.5px; max-width:70ch; }
+.exp-slider{ display:flex; align-items:center; gap:18px; margin-bottom:24px; }
+.exp-slider label{ font-family:var(--mono); font-size:11px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); white-space:nowrap; }
+.exp-slider input[type=range]{ flex:1; min-width:0; -webkit-appearance:none; appearance:none;
+  height:3px; border-radius:3px; background:linear-gradient(90deg,#9B87FF,#5FD0E8,#5CD79C); outline:none; }
+.exp-slider input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none;
+  width:18px; height:18px; border-radius:50%; background:var(--paper);
+  border:3px solid var(--green); cursor:pointer; }
+.exp-slider input[type=range]::-moz-range-thumb{ width:18px; height:18px; border-radius:50%;
+  background:var(--paper); border:3px solid var(--green); cursor:pointer; }
+.exp-slider input[type=range]:focus-visible{ outline:2px solid var(--green); outline-offset:6px; }
+.exp-d{ font-family:var(--mono); font-size:15px; color:var(--green); min-width:96px; text-align:right; }
+.exp-grid{ display:grid; grid-template-columns:190px minmax(0,1fr); gap:24px; align-items:center; }
+.exp-grid svg{ display:block; margin:0 auto; width:auto; max-width:100%; max-height:186px; }
+svg.expfig .note{ font-size:12.5px; letter-spacing:.06em; }
+.exp-out{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line);
+  border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-top:20px; }
+.exp-out div{ background:#101a33; padding:12px 15px; }
+.exp-out dt{ font-family:var(--mono); font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.exp-out dd{ margin:0; font-family:var(--mono); font-size:15.5px; color:var(--paper); }
+.exp-verdict{ margin:18px 0 0; font-family:var(--mono); font-size:12.5px; letter-spacing:.05em;
+  color:var(--green); min-height:1.5em; }
+.exp-verdict.warn{ color:#FF8A6B; }
+.exp-note{ margin:14px 0 0; font-family:var(--mono); font-size:10.5px; line-height:1.7;
+  color:var(--muted); opacity:.8; }
+@media (max-width:860px){
+  .now-grid{ grid-template-columns:1fr; gap:14px; }
+  .statement{ grid-template-columns:1fr; gap:34px; }
+  .statement .aside{ border-left:0; padding-left:0; border-top:1px solid var(--line); padding-top:24px; }
+  .exp-grid{ grid-template-columns:1fr; }
+  .exp-out{ grid-template-columns:1fr; }
+  .explorer{ padding:22px 18px; }
+}
+
+/* ============ print ============ */
+@media print{
+  .rail,.rail-marker,.rail-nm,.skip,.masthead,.nav,.actions,.explorer,.now,.foot{ display:none !important; }
+  html,body{ background:#fff !important; color:#111 !important; font-size:10.5pt; }
+  .shell{ max-width:none; padding:0; }
+  .section{ padding:12pt 0; border-top:1px solid #ccc; break-inside:avoid; }
+  .hero{ padding:0 0 12pt; }
+  .hero-grid,.about,.statement,.work-split,.skillsets{ display:block !important; }
+  h1,h2,h3,.state,.wordmark b{ color:#000 !important; }
+  .hero h1{ font-size:20pt; max-width:none; }
+  .hero h1 em{ color:#000 !important; text-shadow:none !important; }
+  p,li,dd,.lede,.who,.entry p,.row p,.work p{ color:#222 !important; }
+  .kicker,.head .of,.marginalia,.when,.note,figcaption{ color:#555 !important; }
+  .chip,.tag,.stamp,.pill{ border-color:#999 !important; color:#333 !important; }
+  .rv{ opacity:1 !important; transform:none !important; }
+  figure svg{ max-height:70mm; }
+  .awards article,.explorer{ background:none !important; border-color:#bbb !important; }
+  a{ color:#000 !important; text-decoration:underline; }
+  a[href^="http"]::after{ content:" (" attr(href) ")"; font-size:8pt; color:#666; }
+  .contact{ padding:12pt 0 0; text-align:left; }
+  .contact h2{ font-size:14pt; }
+}
+
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"MD. Mehedi Hasan Moon",
+"jobTitle":"Research Student, Organic Optoelectronics Lab",
+"affiliation":{"@type":"CollegeOrUniversity","name":"Shahjalal University of Science and Technology"},
+"email":"mailto:mehedi39@student.sust.edu","url":"https://mehedi-hasan29.github.io",
+"identifier":"https://orcid.org/0009-0007-4128-3237",
+"sameAs":["https://github.com/mehedi-hasan29","https://orcid.org/0009-0007-4128-3237"],
+"knowsAbout":["Thermally activated delayed fluorescence","Through-space charge transfer","Density functional theory","Organic optoelectronics"]}
+</script>
+</head>
+
+<body>
+<a class="skip" href="#top">Skip to content</a>
+
+<div class="rail" aria-hidden="true"></div>
+<div class="rail-marker" id="marker" aria-hidden="true"></div>
+<div class="rail-nm" id="nm" aria-hidden="true">390 nm</div>
+
+<header class="masthead">
+  <div class="shell">
+    <a class="wordmark" href="#top">
+      <b>Mehedi Hasan Moon</b><span>Physics · SUST</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#about">About</a>
+      <a href="#statement">Statement</a>
+      <a href="#focus">Focus</a>
+      <a href="#work">Work</a>
+      <a href="#kit">Toolkit</a>
+      <a href="#notes">Notes</a>
+      <a href="#record">Record</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero" style="--accent:var(--violet)">
+  <div class="shell hero-grid">
+    <div class="hero-copy">
+      <div class="hero-lead"><p class="kicker">Organic optoelectronics · TADF emitters</p><h1>In every OLED, three quarters of the excitons are stranded in the dark. I design the geometry that brings them back as <em>light</em>.</h1></div>
+      <p class="lede">MS student in the Organic Optoelectronics Lab at SUST, designing &pi;-stacked donor&ndash;acceptor triads for thermally activated delayed fluorescence. <strong>Hold the donor and acceptor face to face and the singlet&ndash;triplet gap collapses</strong> — below roughly 0.1&nbsp;eV, ambient thermal energy alone is enough to lift trapped triplets back into the emissive channel instead of losing them as heat.</p>
+      <div class="actions">
+      <a class="btn btn-go" href="#work">See the work</a>
+      <a class="btn" href="cv.html">CV</a>
+      <a class="btn" href="https://github.com/mehedi-hasan29">GitHub</a>
+      <a class="btn" href="https://orcid.org/0009-0007-4128-3237">ORCID</a>
+      <a class="btn" href="mailto:mehedi39@student.sust.edu">Email</a>
+    </div>
+    </div>
+
+    <div class="hero-figs">
+      <figure class="plate plate-side">
+        <div class="pane"><svg class="molfig" viewBox="0 0 430 535" role="img" aria-label="The wB97XD optimised ground-state geometry of STF-DBTS viewed edge-on to the stacked rings. A spiro-acridine donor and a dibenzothiophene sulfone acceptor are held by a fluorene linker with their ring systems facing each other, and charge crosses the gap between them.">
+<line x1="134.5" y1="261.9" x2="147.1" y2="323.2" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.6"/>
+<line x1="132.2" y1="227.7" x2="134.5" y2="261.9" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.6"/>
+<line x1="147.1" y1="323.2" x2="157.2" y2="349.0" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.6"/>
+<line x1="306.5" y1="282.4" x2="320.1" y2="223.1" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.68"/>
+<line x1="143.1" y1="253.7" x2="132.2" y2="227.7" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.66"/>
+<line x1="155.6" y1="315.3" x2="157.2" y2="349.0" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.67"/>
+<line x1="341.4" y1="104.1" x2="295.3" y2="72.2" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.69"/>
+<line x1="320.1" y1="223.1" x2="323.5" y2="182.1" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.68"/>
+<line x1="341.4" y1="104.1" x2="404.0" y2="96.2" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.71"/>
+<line x1="323.5" y1="182.1" x2="341.4" y2="104.1" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.73"/>
+<line x1="296.7" y1="299.9" x2="306.5" y2="282.4" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.7"/>
+<line x1="155.6" y1="315.3" x2="143.1" y2="253.7" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.73"/>
+<line x1="143.1" y1="253.7" x2="141.5" y2="218.5" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.73"/>
+<line x1="171.6" y1="115.7" x2="158.7" y2="54.8" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.76"/>
+<line x1="158.7" y1="54.8" x2="101.5" y2="34.0" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.76"/>
+<line x1="167.9" y1="347.0" x2="155.6" y2="315.3" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.74"/>
+<line x1="313.0" y1="197.8" x2="323.5" y2="182.1" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.74"/>
+<line x1="331.1" y1="92.4" x2="341.4" y2="104.1" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.73"/>
+<line x1="283.5" y1="364.1" x2="296.7" y2="299.9" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.77"/>
+<line x1="127.6" y1="156.0" x2="171.6" y2="115.7" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.77"/>
+<line x1="329.5" y1="406.9" x2="283.5" y2="364.1" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.78"/>
+<line x1="318.1" y1="467.5" x2="329.5" y2="406.9" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.78"/>
+<line x1="57.3" y1="74.4" x2="101.5" y2="34.0" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.78"/>
+<line x1="141.5" y1="218.5" x2="127.6" y2="156.0" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.79"/>
+<line x1="225.7" y1="383.9" x2="283.5" y2="364.1" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.79"/>
+<line x1="296.7" y1="299.9" x2="299.8" y2="257.2" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.77"/>
+<line x1="127.6" y1="156.0" x2="70.1" y2="135.5" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.79"/>
+<line x1="70.1" y1="135.5" x2="57.3" y2="74.4" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.8"/>
+<line x1="260.2" y1="487.2" x2="318.1" y2="467.5" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.8"/>
+<line x1="225.7" y1="383.9" x2="167.9" y2="347.0" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.8"/>
+<line x1="214.1" y1="445.0" x2="225.7" y2="383.9" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.8"/>
+<line x1="214.1" y1="445.0" x2="260.2" y2="487.2" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.81"/>
+<line x1="121.7" y1="396.3" x2="167.9" y2="347.0" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.81"/>
+<line x1="299.8" y1="257.2" x2="313.0" y2="197.8" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.81"/>
+<line x1="149.3" y1="452.6" x2="214.1" y2="445.0" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.81"/>
+<line x1="121.7" y1="396.3" x2="149.3" y2="452.6" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.82"/>
+<line x1="60.2" y1="390.1" x2="121.7" y2="396.3" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.82"/>
+<line x1="156.7" y1="242.0" x2="141.5" y2="218.5" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.79"/>
+<line x1="313.0" y1="197.8" x2="316.8" y2="146.1" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.81"/>
+<line x1="115.2" y1="503.8" x2="149.3" y2="452.6" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.83"/>
+<line x1="26.0" y1="441.3" x2="60.2" y2="390.1" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.83"/>
+<line x1="167.9" y1="347.0" x2="169.7" y2="303.3" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.81"/>
+<line x1="331.1" y1="92.4" x2="316.8" y2="146.1" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.82"/>
+<line x1="335.6" y1="38.0" x2="331.1" y2="92.4" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.82"/>
+<line x1="115.2" y1="503.8" x2="53.3" y2="497.7" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.84"/>
+<line x1="53.3" y1="497.7" x2="26.0" y2="441.3" stroke="rgba(236,234,244,.62)" stroke-width="2.6" stroke-linecap="round" opacity="0.84"/>
+<line x1="169.7" y1="303.3" x2="156.7" y2="242.0" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.86"/>
+<line x1="156.7" y1="242.0" x2="160.5" y2="204.1" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.86"/>
+<line x1="306.8" y1="145.2" x2="316.8" y2="146.1" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.86"/>
+<line x1="335.6" y1="38.0" x2="325.4" y2="37.7" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.86"/>
+<line x1="169.7" y1="303.3" x2="185.2" y2="325.0" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.87"/>
+<line x1="311.2" y1="90.8" x2="306.8" y2="145.2" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.93"/>
+<line x1="325.4" y1="37.7" x2="311.2" y2="90.8" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" opacity="0.93"/>
+<line x1="160.5" y1="204.1" x2="176.2" y2="226.7" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.92"/>
+<line x1="188.8" y1="287.6" x2="185.2" y2="325.0" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.94"/>
+<line x1="176.2" y1="226.7" x2="188.8" y2="287.6" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round" opacity="0.99"/>
+<circle cx="134.5" cy="261.9" r="2.4" fill="var(--violet)" opacity="0.6"/>
+<circle cx="147.1" cy="323.2" r="2.4" fill="var(--violet)" opacity="0.6"/>
+<circle cx="132.2" cy="227.7" r="2.4" fill="var(--violet)" opacity="0.66"/>
+<circle cx="157.2" cy="349.0" r="2.4" fill="var(--violet)" opacity="0.67"/>
+<circle cx="320.1" cy="223.1" r="2.4" fill="var(--cyan)" opacity="0.68"/>
+<circle cx="295.3" cy="72.2" r="5" fill="#FF8A6B" opacity="0.69"/>
+<circle cx="306.5" cy="282.4" r="2.4" fill="var(--cyan)" opacity="0.7"/>
+<circle cx="404.0" cy="96.2" r="5" fill="#FF8A6B" opacity="0.71"/>
+<circle cx="341.4" cy="104.1" r="5" fill="#E8B54A" opacity="0.73"/>
+<circle cx="143.1" cy="253.7" r="2.4" fill="var(--violet)" opacity="0.73"/>
+<circle cx="155.6" cy="315.3" r="2.4" fill="var(--violet)" opacity="0.74"/>
+<circle cx="323.5" cy="182.1" r="2.4" fill="var(--cyan)" opacity="0.74"/>
+<circle cx="158.7" cy="54.8" r="2.4" fill="var(--violet)" opacity="0.76"/>
+<circle cx="171.6" cy="115.7" r="2.4" fill="var(--violet)" opacity="0.77"/>
+<circle cx="296.7" cy="299.9" r="2.4" fill="var(--cyan)" opacity="0.77"/>
+<circle cx="101.5" cy="34.0" r="2.4" fill="var(--violet)" opacity="0.78"/>
+<circle cx="329.5" cy="406.9" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.78"/>
+<circle cx="283.5" cy="364.1" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.79"/>
+<circle cx="127.6" cy="156.0" r="2.4" fill="var(--violet)" opacity="0.79"/>
+<circle cx="141.5" cy="218.5" r="5" fill="#7FA6FF" opacity="0.79"/>
+<circle cx="318.1" cy="467.5" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.8"/>
+<circle cx="57.3" cy="74.4" r="2.4" fill="var(--violet)" opacity="0.8"/>
+<circle cx="225.7" cy="383.9" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.8"/>
+<circle cx="70.1" cy="135.5" r="2.4" fill="var(--violet)" opacity="0.81"/>
+<circle cx="167.9" cy="347.0" r="2.4" fill="var(--violet)" opacity="0.81"/>
+<circle cx="313.0" cy="197.8" r="2.4" fill="var(--cyan)" opacity="0.81"/>
+<circle cx="260.2" cy="487.2" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.81"/>
+<circle cx="214.1" cy="445.0" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.81"/>
+<circle cx="121.7" cy="396.3" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.82"/>
+<circle cx="331.1" cy="92.4" r="2.4" fill="var(--cyan)" opacity="0.82"/>
+<circle cx="299.8" cy="257.2" r="2.4" fill="var(--cyan)" opacity="0.82"/>
+<circle cx="149.3" cy="452.6" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.83"/>
+<circle cx="60.2" cy="390.1" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.83"/>
+<circle cx="115.2" cy="503.8" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.84"/>
+<circle cx="26.0" cy="441.3" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.84"/>
+<circle cx="53.3" cy="497.7" r="2.4" fill="rgba(236,234,244,.62)" opacity="0.85"/>
+<circle cx="316.8" cy="146.1" r="2.4" fill="var(--cyan)" opacity="0.86"/>
+<circle cx="335.6" cy="38.0" r="2.4" fill="var(--cyan)" opacity="0.86"/>
+<circle cx="156.7" cy="242.0" r="2.4" fill="var(--violet)" opacity="0.86"/>
+<circle cx="169.7" cy="303.3" r="2.4" fill="var(--violet)" opacity="0.87"/>
+<circle cx="160.5" cy="204.1" r="2.4" fill="var(--violet)" opacity="0.92"/>
+<circle cx="306.8" cy="145.2" r="2.4" fill="var(--cyan)" opacity="0.93"/>
+<circle cx="325.4" cy="37.7" r="2.4" fill="var(--cyan)" opacity="0.93"/>
+<circle cx="185.2" cy="325.0" r="2.4" fill="var(--violet)" opacity="0.94"/>
+<circle cx="311.2" cy="90.8" r="2.4" fill="var(--cyan)" opacity="0.97"/>
+<circle cx="176.2" cy="226.7" r="2.4" fill="var(--violet)" opacity="0.99"/>
+<circle cx="188.8" cy="287.6" r="2.4" fill="var(--violet)" opacity="1.0"/>
+<line x1="169.7" y1="303.3" x2="299.8" y2="257.2" stroke="#5CD79C" stroke-width="1.4" stroke-dasharray="3 3" opacity=".9"/>
+<text class="note g" x="241" y="272" text-anchor="middle">3.190 &#197;</text>
+<circle class="halo" r="10" cx="158" cy="277">
+<animate attributeName="cx" values="158;322;322" keyTimes="0;.6;1" dur="3.8s" repeatCount="indefinite"/><animate attributeName="cy" values="277;151;151" keyTimes="0;.6;1" dur="3.8s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0;.26;.26;0" keyTimes="0;.12;.56;.7" dur="3.8s" repeatCount="indefinite"/></circle>
+<circle r="4.2" fill="#5CD79C" cx="158" cy="277">
+<animate attributeName="cx" values="158;322;322" keyTimes="0;.6;1" dur="3.8s" repeatCount="indefinite"/><animate attributeName="cy" values="277;151;151" keyTimes="0;.6;1" dur="3.8s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.56;.7" dur="3.8s" repeatCount="indefinite"/></circle>
+<text class="note v" x="8" y="26">ACRIDINE</text>
+<text class="note c" x="422" y="26" text-anchor="end">DBTS</text>
+<text class="note" x="215" y="524" text-anchor="middle">FLUORENE</text>
+</svg></div>
+        <figcaption>STF-DBTS &#183; acridine donor over DBTS acceptor &#183; geometry from my &omega;B97XD/def2-SVP optimisation</figcaption>
+      </figure>
+
+      <figure class="plate plate-side">
+        <div class="pane"><svg class="cycle" viewBox="12 40 512 272" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Energy level diagram. An exciton is excited from the ground state to the first singlet, crosses to the triplet where it is trapped, then returns to the singlet by reverse intersystem crossing and emits as delayed fluorescence.">
+<defs><path id="cyc" d="M92,280 L92,98 L232,98 C258,110 274,124 288,137 L358,139 L288,139 C274,127 258,113 236,98 L172,98 L172,274 L92,277 Z"/></defs>
+<path class="ax" d="M40,300 L40,44 M35,54 L40,44 L45,54"/>
+<text class="note" transform="translate(22,178) rotate(-90)" text-anchor="middle">ENERGY</text>
+<rect class="band" x="62" y="92" width="352" height="50"/>
+<line class="gd" x1="232" y1="92" x2="414" y2="92"/>
+<line class="lvl" x1="56" y1="282" x2="400" y2="282"/>
+<line class="lvl" x1="62" y1="92"  x2="232" y2="92"/>
+<line class="lvl" x1="288" y1="142" x2="400" y2="142"/>
+<text class="state" x="58" y="302">S<tspan dy="4">0</tspan></text>
+<text class="state" x="62" y="82">S<tspan dy="4">1</tspan></text>
+<text class="state" x="370" y="132">T<tspan dy="4">1</tspan></text>
+<path class="abs" d="M92,282 L92,100 M87,109 L92,97 L97,109"/>
+<text class="note v" transform="translate(83,192) rotate(-90)" text-anchor="middle">ABSORPTION</text>
+<path class="pf" d="M132,98 L132,276 M127,266 L132,279 L137,266"/>
+<text class="note" transform="translate(123,192) rotate(-90)" text-anchor="middle">PROMPT FL.</text>
+<path class="df" d="M172,98 L172,276 M167,266 L172,279 L177,266"/>
+<text class="note g" transform="translate(163,192) rotate(-90)" text-anchor="middle">DELAYED FL.</text>
+<path class="isc" d="M234,100 C258,112 272,124 286,135"/>
+<path class="isc" d="M278,130 L288,137 L277,141" stroke-dasharray="0"/>
+<text class="note" x="238" y="176">ISC</text>
+<path class="risc" d="M294,134 C272,124 256,110 238,97"/>
+<path class="risc-tip" d="M246,91 L236,96 L244,104"/>
+<text class="note g" x="252" y="88">RISC</text>
+<path class="ax" d="M414,92 L422,92 M418,92 L418,142 M414,142 L422,142" stroke="#5CD79C"/>
+<text class="note g" x="428" y="110">&#916;E<tspan dy="3" font-size="7">ST</tspan></text>
+<text class="note g" x="428" y="127">&lt; 0.1 eV</text>
+<g>
+<circle class="halo" r="11"><animate attributeName="fill" values="#9B87FF;#9B87FF;#7FA6FF;#5B5F86;#5B5F86;#5CD79C;#5CD79C;#9B87FF" keyTimes="0;.16;.28;.40;.56;.68;.94;1" dur="10s" repeatCount="indefinite"/><animate attributeName="opacity" values=".22;.22;.14;.07;.07;.28;.28;.22" keyTimes="0;.16;.28;.40;.56;.68;.94;1" dur="10s" repeatCount="indefinite"/></circle>
+<circle r="4.6"><animate attributeName="fill" values="#9B87FF;#9B87FF;#7FA6FF;#5B5F86;#5B5F86;#5CD79C;#5CD79C;#9B87FF" keyTimes="0;.16;.28;.40;.56;.68;.94;1" dur="10s" repeatCount="indefinite"/></circle>
+<animateMotion dur="10s" repeatCount="indefinite" rotate="0" keyPoints="0;.30;.36;.50;.56;.78;.88;1" keyTimes="0;.20;.30;.44;.58;.74;.90;1" calcMode="linear"><mpath href="#cyc" xlink:href="#cyc"/></animateMotion>
+</g>
+</svg></div>
+        <figcaption>One exciton, one cycle</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+
+<section class="now" style="--accent:var(--violet)">
+  <div class="shell now-grid">
+    <p class="now-label">Currently</p>
+    <ul>
+      <li>Ground-state geometries for the STF-DBTS triad series are converged; excited-state calculations are next.</li>
+      <li>The [3.3]paracyclophane bridge study is under review.</li>
+      <li>Building the SkyNet-to-MESA coupling so neutrino emission comes out time-resolved rather than estimated.</li>
+      <li><time datetime="2026-09">Updated September 2026</time></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="section" id="about" style="--accent:var(--indigo)">
+  <div class="shell">
+    <div class="head rv"><h2>About</h2><span class="of">01 / Sylhet, Bangladesh</span></div>
+    <div class="about rv">
+      <div>
+        <p><strong>I work on the electronic structure of organic emitters, starting from the geometry.</strong> My thesis asks how to hold a donor and an acceptor face to face — close, rigid, and deliberately not joined through a conjugated bridge — so that charge transfer happens through space rather than along a chain.</p>
+        <p>That geometry is the whole point. Separating the frontier orbitals spatially shrinks the exchange integral, the singlet–triplet splitting collapses, and triplet excitons that would otherwise decay non-radiatively can cross back up to S<sub>1</sub>. Reaching that regime means optimising ground-state configurations in Gaussian&nbsp;16 with dispersion-corrected functionals, taking binding and excitation energies from those structures, and reading the character of every transition through hole–electron distribution analysis in Multiwfn.</p>
+        <p>Before the current triads I worked on a series of donor&ndash;acceptor [3.3]paracyclophanes that differ only in the saturated bridge holding the two decks cofacial. That study is where I learned not to trust an excitation energy until I know what the state actually is &mdash; and to treat the bridge as an electronic participant rather than a piece of scaffolding.</p>
+        <p>Separately, I am building a framework that couples SkyNet nucleosynthesis networks to MESA stellar models, so neutrino emission from neutron-capture burning can be followed as a time-resolved output rather than estimated after the fact. Different scale, same habit: understand what the numerical machinery is actually claiming before trusting the number it hands you.</p>
+      </div>
+      <dl class="facts">
+        <div><dt>Institution</dt><dd>Shahjalal University of Science &amp; Technology</dd></div>
+        <div><dt>Degree</dt><dd>M.S. Physics (Mixed Mode) — ongoing</dd></div>
+        <div><dt>Previously</dt><dd>B.Sc. (Hons.) Physics · CGPA 3.04 / 4.00</dd></div>
+        <div><dt>Current role</dt><dd>Research Student, Organic Optoelectronics Lab</dd></div>
+        <div><dt>Lab</dt><dd>Organic Optoelectronics Lab, Dept. of Physics</dd></div>
+        <div><dt>Supervisor</dt><dd>Prof. Dr. Nazia Chawdhury</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================= STATEMENT ================= -->
+<section class="section" id="statement" style="--accent:var(--indigo)">
+  <div class="shell">
+    <div class="head rv"><h2>Research statement</h2><span class="of">02 / What I'm after</span></div>
+    <div class="statement rv">
+      <div>
+        <p>The question I keep returning to is how much of a molecule's photophysics is fixed by its geometry rather than by its chemistry.</p>
+
+        <p>Emitter design is usually framed as a search for the right functional groups &mdash; a stronger acceptor, a bulkier donor, a different heteroatom. But the singlet&ndash;triplet gap that decides whether an OLED can recover its triplets is, to a good approximation, twice an exchange integral, and that integral runs over the product of the two frontier orbitals evaluated at the same point in space. It is governed by their overlap. Separate them and the gap collapses, without changing what the molecule is made of.</p>
+
+        <p>A small gap is necessary and not sufficient, which is the part I find most interesting. Reverse intersystem crossing also needs spin&ndash;orbit coupling, and coupling between a singlet and a triplet of the same charge-transfer character is close to forbidden &mdash; the process is generally understood to be mediated by a nearby locally excited triplet. Push donor and acceptor further apart and the gap keeps shrinking while that coupling, and the oscillator strength, shrink with it. The target is not one number but an arrangement of three states, and the usable region is narrow.</p>
+
+        <p>That is what draws me to rigid architectures &mdash; spiro linkages, paracyclophanes, U-shaped triads. They replace a thermal average over conformations with a geometry you can fix, compute against and, in principle, measure. They also make failure diagnosable: in my paracyclophane work a linker I had been treating as inert scaffolding turned out to carry its own low-lying excited state, and the molecule went dark with the designed transition still intact a few states above it. I no longer trust an excitation energy until I know what the state is made of.</p>
+
+        <p>Everything I do now ends at a predicted number. A gap, a rate, an efficiency are only worth what they survive in a device, and my work has so far stopped at the screen. I would rather close that loop than hand a structure over and wait to hear. A group where computed design and fabrication share a building is where I think I would be most useful &mdash; and most usefully wrong.</p>
+      </div>
+      <aside class="aside">
+        <h3>In one line</h3>
+        <p>I use electronic structure theory to work out what molecular geometry does to excited states, with the aim of designing organic emitters that can be built and measured rather than only predicted.</p>
+        <h3>Looking for</h3>
+        <p>PhD positions in organic optoelectronics, computational materials science, and groups that pair calculation with device work.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOCUS ================= -->
+<section class="section" id="focus" style="--accent:var(--cyan)">
+  <div class="shell">
+    <div class="head rv"><h2>Focus</h2><span class="of">03 / Three threads</span></div>
+    <div class="rv">
+      <div class="row">
+        <span class="n">i</span>
+        <h3>Through-space charge transfer</h3>
+        <p>Rigid U-shaped triads that clamp donor and acceptor cofacial, so charge transfer proceeds across the stacking gap instead of along a conjugated bridge — and the orbital overlap that normally enforces a large exchange splitting is designed away.</p>
+      </div>
+      <div class="row">
+        <span class="n">ii</span>
+        <h3>Gap engineering for RISC</h3>
+        <p>Driving ΔE<sub>ST</sub> below 0.1 eV using dispersion-corrected DFT and TD-DFT so reverse intersystem crossing stays fast enough at room temperature to blunt efficiency roll-off.</p>
+      </div>
+      <div class="row">
+        <span class="n">iii</span>
+        <h3>Synthesis &amp; device fabrication</h3>
+        <p>Not yet my day-to-day &mdash; everything above is computational &mdash; but it is where I want to take the work. A predicted &#916;E<sub>ST</sub> stays a hypothesis until someone synthesises the emitter, builds the stack and measures what comes out of it, and I would rather close that loop myself than hand the structures over and wait.</p>
+      </div>
+      <div class="row">
+        <span class="n">iv</span>
+        <h3>Neutrinos from neutron capture</h3>
+        <p>Coupling SkyNet reaction networks to MESA stellar evolution models to follow time-dependent neutrino emission through neutron-capture burning, as a properly resolved output of the network rather than a post-hoc estimate.</p>
+      </div>
+    </div>
+  </div>
+
+      <div class="explorer rv">
+        <div class="exp-top">
+          <h3>The window</h3>
+          <span>Interactive &#183; drag the slider</span>
+        </div>
+        <p class="exp-intro">Pull the donor and acceptor apart and the singlet&ndash;triplet gap collapses, which is what TADF needs. Keep pulling and the coupling that lets the molecule emit &mdash; and that lets spin flip &mdash; collapses with it. Both failures are quiet. The useful region is narrow.</p>
+
+        <div class="exp-slider">
+          <label for="dslider">Separation</label>
+          <input id="dslider" type="range" min="2.8" max="5.5" step="0.02" value="3.80"
+                 aria-label="Donor-acceptor separation in angstroms">
+          <output class="exp-d" id="dout">3.80 &#197;</output>
+        </div>
+
+        <div class="exp-grid">
+          <svg class="expfig" viewBox="10 12 200 190" role="img" aria-label="Two stacked ring planes whose separation follows the slider.">
+            <ellipse id="deckA" cx="110" cy="70" rx="72" ry="15" fill="rgba(95,208,232,.10)" stroke="#5FD0E8" stroke-width="1.8"/>
+            <ellipse id="deckD" cx="110" cy="150" rx="72" ry="15" fill="rgba(155,135,255,.10)" stroke="#9B87FF" stroke-width="1.8"/>
+            <line id="dimline" x1="110" y1="70" x2="110" y2="150" stroke="#5CD79C" stroke-width="1.2" stroke-dasharray="3 3" opacity=".8"/>
+            <circle id="carrier" cx="110" cy="150" r="5" fill="#5CD79C"/>
+            <text class="note c" x="110" y="26" text-anchor="middle">ACCEPTOR</text>
+            <text class="note v" x="110" y="196" text-anchor="middle">DONOR</text>
+          </svg>
+
+          <svg class="expfig" viewBox="26 8 366 202" role="img" aria-label="Curves of the singlet-triplet gap and the relative RISC rate against separation, with the useful window shaded.">
+            <rect id="win" x="144.9" y="24" width="49.9" height="166" fill="#5CD79C" opacity=".10"/>
+            <line x1="44" y1="190" x2="384" y2="190" stroke="rgba(236,234,244,.28)" stroke-width="1"/>
+            <line x1="44" y1="24" x2="44" y2="190" stroke="rgba(236,234,244,.28)" stroke-width="1"/>
+            <line x1="44" y1="153.1" x2="384" y2="153.1" stroke="#6C7196" stroke-width="1" stroke-dasharray="4 4"/>
+            <text class="note" x="48" y="149.1">0.1 eV</text>
+            <polyline points="44.0,30.4 45.1,33.0 46.3,35.6 47.4,38.1 48.5,40.6 49.7,43.0 50.8,45.4 51.9,47.8 53.1,50.1 54.2,52.4 55.3,54.7 56.5,56.9 57.6,59.0 58.7,61.2 59.9,63.3 61.0,65.4 62.1,67.4 63.3,69.4 64.4,71.4 65.5,73.3 66.7,75.2 67.8,77.1 68.9,78.9 70.1,80.7 71.2,82.5 72.3,84.3 73.5,86.0 74.6,87.7 75.7,89.4 76.9,91.0 78.0,92.6 79.1,94.2 80.3,95.8 81.4,97.3 82.5,98.8 83.7,100.3 84.8,101.8 85.9,103.2 87.1,104.7 88.2,106.1 89.3,107.4 90.5,108.8 91.6,110.1 92.7,111.4 93.9,112.7 95.0,114.0 96.1,115.2 97.3,116.4 98.4,117.6 99.5,118.8 100.7,120.0 101.8,121.1 102.9,122.2 104.1,123.3 105.2,124.4 106.3,125.5 107.5,126.6 108.6,127.6 109.7,128.6 110.9,129.6 112.0,130.6 113.1,131.6 114.3,132.5 115.4,133.5 116.5,134.4 117.7,135.3 118.8,136.2 119.9,137.1 121.1,137.9 122.2,138.8 123.3,139.6 124.5,140.4 125.6,141.3 126.7,142.0 127.9,142.8 129.0,143.6 130.1,144.4 131.3,145.1 132.4,145.8 133.5,146.6 134.7,147.3 135.8,148.0 136.9,148.7 138.1,149.3 139.2,150.0 140.3,150.6 141.5,151.3 142.6,151.9 143.7,152.5 144.9,153.2 146.0,153.8 147.1,154.3 148.3,154.9 149.4,155.5 150.5,156.1 151.7,156.6 152.8,157.2 153.9,157.7 155.1,158.2 156.2,158.8 157.3,159.3 158.5,159.8 159.6,160.3 160.7,160.7 161.9,161.2 163.0,161.7 164.1,162.2 165.3,162.6 166.4,163.1 167.5,163.5 168.7,163.9 169.8,164.4 170.9,164.8 172.1,165.2 173.2,165.6 174.3,166.0 175.5,166.4 176.6,166.8 177.7,167.1 178.9,167.5 180.0,167.9 181.1,168.2 182.3,168.6 183.4,169.0 184.5,169.3 185.7,169.6 186.8,170.0 187.9,170.3 189.1,170.6 190.2,170.9 191.3,171.2 192.5,171.6 193.6,171.9 194.7,172.1 195.9,172.4 197.0,172.7 198.1,173.0 199.3,173.3 200.4,173.6 201.5,173.8 202.7,174.1 203.8,174.4 204.9,174.6 206.1,174.9 207.2,175.1 208.3,175.4 209.5,175.6 210.6,175.8 211.7,176.1 212.9,176.3 214.0,176.5 215.1,176.7 216.3,176.9 217.4,177.2 218.5,177.4 219.7,177.6 220.8,177.8 221.9,178.0 223.1,178.2 224.2,178.4 225.3,178.6 226.5,178.7 227.6,178.9 228.7,179.1 229.9,179.3 231.0,179.5 232.1,179.6 233.3,179.8 234.4,180.0 235.5,180.1 236.7,180.3 237.8,180.5 238.9,180.6 240.1,180.8 241.2,180.9 242.3,181.1 243.5,181.2 244.6,181.4 245.7,181.5 246.9,181.6 248.0,181.8 249.1,181.9 250.3,182.0 251.4,182.2 252.5,182.3 253.7,182.4 254.8,182.5 255.9,182.7 257.1,182.8 258.2,182.9 259.3,183.0 260.5,183.1 261.6,183.2 262.7,183.4 263.9,183.5 265.0,183.6 266.1,183.7 267.3,183.8 268.4,183.9 269.5,184.0 270.7,184.1 271.8,184.2 272.9,184.3 274.1,184.4 275.2,184.5 276.3,184.5 277.5,184.6 278.6,184.7 279.7,184.8 280.9,184.9 282.0,185.0 283.1,185.1 284.3,185.1 285.4,185.2 286.5,185.3 287.7,185.4 288.8,185.5 289.9,185.5 291.1,185.6 292.2,185.7 293.3,185.7 294.5,185.8 295.6,185.9 296.7,185.9 297.9,186.0 299.0,186.1 300.1,186.1 301.3,186.2 302.4,186.3 303.5,186.3 304.7,186.4 305.8,186.4 306.9,186.5 308.1,186.6 309.2,186.6 310.3,186.7 311.5,186.7 312.6,186.8 313.7,186.8 314.9,186.9 316.0,186.9 317.1,187.0 318.3,187.0 319.4,187.1 320.5,187.1 321.7,187.2 322.8,187.2 323.9,187.3 325.1,187.3 326.2,187.4 327.3,187.4 328.5,187.4 329.6,187.5 330.7,187.5 331.9,187.6 333.0,187.6 334.1,187.6 335.3,187.7 336.4,187.7 337.5,187.8 338.7,187.8 339.8,187.8 340.9,187.9 342.1,187.9 343.2,187.9 344.3,188.0 345.5,188.0 346.6,188.0 347.7,188.1 348.9,188.1 350.0,188.1 351.1,188.2 352.3,188.2 353.4,188.2 354.5,188.2 355.7,188.3 356.8,188.3 357.9,188.3 359.1,188.4 360.2,188.4 361.3,188.4 362.5,188.4 363.6,188.5 364.7,188.5 365.9,188.5 367.0,188.5 368.1,188.6 369.3,188.6 370.4,188.6 371.5,188.6 372.7,188.7 373.8,188.7 374.9,188.7 376.1,188.7 377.2,188.7 378.3,188.8 379.5,188.8 380.6,188.8 381.7,188.8 382.9,188.8 384.0,188.9" fill="none" stroke="#5CD79C" stroke-width="2.2"/>
+            <polyline points="44.0,190.0 45.1,190.0 46.3,190.0 47.4,190.0 48.5,190.0 49.7,190.0 50.8,190.0 51.9,190.0 53.1,190.0 54.2,190.0 55.3,190.0 56.5,190.0 57.6,190.0 58.7,190.0 59.9,190.0 61.0,190.0 62.1,190.0 63.3,190.0 64.4,190.0 65.5,190.0 66.7,190.0 67.8,190.0 68.9,190.0 70.1,190.0 71.2,189.9 72.3,189.9 73.5,189.9 74.6,189.9 75.7,189.9 76.9,189.9 78.0,189.8 79.1,189.8 80.3,189.8 81.4,189.8 82.5,189.7 83.7,189.7 84.8,189.6 85.9,189.6 87.1,189.5 88.2,189.5 89.3,189.4 90.5,189.3 91.6,189.2 92.7,189.1 93.9,189.0 95.0,188.9 96.1,188.7 97.3,188.6 98.4,188.4 99.5,188.2 100.7,188.0 101.8,187.8 102.9,187.5 104.1,187.3 105.2,187.0 106.3,186.7 107.5,186.4 108.6,186.0 109.7,185.6 110.9,185.2 112.0,184.8 113.1,184.3 114.3,183.8 115.4,183.3 116.5,182.7 117.7,182.1 118.8,181.5 119.9,180.8 121.1,180.1 122.2,179.3 123.3,178.5 124.5,177.7 125.6,176.8 126.7,175.9 127.9,174.9 129.0,173.9 130.1,172.8 131.3,171.7 132.4,170.6 133.5,169.4 134.7,168.1 135.8,166.8 136.9,165.5 138.1,164.1 139.2,162.7 140.3,161.2 141.5,159.7 142.6,158.1 143.7,156.5 144.9,154.8 146.0,153.1 147.1,151.4 148.3,149.6 149.4,147.8 150.5,145.9 151.7,144.0 152.8,142.1 153.9,140.1 155.1,138.1 156.2,136.0 157.3,134.0 158.5,131.9 159.6,129.7 160.7,127.6 161.9,125.4 163.0,123.2 164.1,121.0 165.3,118.8 166.4,116.5 167.5,114.3 168.7,112.0 169.8,109.7 170.9,107.5 172.1,105.2 173.2,102.9 174.3,100.6 175.5,98.3 176.6,96.1 177.7,93.8 178.9,91.5 180.0,89.3 181.1,87.1 182.3,84.9 183.4,82.7 184.5,80.5 185.7,78.3 186.8,76.2 187.9,74.1 189.1,72.0 190.2,70.0 191.3,68.0 192.5,66.0 193.6,64.0 194.7,62.1 195.9,60.2 197.0,58.4 198.1,56.6 199.3,54.8 200.4,53.1 201.5,51.5 202.7,49.8 203.8,48.2 204.9,46.7 206.1,45.2 207.2,43.8 208.3,42.4 209.5,41.1 210.6,39.8 211.7,38.5 212.9,37.3 214.0,36.2 215.1,35.1 216.3,34.1 217.4,33.1 218.5,32.1 219.7,31.3 220.8,30.4 221.9,29.7 223.1,28.9 224.2,28.3 225.3,27.6 226.5,27.1 227.6,26.5 228.7,26.1 229.9,25.6 231.0,25.3 232.1,24.9 233.3,24.7 234.4,24.4 235.5,24.3 236.7,24.1 237.8,24.0 238.9,24.0 240.1,24.0 241.2,24.0 242.3,24.1 243.5,24.3 244.6,24.4 245.7,24.7 246.9,24.9 248.0,25.2 249.1,25.5 250.3,25.9 251.4,26.3 252.5,26.8 253.7,27.2 254.8,27.7 255.9,28.3 257.1,28.9 258.2,29.5 259.3,30.1 260.5,30.8 261.6,31.5 262.7,32.2 263.9,32.9 265.0,33.7 266.1,34.5 267.3,35.3 268.4,36.2 269.5,37.0 270.7,37.9 271.8,38.8 272.9,39.8 274.1,40.7 275.2,41.7 276.3,42.7 277.5,43.6 278.6,44.7 279.7,45.7 280.9,46.7 282.0,47.8 283.1,48.9 284.3,49.9 285.4,51.0 286.5,52.1 287.7,53.2 288.8,54.4 289.9,55.5 291.1,56.6 292.2,57.8 293.3,58.9 294.5,60.1 295.6,61.2 296.7,62.4 297.9,63.6 299.0,64.8 300.1,65.9 301.3,67.1 302.4,68.3 303.5,69.5 304.7,70.7 305.8,71.8 306.9,73.0 308.1,74.2 309.2,75.4 310.3,76.6 311.5,77.8 312.6,78.9 313.7,80.1 314.9,81.3 316.0,82.5 317.1,83.6 318.3,84.8 319.4,86.0 320.5,87.1 321.7,88.3 322.8,89.4 323.9,90.5 325.1,91.7 326.2,92.8 327.3,93.9 328.5,95.1 329.6,96.2 330.7,97.3 331.9,98.4 333.0,99.5 334.1,100.6 335.3,101.6 336.4,102.7 337.5,103.8 338.7,104.8 339.8,105.9 340.9,106.9 342.1,108.0 343.2,109.0 344.3,110.0 345.5,111.0 346.6,112.0 347.7,113.0 348.9,114.0 350.0,115.0 351.1,115.9 352.3,116.9 353.4,117.8 354.5,118.8 355.7,119.7 356.8,120.6 357.9,121.6 359.1,122.5 360.2,123.4 361.3,124.2 362.5,125.1 363.6,126.0 364.7,126.9 365.9,127.7 367.0,128.6 368.1,129.4 369.3,130.2 370.4,131.0 371.5,131.8 372.7,132.6 373.8,133.4 374.9,134.2 376.1,135.0 377.2,135.8 378.3,136.5 379.5,137.3 380.6,138.0 381.7,138.7 382.9,139.4 384.0,140.2" fill="none" stroke="#9B87FF" stroke-width="2.2" stroke-dasharray="5 4"/>
+            <line id="mark" x1="200" y1="20" x2="200" y2="192" stroke="rgba(236,234,244,.55)" stroke-width="1"/>
+            <circle id="dotE" cx="200" cy="120" r="4.5" fill="#5CD79C"/>
+            <circle id="dotK" cx="200" cy="120" r="4.5" fill="#9B87FF"/>
+            <text class="note g" x="52" y="20">&#916;E_ST</text>
+            <text class="note v" x="120" y="20">k_RISC (relative)</text>
+            <text class="note" x="44" y="204">2.8 &#197;</text>
+            <text class="note" x="384" y="204" text-anchor="end">5.5 &#197;</text>
+          </svg>
+        </div>
+
+        <dl class="exp-out">
+          <div><dt>&#916;E<sub>ST</sub></dt><dd id="oGap">&mdash;</dd></div>
+          <div><dt>k<sub>RISC</sub> relative</dt><dd id="oK">&mdash;</dd></div>
+          <div><dt>Oscillator strength</dt><dd id="oF">&mdash;</dd></div>
+        </dl>
+        <p class="exp-verdict" id="verdict"></p>
+        <p class="exp-note">Illustrative model, not a calculation on any specific molecule: the exchange integral is taken to decay exponentially with separation, spin&ndash;orbit coupling and oscillator strength with it, and k<sub>RISC</sub> follows an Arrhenius factor in &#916;E<sub>ST</sub> at 298&nbsp;K. The shape of the trade-off is real; the numbers are a teaching aid.</p>
+      </div>
+    </section>
+
+<!-- ================= WORK ================= -->
+<section class="section" id="work" style="--accent:var(--teal)">
+  <div class="shell">
+    <div class="head rv"><h2>Research</h2><span class="of">04 / Projects</span></div>
+
+    <article class="work rv">
+      <div class="work-split">
+        <div class="work-copy">
+          <div class="meta"><span class="stamp">MS thesis</span><span class="when">2026 &mdash; ongoing</span></div>
+          <h3>Computational design of &pi;-stacked donor&ndash;acceptor triads for TADF OLEDs</h3>
+          <p class="who">Organic Optoelectronics Lab, Dept. of Physics, SUST &mdash; Supervisor: Prof. Dr. Nazia Chawdhury</p>
+          <ul class="pts">
+        <li>Investigating intramolecular &pi;-stacked donor&ndash;acceptor triads with rigid U-shaped geometries that enable through-space charge transfer.</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">Gaussian 16</span><span class="chip">&omega;B97XD</span><span class="chip">Multiwfn</span>
+            <span class="chip">DFT / TD-DFT</span><span class="chip">def2-SVP</span>
+          </div>
+        </div>
+        <figure class="fig">
+        <div class="frame">
+          <svg class="hefig" viewBox="0 -2 430 517" role="img" aria-label="Hole and electron distributions for the through-space charge transfer state of STF-DBTS, modelled on the optimised geometry. The hole sits on the spiro-acridine donor and the electron on the dibenzothiophene sulfone acceptor, with very little overlap.">
+<g opacity=".9">
+<animate attributeName="opacity" values=".2;.9;.9;.2" keyTimes="0;.2;.85;1" dur="7s" repeatCount="indefinite"/>
+<path d="M136.8,147.6 L139.5,147.3 L142.2,147.1 L144.9,147.0 L147.7,147.1 L150.4,147.3 L153.1,147.8 L154.5,148.0 L157.2,148.7 L158.9,149.2 L161.3,150.0 L162.8,150.6 L165.3,151.7 L166.7,152.3 L168.6,153.3 L170.8,154.5 L172.1,155.3 L173.5,156.1 L175.4,157.4 L177.4,158.7 L178.9,159.9 L180.3,160.9 L181.7,162.0 L183.0,163.1 L184.4,164.2 L185.9,165.5 L187.4,166.9 L188.8,168.3 L190.2,169.6 L191.6,171.0 L192.9,172.3 L194.2,173.7 L195.4,175.1 L196.6,176.5 L198.0,178.1 L199.4,179.8 L200.7,181.5 L202.0,183.2 L203.0,184.6 L203.9,186.0 L204.8,187.3 L206.2,189.4 L207.4,191.4 L208.1,192.8 L208.9,194.1 L210.2,196.6 L211.0,198.2 L211.7,199.6 L212.9,202.3 L213.5,203.7 L214.3,205.7 L215.1,207.7 L215.7,209.3 L216.6,211.8 L217.0,213.3 L217.8,215.9 L218.4,218.0 L218.9,220.0 L219.6,222.7 L219.9,224.1 L220.5,226.8 L221.1,229.5 L221.4,230.9 L221.9,233.6 L222.4,236.3 L222.6,237.7 L223.1,240.4 L223.5,243.1 L223.8,245.3 L224.2,247.2 L224.6,250.0 L225.1,252.7 L225.3,254.0 L225.8,256.8 L226.2,259.5 L226.6,261.5 L226.9,263.6 L227.4,266.3 L227.9,269.0 L228.2,270.4 L228.7,273.1 L229.2,275.8 L229.4,277.2 L229.9,279.9 L230.3,282.6 L230.6,284.7 L230.9,286.7 L231.3,289.4 L231.7,292.2 L232.0,294.9 L232.1,296.2 L232.3,299.0 L232.5,301.7 L232.6,304.4 L232.6,307.1 L232.6,309.9 L232.6,312.6 L232.4,315.3 L232.2,318.0 L232.0,319.9 L231.7,322.1 L231.4,324.8 L230.9,327.6 L230.6,328.9 L230.0,331.6 L229.3,334.4 L229.0,335.7 L228.2,338.4 L227.7,339.8 L226.8,342.5 L226.3,343.9 L225.2,346.5 L224.6,348.0 L223.8,349.6 L222.6,352.1 L221.9,353.4 L221.1,354.9 L219.8,357.2 L218.8,358.9 L217.9,360.2 L217.0,361.6 L215.7,363.4 L214.3,365.2 L213.0,366.9 L211.7,368.4 L210.5,369.8 L209.2,371.1 L207.8,372.5 L206.4,373.8 L204.9,375.2 L203.4,376.5 L202.1,377.6 L200.7,378.6 L199.4,379.6 L197.9,380.7 L195.8,382.0 L193.9,383.2 L192.6,383.9 L191.0,384.7 L188.5,386.0 L187.1,386.6 L185.0,387.5 L183.0,388.2 L181.1,388.8 L178.9,389.5 L176.2,390.1 L174.9,390.4 L172.1,390.9 L169.4,391.3 L166.7,391.5 L165.3,391.6 L162.6,391.6 L160.9,391.5 L158.5,391.4 L155.8,391.1 L153.1,390.7 L150.4,390.2 L149.0,389.9 L146.3,389.1 L144.9,388.7 L142.2,387.7 L140.9,387.2 L138.4,386.1 L136.8,385.3 L135.4,384.6 L133.2,383.4 L131.3,382.2 L130.0,381.3 L128.6,380.4 L127.2,379.3 L125.4,377.9 L123.8,376.6 L122.3,375.2 L120.9,373.8 L119.5,372.5 L118.2,371.1 L117.0,369.8 L115.9,368.4 L114.8,367.0 L113.7,365.5 L112.3,363.6 L111.0,361.6 L110.1,360.2 L109.3,358.9 L108.2,356.9 L107.1,354.8 L106.4,353.4 L105.5,351.5 L104.5,349.3 L104.0,348.0 L102.9,345.3 L102.4,343.9 L101.5,341.2 L101.0,339.8 L100.2,337.1 L99.8,335.7 L99.1,333.0 L98.7,331.3 L98.1,328.9 L97.5,326.2 L97.2,324.8 L96.7,322.1 L96.1,319.4 L95.9,318.0 L95.4,315.3 L94.9,312.6 L94.6,311.1 L94.1,308.5 L93.6,305.8 L93.2,303.9 L92.8,301.7 L92.2,299.0 L91.9,297.3 L91.4,294.9 L90.7,292.2 L90.4,290.8 L89.8,288.1 L89.2,285.5 L88.8,284.0 L88.1,281.3 L87.8,279.9 L87.1,277.2 L86.4,274.5 L86.1,273.1 L85.5,270.4 L85.1,268.7 L84.5,266.3 L84.0,263.6 L83.7,262.2 L83.2,259.5 L82.7,256.8 L82.4,254.2 L82.1,252.7 L81.8,250.0 L81.5,247.2 L81.3,244.5 L81.2,241.8 L81.1,239.1 L81.1,236.3 L81.1,233.6 L81.2,230.9 L81.4,228.2 L81.6,225.4 L81.9,222.7 L82.3,220.0 L82.5,218.6 L83.0,215.9 L83.5,213.2 L83.8,211.8 L84.4,209.1 L85.1,206.4 L85.4,205.0 L86.2,202.3 L86.6,200.9 L87.5,198.2 L87.9,196.9 L88.9,194.1 L89.4,192.8 L90.5,190.0 L91.0,188.7 L91.9,186.6 L92.8,184.6 L93.4,183.2 L94.6,180.8 L95.5,179.2 L96.2,177.8 L97.3,175.8 L98.6,173.7 L99.5,172.3 L100.4,171.0 L101.4,169.6 L102.8,167.7 L104.1,166.0 L105.5,164.5 L106.8,163.0 L108.2,161.7 L109.6,160.4 L110.9,159.2 L112.3,158.1 L113.7,157.1 L115.2,156.0 L117.4,154.6 L119.1,153.7 L120.5,152.9 L122.6,151.9 L124.5,151.1 L125.9,150.5 L128.6,149.6 L130.0,149.2 L132.7,148.4 L135.4,147.9 L136.8,147.6 Z" fill="#7FA6FF" fill-opacity=".10" stroke="#7FA6FF" stroke-opacity=".35" stroke-width="1"/>
+<path d="M143.6,177.7 L146.3,177.5 L149.0,177.4 L151.7,177.6 L153.6,177.8 L155.8,178.1 L158.5,178.7 L160.1,179.2 L162.6,180.0 L164.1,180.5 L166.7,181.6 L168.1,182.3 L169.9,183.2 L172.1,184.6 L173.5,185.4 L174.9,186.3 L176.2,187.3 L177.9,188.7 L179.6,190.0 L181.0,191.4 L182.4,192.8 L183.8,194.1 L185.0,195.5 L186.1,196.9 L187.2,198.2 L188.5,199.8 L189.8,201.8 L191.0,203.7 L191.9,205.0 L192.7,206.4 L193.9,208.7 L194.8,210.5 L195.4,211.8 L196.6,214.6 L197.1,215.9 L198.0,218.4 L198.5,220.0 L199.4,222.7 L199.8,224.1 L200.5,226.8 L200.8,228.2 L201.4,230.9 L201.9,233.6 L202.2,235.0 L202.7,237.7 L203.1,240.4 L203.4,242.8 L203.7,244.5 L204.1,247.2 L204.4,250.0 L204.8,252.6 L205.0,254.0 L205.4,256.8 L205.8,259.5 L206.2,262.0 L206.4,263.6 L206.8,266.3 L207.3,269.0 L207.5,270.4 L208.0,273.1 L208.5,275.8 L208.9,277.8 L209.3,279.9 L209.8,282.6 L210.2,285.3 L210.5,286.7 L210.9,289.4 L211.3,292.2 L211.6,294.0 L211.9,296.2 L212.2,299.0 L212.4,301.7 L212.6,304.4 L212.7,307.1 L212.7,309.9 L212.6,312.6 L212.5,315.3 L212.2,318.0 L211.9,320.7 L211.6,322.7 L211.2,324.8 L210.6,327.6 L210.2,329.0 L209.5,331.6 L208.9,333.6 L208.1,335.7 L207.5,337.2 L206.4,339.8 L205.8,341.2 L204.8,343.0 L203.6,345.3 L202.7,346.6 L201.9,348.0 L200.7,349.6 L199.4,351.4 L198.0,353.1 L196.6,354.7 L195.3,356.1 L193.9,357.4 L192.6,358.7 L191.2,359.8 L189.8,360.9 L188.5,361.9 L186.9,363.0 L184.6,364.3 L183.0,365.2 L181.7,365.9 L179.0,367.0 L177.6,367.6 L175.0,368.4 L173.5,368.8 L170.8,369.4 L168.2,369.8 L166.7,369.9 L164.0,370.0 L161.3,370.0 L159.0,369.8 L157.2,369.5 L154.5,369.0 L152.2,368.4 L150.4,367.8 L148.3,367.0 L146.3,366.2 L144.9,365.5 L142.8,364.3 L140.9,363.1 L139.5,362.2 L138.1,361.2 L136.8,360.1 L135.4,358.9 L133.9,357.5 L132.6,356.1 L131.3,354.8 L130.0,353.1 L128.6,351.3 L127.3,349.4 L126.3,348.0 L125.5,346.6 L124.5,344.9 L123.3,342.5 L122.7,341.2 L121.8,339.3 L120.9,337.1 L120.4,335.7 L119.5,333.0 L119.0,331.6 L118.2,328.9 L117.7,327.1 L117.2,324.8 L116.5,322.1 L116.2,320.7 L115.7,318.0 L115.1,315.3 L114.9,313.9 L114.4,311.2 L113.9,308.5 L113.7,307.0 L113.2,304.4 L112.7,301.7 L112.3,299.6 L111.9,297.6 L111.3,294.9 L110.9,293.1 L110.4,290.8 L109.8,288.1 L109.4,286.7 L108.7,284.0 L108.2,282.0 L107.7,279.9 L106.9,277.2 L106.5,275.8 L105.8,273.1 L105.4,271.7 L104.7,269.0 L104.1,266.9 L103.6,264.9 L103.0,262.2 L102.7,260.8 L102.1,258.1 L101.6,255.4 L101.3,254.0 L100.9,251.3 L100.5,248.6 L100.3,245.9 L100.1,243.1 L100.0,241.8 L99.9,239.1 L99.9,236.3 L100.0,233.6 L100.1,232.3 L100.4,229.5 L100.7,226.8 L101.2,224.1 L101.4,222.7 L102.1,220.0 L102.8,217.3 L103.2,215.9 L104.1,213.2 L104.6,211.8 L105.5,209.6 L106.3,207.7 L106.9,206.4 L108.2,203.8 L109.1,202.3 L109.9,200.9 L110.9,199.3 L112.3,197.3 L113.6,195.5 L114.7,194.1 L115.9,192.8 L117.1,191.4 L118.4,190.0 L119.9,188.7 L121.5,187.3 L123.2,186.0 L124.5,185.0 L125.9,184.1 L127.3,183.2 L129.7,181.9 L131.3,181.1 L132.7,180.5 L135.4,179.5 L136.8,179.1 L139.5,178.4 L142.2,177.9 L143.6,177.7 Z" fill="#7FA6FF" fill-opacity=".17" stroke="#7FA6FF" stroke-opacity=".5" stroke-width="1"/>
+<path d="M144.9,200.8 L147.7,200.4 L150.4,200.4 L153.1,200.6 L154.9,200.9 L157.2,201.5 L159.6,202.3 L161.3,203.0 L162.6,203.7 L164.9,205.0 L166.7,206.2 L168.1,207.3 L169.4,208.4 L170.8,209.7 L172.1,211.2 L173.5,212.8 L174.8,214.6 L175.8,215.9 L176.6,217.3 L177.6,219.0 L178.8,221.4 L179.4,222.7 L180.3,225.0 L181.0,226.8 L181.7,229.0 L182.2,230.9 L182.9,233.6 L183.2,235.0 L183.7,237.7 L184.1,240.4 L184.4,242.3 L184.7,244.5 L185.0,247.2 L185.2,250.0 L185.5,252.7 L185.7,255.4 L185.8,256.8 L186.0,259.5 L186.3,262.2 L186.6,264.9 L186.9,267.7 L187.1,269.5 L187.4,271.7 L187.8,274.5 L188.3,277.2 L188.5,278.5 L189.0,281.3 L189.5,284.0 L189.8,285.6 L190.3,288.1 L190.8,290.8 L191.2,292.9 L191.5,294.9 L191.9,297.6 L192.3,300.3 L192.6,302.9 L192.7,304.4 L192.8,307.1 L192.8,309.9 L192.8,312.6 L192.6,315.2 L192.4,316.7 L192.0,319.4 L191.4,322.1 L191.0,323.5 L190.1,326.2 L189.6,327.6 L188.5,330.2 L187.7,331.6 L186.9,333.0 L185.8,334.9 L184.4,336.7 L183.0,338.3 L181.7,339.7 L180.3,341.0 L178.9,342.1 L177.6,343.1 L176.2,343.9 L173.6,345.3 L172.1,345.8 L169.6,346.6 L168.1,347.0 L165.3,347.3 L162.6,347.3 L159.9,347.0 L158.4,346.6 L155.8,345.8 L154.4,345.3 L151.8,343.9 L150.4,343.0 L149.0,341.9 L147.7,340.8 L146.3,339.5 L144.9,338.0 L143.6,336.3 L142.2,334.4 L141.4,333.0 L140.6,331.6 L139.5,329.5 L138.6,327.6 L138.1,326.2 L137.1,323.5 L136.7,322.1 L135.9,319.4 L135.4,317.4 L134.9,315.3 L134.4,312.6 L134.1,310.9 L133.6,308.5 L133.2,305.8 L132.7,303.0 L132.5,301.7 L132.0,299.0 L131.5,296.2 L131.3,294.9 L130.7,292.2 L130.1,289.4 L129.8,288.1 L129.1,285.3 L128.6,283.5 L128.0,281.3 L127.3,278.9 L126.7,277.2 L125.9,274.6 L125.4,273.1 L124.5,270.5 L124.0,269.0 L123.2,266.3 L122.7,264.9 L121.9,262.2 L121.5,260.8 L120.7,258.1 L120.4,256.8 L119.7,254.0 L119.2,251.3 L118.9,250.0 L118.5,247.2 L118.2,244.5 L118.0,241.8 L118.0,239.1 L118.1,236.3 L118.3,233.6 L118.7,230.9 L119.1,228.7 L119.5,226.8 L120.3,224.1 L120.8,222.7 L121.8,220.2 L122.6,218.6 L123.3,217.3 L124.5,215.1 L125.8,213.2 L126.9,211.8 L128.0,210.5 L129.3,209.1 L130.7,207.7 L132.4,206.4 L134.1,205.2 L135.4,204.3 L136.8,203.5 L139.5,202.3 L140.9,201.8 L143.6,201.0 L144.9,200.8 Z" fill="#7FA6FF" fill-opacity=".24" stroke="#7FA6FF" stroke-opacity=".7" stroke-width="1"/>
+</g>
+<g opacity=".9">
+<animate attributeName="opacity" values=".2;.2;.9;.9;.2" keyTimes="0;.3;.52;.85;1" dur="7s" repeatCount="indefinite"/>
+<path d="M319.1,-10.3 L321.8,-10.8 L324.5,-11.1 L327.2,-11.3 L330.0,-11.3 L332.7,-11.2 L335.4,-11.0 L338.1,-10.6 L340.8,-10.1 L342.2,-9.8 L344.9,-9.1 L346.3,-8.7 L349.0,-7.7 L350.4,-7.2 L352.9,-6.0 L354.4,-5.3 L355.8,-4.5 L358.0,-3.3 L359.9,-2.1 L361.2,-1.1 L362.6,-0.1 L364.0,0.9 L365.4,2.2 L367.0,3.5 L368.4,4.9 L369.7,6.2 L371.0,7.6 L372.2,9.0 L373.5,10.5 L374.8,12.3 L376.2,14.2 L377.3,15.8 L378.2,17.1 L379.0,18.5 L380.3,20.7 L381.3,22.6 L382.0,23.9 L383.0,26.1 L383.9,28.0 L384.5,29.4 L385.6,32.1 L386.1,33.5 L387.1,36.1 L387.6,37.6 L388.4,40.2 L388.9,41.6 L389.7,44.4 L390.1,45.7 L390.8,48.4 L391.2,49.9 L391.8,52.5 L392.4,55.3 L392.7,56.6 L393.3,59.3 L393.8,62.1 L394.1,63.4 L394.6,66.1 L395.0,68.9 L395.3,70.8 L395.5,73.0 L395.9,75.7 L396.1,78.4 L396.3,81.1 L396.4,83.8 L396.5,86.6 L396.5,89.3 L396.4,92.0 L396.2,94.7 L396.0,97.5 L395.6,100.2 L395.3,102.7 L395.0,104.3 L394.5,107.0 L393.9,109.7 L393.6,111.1 L393.0,113.8 L392.5,115.5 L391.9,117.9 L391.2,120.6 L390.8,122.0 L390.1,124.7 L389.7,126.1 L389.0,128.8 L388.4,131.0 L388.0,132.9 L387.3,135.6 L387.0,136.9 L386.4,139.7 L385.9,142.4 L385.6,143.8 L385.1,146.5 L384.7,149.2 L384.4,151.2 L384.1,153.3 L383.7,156.0 L383.4,158.7 L383.1,161.5 L383.0,162.9 L382.8,165.5 L382.6,168.3 L382.4,171.0 L382.2,173.7 L382.0,176.4 L381.8,179.2 L381.6,181.4 L381.5,183.2 L381.3,186.0 L381.1,188.7 L380.9,191.4 L380.6,194.1 L380.3,196.9 L380.2,198.2 L379.9,200.9 L379.5,203.7 L379.2,206.4 L378.9,208.1 L378.6,210.5 L378.1,213.2 L377.7,215.9 L377.4,217.3 L376.9,220.0 L376.4,222.7 L376.1,224.1 L375.5,226.8 L374.9,229.5 L374.6,230.9 L374.0,233.6 L373.5,236.0 L373.1,237.7 L372.5,240.4 L372.1,241.9 L371.5,244.5 L370.9,247.2 L370.6,248.6 L369.9,251.3 L369.4,253.6 L369.0,255.4 L368.4,258.1 L368.0,259.5 L367.4,262.2 L366.8,264.9 L366.5,266.3 L365.8,269.0 L365.3,271.2 L364.9,273.1 L364.2,275.8 L363.8,277.2 L363.1,279.9 L362.6,281.8 L362.0,284.0 L361.2,286.4 L360.7,288.1 L359.9,290.7 L359.4,292.2 L358.5,294.5 L357.9,296.2 L357.2,298.0 L356.2,300.3 L355.6,301.7 L354.4,304.1 L353.6,305.8 L352.9,307.1 L351.7,309.2 L350.5,311.2 L349.7,312.6 L348.8,313.9 L347.6,315.6 L346.3,317.4 L344.9,319.2 L343.6,320.7 L342.4,322.1 L341.1,323.5 L339.8,324.8 L338.4,326.2 L336.8,327.6 L335.4,328.8 L334.0,329.9 L332.7,330.9 L331.3,331.8 L329.6,333.0 L327.3,334.4 L325.9,335.2 L324.5,335.9 L322.0,337.1 L320.4,337.7 L318.6,338.4 L316.3,339.2 L314.4,339.8 L312.3,340.4 L309.5,340.9 L308.1,341.2 L305.5,341.5 L302.7,341.7 L300.0,341.8 L297.3,341.7 L294.6,341.5 L292.2,341.2 L290.5,340.9 L287.8,340.3 L286.0,339.8 L283.7,339.1 L281.8,338.4 L279.6,337.6 L278.3,336.9 L275.8,335.7 L274.2,334.8 L272.8,334.0 L271.3,333.0 L269.3,331.6 L267.5,330.3 L266.0,329.0 L264.7,327.8 L263.3,326.5 L261.9,325.1 L260.6,323.6 L259.3,322.1 L258.2,320.7 L257.2,319.4 L256.2,318.0 L255.1,316.4 L253.8,314.2 L252.8,312.6 L252.1,311.2 L251.1,309.0 L250.2,307.1 L249.6,305.8 L248.6,303.0 L248.1,301.7 L247.3,299.0 L246.9,297.6 L246.2,294.9 L245.6,292.2 L245.4,290.8 L244.9,288.1 L244.6,285.3 L244.3,282.6 L244.2,281.3 L244.1,278.5 L244.0,275.8 L244.0,273.1 L244.0,270.4 L244.2,267.7 L244.2,266.1 L244.4,263.6 L244.7,260.8 L245.0,258.1 L245.3,255.4 L245.6,253.0 L245.8,251.3 L246.2,248.6 L246.7,245.9 L247.0,243.9 L247.3,241.8 L247.7,239.1 L248.1,236.3 L248.4,235.0 L248.8,232.3 L249.1,229.5 L249.5,226.8 L249.7,225.4 L250.0,222.7 L250.3,220.0 L250.5,217.3 L250.8,214.6 L251.0,211.8 L251.1,210.4 L251.2,207.7 L251.3,205.0 L251.4,202.3 L251.4,199.6 L251.4,196.9 L251.4,194.1 L251.4,191.4 L251.4,188.7 L251.3,186.0 L251.3,183.2 L251.2,180.5 L251.2,177.8 L251.1,175.1 L251.1,172.8 L251.0,171.0 L251.0,168.3 L250.9,165.5 L250.9,162.8 L250.8,160.1 L250.8,157.4 L250.8,154.6 L250.9,151.9 L250.9,149.2 L250.9,146.5 L251.0,143.8 L251.1,141.9 L251.1,139.7 L251.2,136.9 L251.3,134.2 L251.4,131.5 L251.6,128.8 L251.7,126.1 L251.8,123.3 L252.0,120.6 L252.2,117.9 L252.3,115.2 L252.4,113.7 L252.6,111.1 L252.8,108.4 L252.9,105.6 L253.1,102.9 L253.3,100.2 L253.6,97.5 L253.8,95.2 L253.9,93.4 L254.2,90.7 L254.5,87.9 L254.8,85.2 L255.1,82.7 L255.3,81.1 L255.7,78.4 L256.1,75.7 L256.5,73.7 L256.9,71.6 L257.4,68.9 L257.9,66.6 L258.2,64.8 L258.9,62.1 L259.2,60.7 L259.9,58.0 L260.6,55.6 L261.1,53.9 L261.9,51.2 L262.3,49.8 L263.3,47.1 L263.7,45.7 L264.7,43.3 L265.3,41.6 L266.0,39.9 L267.0,37.6 L267.6,36.2 L268.7,33.7 L269.5,32.1 L270.2,30.8 L271.5,28.4 L272.4,26.7 L273.2,25.3 L274.2,23.7 L275.5,21.5 L276.6,19.9 L277.5,18.5 L278.5,17.1 L279.6,15.7 L281.0,13.9 L282.3,12.3 L283.7,10.7 L285.1,9.2 L286.4,7.8 L287.8,6.4 L289.1,5.2 L290.5,3.9 L291.9,2.8 L293.2,1.7 L294.6,0.7 L296.3,-0.6 L298.3,-1.9 L300.0,-3.0 L301.4,-3.8 L303.0,-4.6 L305.5,-5.9 L306.8,-6.5 L308.9,-7.4 L310.9,-8.1 L312.8,-8.7 L315.0,-9.4 L317.7,-10.0 L319.1,-10.3 Z" fill="#FF8A6B" fill-opacity=".10" stroke="#FF8A6B" stroke-opacity=".35" stroke-width="1"/>
+<path d="M324.5,11.7 L327.2,11.4 L330.0,11.4 L332.7,11.6 L334.0,11.8 L336.8,12.3 L339.3,13.1 L340.8,13.6 L342.9,14.4 L344.9,15.4 L346.3,16.1 L348.0,17.1 L350.0,18.5 L351.7,19.9 L353.1,21.0 L354.4,22.3 L355.8,23.7 L357.2,25.3 L358.3,26.7 L359.3,28.0 L360.2,29.4 L361.2,31.0 L362.6,33.3 L363.4,34.8 L364.1,36.2 L365.3,38.8 L365.9,40.3 L366.7,42.3 L367.4,44.4 L368.0,46.3 L368.7,48.4 L369.4,51.2 L369.7,52.5 L370.3,55.3 L370.8,57.5 L371.1,59.3 L371.5,62.1 L371.9,64.8 L372.1,67.0 L372.3,68.9 L372.5,71.6 L372.7,74.3 L372.8,77.0 L372.9,79.8 L372.9,82.5 L372.9,85.2 L372.8,87.9 L372.7,90.7 L372.5,93.4 L372.2,96.1 L372.1,97.5 L371.8,100.2 L371.5,102.9 L371.1,105.6 L370.8,107.8 L370.5,109.7 L370.0,112.4 L369.6,115.2 L369.4,116.5 L368.9,119.2 L368.5,122.0 L368.0,124.5 L367.8,126.1 L367.4,128.8 L367.0,131.5 L366.7,133.6 L366.4,135.6 L366.1,138.3 L365.8,141.0 L365.5,143.8 L365.3,146.0 L365.2,147.8 L365.0,150.6 L364.8,153.3 L364.6,156.0 L364.5,158.7 L364.4,161.5 L364.3,164.2 L364.2,166.9 L364.0,169.6 L364.0,171.7 L363.9,173.7 L363.7,176.4 L363.6,179.2 L363.4,181.9 L363.3,184.6 L363.1,187.3 L362.8,190.0 L362.6,192.2 L362.4,194.1 L362.1,196.9 L361.7,199.6 L361.3,202.3 L361.1,203.7 L360.7,206.4 L360.2,209.1 L359.9,210.9 L359.4,213.2 L358.9,215.9 L358.5,217.5 L358.0,220.0 L357.3,222.7 L357.0,224.1 L356.3,226.8 L355.8,229.0 L355.3,230.9 L354.6,233.6 L354.3,235.0 L353.6,237.7 L353.1,239.6 L352.5,241.8 L351.8,244.5 L351.5,245.9 L350.8,248.6 L350.4,250.4 L349.8,252.7 L349.2,255.4 L348.8,256.8 L348.2,259.5 L347.6,261.6 L347.2,263.6 L346.5,266.3 L346.1,267.7 L345.4,270.4 L344.9,272.2 L344.3,274.5 L343.6,276.9 L343.0,278.5 L342.2,281.1 L341.7,282.6 L340.8,284.9 L340.1,286.7 L339.5,288.2 L338.3,290.8 L337.6,292.2 L336.8,293.8 L335.4,296.2 L334.6,297.6 L333.7,299.0 L332.7,300.5 L331.3,302.3 L330.0,304.0 L328.6,305.5 L327.2,306.9 L325.9,308.2 L324.5,309.4 L323.2,310.5 L321.8,311.5 L320.3,312.6 L318.0,313.9 L316.3,314.8 L315.0,315.5 L312.3,316.5 L310.9,317.0 L308.2,317.7 L306.5,318.0 L304.1,318.3 L301.4,318.5 L298.7,318.4 L295.9,318.1 L294.6,317.9 L291.9,317.2 L290.2,316.7 L287.8,315.7 L286.4,315.1 L284.3,313.9 L282.3,312.7 L281.0,311.7 L279.6,310.6 L278.3,309.4 L276.9,308.1 L275.5,306.6 L274.2,305.0 L272.8,303.2 L271.8,301.7 L271.0,300.3 L270.1,298.7 L268.9,296.2 L268.3,294.9 L267.4,292.5 L266.8,290.8 L266.0,288.1 L265.7,286.7 L265.1,284.0 L264.7,281.3 L264.5,279.9 L264.2,277.2 L264.0,274.5 L264.0,271.7 L264.0,269.0 L264.1,266.3 L264.2,263.6 L264.4,260.8 L264.7,258.4 L264.8,256.8 L265.2,254.0 L265.5,251.3 L265.9,248.6 L266.1,247.2 L266.5,244.5 L266.9,241.8 L267.3,239.1 L267.5,237.7 L267.8,235.0 L268.2,232.3 L268.5,229.5 L268.7,227.4 L268.9,225.4 L269.2,222.7 L269.3,220.0 L269.5,217.3 L269.6,214.6 L269.7,211.8 L269.8,209.1 L269.8,206.4 L269.8,203.7 L269.8,200.9 L269.7,198.2 L269.7,195.5 L269.6,192.8 L269.5,190.0 L269.4,187.3 L269.3,184.6 L269.2,181.9 L269.1,179.2 L269.0,176.4 L269.0,173.7 L268.9,171.0 L268.8,168.3 L268.8,165.5 L268.8,162.8 L268.8,160.1 L268.8,157.4 L268.8,154.6 L268.8,151.9 L268.9,149.2 L269.0,146.5 L269.1,143.8 L269.2,141.0 L269.4,138.3 L269.5,135.6 L269.7,132.9 L269.8,130.1 L270.0,127.4 L270.1,126.1 L270.3,123.3 L270.5,120.6 L270.7,117.9 L270.9,115.2 L271.1,112.4 L271.4,109.7 L271.5,108.4 L271.7,105.6 L272.0,102.9 L272.2,100.2 L272.5,97.5 L272.8,94.7 L272.9,93.4 L273.3,90.7 L273.6,87.9 L274.0,85.2 L274.2,83.8 L274.6,81.1 L275.1,78.4 L275.5,76.0 L275.9,74.3 L276.4,71.6 L276.9,69.6 L277.4,67.5 L278.1,64.8 L278.5,63.4 L279.3,60.7 L279.7,59.3 L280.6,56.6 L281.1,55.3 L282.1,52.5 L282.6,51.2 L283.7,48.6 L284.4,47.1 L285.1,45.5 L286.3,43.0 L287.0,41.6 L287.8,40.2 L289.1,37.8 L290.1,36.2 L291.0,34.8 L291.9,33.5 L293.2,31.7 L294.6,29.9 L295.9,28.2 L297.3,26.7 L298.6,25.3 L300.0,23.9 L301.4,22.6 L302.7,21.4 L304.1,20.3 L305.5,19.3 L306.8,18.4 L308.8,17.1 L310.9,15.9 L312.3,15.3 L314.2,14.4 L316.3,13.6 L317.9,13.1 L320.4,12.4 L323.2,11.8 L324.5,11.7 Z" fill="#FF8A6B" fill-opacity=".17" stroke="#FF8A6B" stroke-opacity=".5" stroke-width="1"/>
+<path d="M325.9,37.4 L328.6,37.5 L330.0,37.7 L332.7,38.3 L334.2,38.9 L336.8,40.2 L338.1,41.1 L339.5,42.2 L340.8,43.5 L342.2,45.0 L343.6,46.7 L344.7,48.4 L345.5,49.8 L346.3,51.2 L347.5,53.9 L348.1,55.3 L349.0,57.8 L349.5,59.3 L350.2,62.1 L350.5,63.4 L351.1,66.1 L351.5,68.9 L351.7,70.5 L352.0,73.0 L352.2,75.7 L352.4,78.4 L352.5,81.1 L352.5,83.8 L352.5,86.6 L352.4,89.3 L352.3,92.0 L352.1,94.7 L351.9,97.5 L351.7,99.3 L351.5,101.5 L351.2,104.3 L350.9,107.0 L350.6,109.7 L350.4,111.3 L350.0,113.8 L349.7,116.5 L349.4,119.2 L349.1,122.0 L348.9,123.3 L348.6,126.1 L348.3,128.8 L348.1,131.5 L347.9,134.2 L347.7,136.9 L347.6,138.3 L347.5,141.0 L347.4,143.8 L347.3,146.5 L347.2,149.2 L347.1,151.9 L347.1,154.6 L347.0,157.4 L347.0,160.1 L347.0,162.8 L346.9,165.5 L346.9,168.3 L346.8,171.0 L346.7,173.7 L346.5,176.4 L346.4,179.2 L346.3,180.8 L346.1,183.2 L345.8,186.0 L345.5,188.7 L345.2,191.4 L344.9,193.4 L344.6,195.5 L344.1,198.2 L343.6,200.9 L343.3,202.3 L342.7,205.0 L342.2,207.3 L341.7,209.1 L341.0,211.8 L340.6,213.2 L339.8,215.9 L339.4,217.3 L338.6,220.0 L338.1,221.5 L337.3,224.1 L336.8,225.7 L335.9,228.2 L335.4,229.8 L334.6,232.3 L334.0,233.9 L333.2,236.3 L332.7,238.1 L331.9,240.4 L331.3,242.4 L330.7,244.5 L330.0,247.0 L329.5,248.6 L328.7,251.3 L328.3,252.7 L327.5,255.4 L327.1,256.8 L326.3,259.5 L325.9,261.1 L325.1,263.6 L324.5,265.4 L323.7,267.7 L323.2,269.2 L322.1,271.7 L321.5,273.1 L320.4,275.4 L319.5,277.2 L318.6,278.5 L317.7,280.0 L316.3,281.8 L315.0,283.4 L313.6,284.7 L312.3,285.9 L310.9,286.9 L308.7,288.1 L306.8,288.8 L304.1,289.4 L302.7,289.5 L301.3,289.4 L298.7,288.9 L296.7,288.1 L294.6,286.7 L293.2,285.6 L291.9,284.1 L290.8,282.6 L290.0,281.3 L289.1,279.7 L288.1,277.2 L287.7,275.8 L287.0,273.1 L286.6,270.4 L286.4,269.0 L286.2,266.3 L286.2,263.6 L286.2,260.8 L286.3,258.1 L286.4,256.7 L286.6,254.0 L286.9,251.3 L287.2,248.6 L287.5,245.9 L287.8,243.1 L287.9,241.8 L288.2,239.1 L288.4,236.3 L288.6,233.6 L288.7,230.9 L288.8,228.2 L288.8,225.4 L288.8,222.7 L288.8,220.0 L288.7,217.3 L288.6,214.6 L288.5,211.8 L288.3,209.1 L288.1,206.4 L287.9,203.7 L287.8,201.5 L287.6,199.6 L287.4,196.9 L287.2,194.1 L287.0,191.4 L286.8,188.7 L286.6,186.0 L286.5,183.2 L286.4,181.9 L286.2,179.2 L286.1,176.4 L286.0,173.7 L285.9,171.0 L285.8,168.3 L285.8,165.5 L285.8,162.8 L285.8,160.1 L285.9,157.4 L285.9,154.6 L286.0,151.9 L286.2,149.2 L286.3,146.5 L286.4,144.7 L286.6,142.4 L286.8,139.7 L287.0,136.9 L287.2,134.2 L287.5,131.5 L287.7,128.8 L287.8,127.4 L288.1,124.7 L288.3,122.0 L288.6,119.2 L288.9,116.5 L289.1,113.8 L289.3,112.4 L289.5,109.7 L289.8,107.0 L290.1,104.3 L290.4,101.5 L290.6,100.2 L290.9,97.5 L291.3,94.7 L291.7,92.0 L291.9,90.7 L292.3,87.9 L292.8,85.2 L293.2,82.9 L293.6,81.1 L294.2,78.4 L294.6,76.8 L295.2,74.3 L295.9,71.8 L296.4,70.2 L297.3,67.6 L297.8,66.1 L298.7,64.0 L299.5,62.1 L300.0,60.7 L301.4,58.0 L302.1,56.6 L302.8,55.3 L304.1,53.1 L305.4,51.2 L306.4,49.8 L307.4,48.4 L308.6,47.1 L309.8,45.7 L311.2,44.4 L312.8,43.0 L314.6,41.6 L316.3,40.5 L317.7,39.8 L319.6,38.9 L321.8,38.2 L324.5,37.6 L325.9,37.4 Z" fill="#FF8A6B" fill-opacity=".24" stroke="#FF8A6B" stroke-opacity=".7" stroke-width="1"/>
+</g>
+<g stroke="rgba(236,234,244,.5)" stroke-width="1.8" stroke-linecap="round" fill="none">
+<line x1="115.2" y1="503.8" x2="53.3" y2="497.7"/>
+<line x1="115.2" y1="503.8" x2="149.3" y2="452.6"/>
+<line x1="53.3" y1="497.7" x2="26.0" y2="441.3"/>
+<line x1="26.0" y1="441.3" x2="60.2" y2="390.1"/>
+<line x1="60.2" y1="390.1" x2="121.7" y2="396.3"/>
+<line x1="121.7" y1="396.3" x2="149.3" y2="452.6"/>
+<line x1="121.7" y1="396.3" x2="167.9" y2="347.0"/>
+<line x1="149.3" y1="452.6" x2="214.1" y2="445.0"/>
+<line x1="214.1" y1="445.0" x2="260.2" y2="487.2"/>
+<line x1="214.1" y1="445.0" x2="225.7" y2="383.9"/>
+<line x1="260.2" y1="487.2" x2="318.1" y2="467.5"/>
+<line x1="225.7" y1="383.9" x2="283.5" y2="364.1"/>
+<line x1="225.7" y1="383.9" x2="167.9" y2="347.0"/>
+<line x1="318.1" y1="467.5" x2="329.5" y2="406.9"/>
+<line x1="329.5" y1="406.9" x2="283.5" y2="364.1"/>
+<line x1="283.5" y1="364.1" x2="296.7" y2="299.9"/>
+<line x1="167.9" y1="347.0" x2="169.7" y2="303.3"/>
+<line x1="167.9" y1="347.0" x2="155.6" y2="315.3"/>
+<line x1="169.7" y1="303.3" x2="156.7" y2="242.0"/>
+<line x1="169.7" y1="303.3" x2="185.2" y2="325.0"/>
+<line x1="155.6" y1="315.3" x2="143.1" y2="253.7"/>
+<line x1="155.6" y1="315.3" x2="157.2" y2="349.0"/>
+<line x1="156.7" y1="242.0" x2="160.5" y2="204.1"/>
+<line x1="156.7" y1="242.0" x2="141.5" y2="218.5"/>
+<line x1="143.1" y1="253.7" x2="132.2" y2="227.7"/>
+<line x1="143.1" y1="253.7" x2="141.5" y2="218.5"/>
+<line x1="132.2" y1="227.7" x2="134.5" y2="261.9"/>
+<line x1="160.5" y1="204.1" x2="176.2" y2="226.7"/>
+<line x1="176.2" y1="226.7" x2="188.8" y2="287.6"/>
+<line x1="188.8" y1="287.6" x2="185.2" y2="325.0"/>
+<line x1="134.5" y1="261.9" x2="147.1" y2="323.2"/>
+<line x1="147.1" y1="323.2" x2="157.2" y2="349.0"/>
+<line x1="141.5" y1="218.5" x2="127.6" y2="156.0"/>
+<line x1="127.6" y1="156.0" x2="70.1" y2="135.5"/>
+<line x1="127.6" y1="156.0" x2="171.6" y2="115.7"/>
+<line x1="70.1" y1="135.5" x2="57.3" y2="74.4"/>
+<line x1="171.6" y1="115.7" x2="158.7" y2="54.8"/>
+<line x1="57.3" y1="74.4" x2="101.5" y2="34.0"/>
+<line x1="158.7" y1="54.8" x2="101.5" y2="34.0"/>
+<line x1="296.7" y1="299.9" x2="299.8" y2="257.2"/>
+<line x1="296.7" y1="299.9" x2="306.5" y2="282.4"/>
+<line x1="299.8" y1="257.2" x2="313.0" y2="197.8"/>
+<line x1="306.5" y1="282.4" x2="320.1" y2="223.1"/>
+<line x1="313.0" y1="197.8" x2="323.5" y2="182.1"/>
+<line x1="313.0" y1="197.8" x2="316.8" y2="146.1"/>
+<line x1="320.1" y1="223.1" x2="323.5" y2="182.1"/>
+<line x1="323.5" y1="182.1" x2="341.4" y2="104.1"/>
+<line x1="335.6" y1="38.0" x2="325.4" y2="37.7"/>
+<line x1="335.6" y1="38.0" x2="331.1" y2="92.4"/>
+<line x1="325.4" y1="37.7" x2="311.2" y2="90.8"/>
+<line x1="311.2" y1="90.8" x2="306.8" y2="145.2"/>
+<line x1="331.1" y1="92.4" x2="316.8" y2="146.1"/>
+<line x1="331.1" y1="92.4" x2="341.4" y2="104.1"/>
+<line x1="306.8" y1="145.2" x2="316.8" y2="146.1"/>
+<line x1="341.4" y1="104.1" x2="404.0" y2="96.2"/>
+<line x1="341.4" y1="104.1" x2="295.3" y2="72.2"/>
+</g>
+<circle cx="141.5" cy="218.5" r="4" fill="#7FA6FF"/>
+<circle cx="341.4" cy="104.1" r="4" fill="#E8B54A"/>
+<circle cx="404.0" cy="96.2" r="4" fill="#FF8A6B"/>
+<circle cx="295.3" cy="72.2" r="4" fill="#FF8A6B"/>
+<g opacity="0">
+<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.55;.66;.88;1" dur="7s" repeatCount="indefinite"/>
+<line x1="145" y1="223" x2="322" y2="151" stroke="#ECEAF4" stroke-width="1.2" stroke-dasharray="4 4" opacity=".8"/>
+<circle cx="145" cy="223" r="3.6" fill="#7FA6FF"/>
+<circle cx="322" cy="151" r="3.6" fill="#FF8A6B"/>
+<text class="note" x="240" y="182">D index</text>
+</g>
+<text class="note" x="8" y="26" style="fill:#7FA6FF">HOLE</text>
+<text class="note" x="422" y="26" text-anchor="end" style="fill:#FF8A6B">ELECTRON</text>
+</svg>
+        </div>
+        <figcaption>Hole and electron distribution &#183; modelled from the optimised geometry</figcaption>
+      </figure>
+      </div>
+    </article>
+
+    <article class="work rv">
+      <div class="meta"><span class="stamp">TD-DFT study</span><span class="pill">Under review</span><span class="when">Prior work</span></div>
+      <h3>Bridge-dependent emission tuning and fluorescence quenching in a donor&ndash;acceptor [3.3]paracyclophane series: a TD-DFT study</h3>
+      <p class="who">MD. Mehedi Hasan Moon, Nazia Chawdhury &mdash; Dept. of Physics, SUST</p>
+      <p>A TD-DFT study of a series of donor&ndash;acceptor [3.3]paracyclophanes that differ only in the saturated bridge holding the two decks cofacial &mdash; asking how much of an emitter's behaviour is set by a linker usually treated as inert scaffolding. Excited-state character was assigned by atom-resolved population analysis and checked against additional range-separated functionals.</p>
+      <div class="chips">
+        <span class="chip">TD-DFT</span><span class="chip">Gaussian 16</span><span class="chip">Hirshfeld analysis</span>
+        <span class="chip">Range-separated functionals</span><span class="chip">[3.3]paracyclophane</span>
+      </div>
+      <p style="margin-top:18px">
+        <button type="button" class="cite" id="citeBtn" data-bib="@unpublished{moon_bridge_2026,&#10;  author  = {Moon, MD. Mehedi Hasan and Chawdhury, Nazia},&#10;  title   = {Bridge-Dependent Emission Tuning and Fluorescence Quenching in a&#10;             Donor--Acceptor [3.3]Paracyclophane Series: A TD-DFT Study},&#10;  year    = {2026},&#10;  note    = {Manuscript under review}&#10;}">Copy BibTeX</button>
+      </p>
+    </article>
+
+    <article class="work rv">
+      <div class="meta"><span class="stamp">Astrophysics</span><span class="when">2025 — ongoing</span></div>
+      <h3>Time-dependent neutrino emission from neutron-capture processes</h3>
+      <p class="who">Dept. of Physics, SUST — Supervisor: Anock Somadder, Associate Professor</p>
+      <p>A framework for coupling SkyNet nuclear reaction networks to MESA stellar evolution, so that neutrino emission can be followed as a time-resolved output of neutron-capture burning rather than reconstructed afterwards.</p>
+      <div class="chips">
+        <span class="chip">SkyNet</span><span class="chip">MESA</span><span class="chip">Python</span>
+      </div>
+    </article>
+
+    <article class="work rv">
+      <div class="meta"><span class="stamp">Undergraduate</span><span class="when">Jun 2023 — Dec 2023</span></div>
+      <h3>Numerical solution of a Legendre boundary value problem for P₄</h3>
+      <p class="who">Dept. of Physics, SUST — Supervisor: Prof. Dr. Mohammed Sujaul Haque Chowdhury</p>
+      <p>Discretising the Legendre differential equation on a finite grid, recovering the fourth-order polynomial solution by finite differences, and testing convergence behaviour against the closed form.</p>
+      <div class="chips">
+        <span class="chip">Finite difference</span><span class="chip">Python</span><span class="chip">Mathematica</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+
+<!-- ================= TOOLKIT ================= -->
+<section class="section" id="kit" style="--accent:var(--teal)">
+  <div class="shell">
+    <div class="head rv"><h2>Toolkit</h2><span class="of">05 / What I run</span></div>
+    <dl class="kit rv">
+      <div>
+        <dt>Computational chemistry</dt>
+        <dd>ORCA 6.0 <i>/</i> Gaussian 16 <i>/</i> Multiwfn</dd>
+      </div>
+      <div>
+        <dt>Theoretical frameworks</dt>
+        <dd>Density functional theory <i>/</i> TD-DFT <i>/</i> PCM solvation</dd>
+      </div>
+      <div>
+        <dt>Programming</dt>
+        <dd>Python <i>/</i> C++ <i>/</i> Bash &amp; shell <i>/</i> Mathematica <i>/</i> Matplotlib</dd>
+      </div>
+      <div>
+        <dt>Environment</dt>
+        <dd>Linux <i>/</i> Git &amp; GitHub <i>/</i> Zotero <i>/</i> Office suite</dd>
+      </div>
+      <div>
+        <dt>Languages</dt>
+        <dd>Bengali — native <i>/</i> English</dd>
+      </div>
+      <div>
+        <dt>How I work</dt>
+        <dd><a class="link-note" href="methods.html" style="margin:0">Methods &amp; reproducibility &rarr;</a></dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+
+<!-- ================= NOTES ================= -->
+<section class="section" id="notes" style="--accent:var(--teal)">
+  <div class="shell">
+    <div class="head rv"><h2>Notes</h2><span class="of">06 / Writing</span></div>
+    <div class="notes rv">
+      <a class="note-card" href="notes/charge-transfer-without-a-bridge.html">
+        <p class="kicker">Through-space CT</p>
+        <h3>Charge transfer without a bridge</h3>
+        <p>Why stacking a donor on an acceptor collapses the singlet–triplet gap, what paracyclophane gets right that a twisted biaryl doesn't, and where the useful window of interplanar distance actually sits.</p>
+        <span class="go">Read the note →</span>
+      </a>
+      <a class="note-card" href="notes/reading-a-hole-electron-analysis.html">
+        <p class="kicker">Method &#183; interactive</p>
+        <h3>Reading a hole–electron analysis</h3>
+        <p>An excitation labelled HOMO→LUMO tells you almost nothing about whether it is charge transfer. A practical Gaussian-to-Multiwfn workflow, and what S<sub>r</sub>, D and t are really measuring.</p>
+        <span class="go">Read the note →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RECORD ================= -->
+<section class="section" id="record" style="--accent:var(--green)">
+  <div class="shell">
+    <div class="head rv"><h2>Record</h2><span class="of">07 / Positions, study &amp; service</span></div>
+    <div class="tl rv">
+
+      <article>
+        <span class="when">11 Mar 2026 — present</span>
+        <h3>Research Student</h3>
+        <p class="who">Organic Optoelectronics Lab, Dept. of Physics, SUST — MS thesis semester</p>
+        <p>Full-time on the thesis: computational design and characterisation of &pi;-stacked donor&ndash;acceptor triads for TADF OLED applications.</p>
+      </article>
+
+      <article>
+        <span class="when">11 May 2025 — 11 Mar 2026</span>
+        <h3>Research Assistant</h3>
+        <p class="who">Dept. of Physics, SUST</p>
+        <p>Computational work on organic emitters — geometry optimisation, excited-state calculations, and wavefunction analysis supporting the group's TADF programme.</p>
+      </article>
+
+      <article>
+        <span class="when">Jan 2026</span>
+        <h3>Research Workshop: The Path to Academic Excellence</h3>
+        <p class="who">SUST Research Society (SUSTRS) — participant</p>
+        <p>Research ethics and integrity, structuring papers for Q1/Q2 journals, and citation management with Zotero.</p>
+      </article>
+
+      <article>
+        <span class="when">18 Dec 2025</span>
+        <h3>Convener</h3>
+        <p class="who">International Conference for Advances in Physics, Dept. of Physics, SUST</p>
+        <p>Led the organising committee across logistics, scheduling and technical sessions for international participants, working with faculty to deliver the academic programme.</p>
+      </article>
+
+      <article>
+        <span class="when">Jun 2025 — ongoing</span>
+        <h3>M.S. in Physics (Mixed Mode)</h3>
+        <p class="who">Shahjalal University of Science and Technology, Sylhet</p>
+        <p>Thesis supervised by Prof. Dr. Nazia Chawdhury.</p>
+      </article>
+
+      <article>
+        <span class="when">Jan 2019 — Apr 2025</span>
+        <h3>B.Sc. (Honours) in Physics</h3>
+        <p class="who">Shahjalal University of Science and Technology, Sylhet</p>
+        <p>CGPA 3.04 / 4.00. Final-year project on the numerical solution of the Legendre equation, supervised by Prof. Dr. Mohammed Sujaul Haque Chowdhury.</p>
+      </article>
+
+      <article>
+        <span class="when">Teaching</span>
+        <h3>Supplementary Instructor</h3>
+        <p class="who">Physics &amp; mathematics — secondary and post-secondary</p>
+        <p>Built lesson plans around experiential learning and practical application, and assessed coursework with feedback aimed at measurable improvement rather than a grade alone.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= HONORS ================= -->
+<section class="section" id="honors" style="--accent:var(--green)">
+  <div class="shell">
+    <div class="head rv"><h2>Honors</h2><span class="of">08 / Awards</span></div>
+    <div class="awards rv">
+      <article>
+        <svg class="badge" viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="16" cy="12" r="5.4" fill="currentColor" opacity=".16"/>
+          <path d="M16 7.4l1.42 2.88 3.18.46-2.3 2.24.54 3.17L16 14.65l-2.84 1.5.54-3.17-2.3-2.24 3.18-.46z" fill="currentColor"/>
+          <path d="M11.4 19.6L9.2 29l6.8-3.4L22.8 29l-2.2-9.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+        <p class="kicker">2015 &#183; National merit</p>
+        <h3>Government Scholarship</h3>
+        <p>Awarded on Secondary School Certificate results.</p>
+      </article>
+      <article>
+        <svg class="badge" viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="16" cy="12" r="5.4" fill="currentColor" opacity=".16"/>
+          <path d="M16 7.4l1.42 2.88 3.18.46-2.3 2.24.54 3.17L16 14.65l-2.84 1.5.54-3.17-2.3-2.24 3.18-.46z" fill="currentColor"/>
+          <path d="M11.4 19.6L9.2 29l6.8-3.4L22.8 29l-2.2-9.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+        <p class="kicker">2012 &#183; National merit</p>
+        <h3>Government Scholarship</h3>
+        <p>Awarded on Junior School Certificate results.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="contact" style="--accent:var(--green)">
+  <div class="shell">
+    <p class="kicker">Get in touch</p>
+    <h2>Let's put the dark excitons to work.</h2>
+    <p>Open to collaboration and PhD opportunities in organic optoelectronics, computational materials science, and anywhere electronic structure theory has to answer to a device that actually works.</p>
+    <p class="kicker" style="margin-top:22px">Currently applying for PhD positions</p>
+    <div class="actions">
+      <a class="btn btn-go" href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a>
+      <a class="btn" href="https://github.com/mehedi-hasan29">GitHub</a>
+      <a class="btn" href="https://orcid.org/0009-0007-4128-3237">ORCID</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="shell">
+  <div class="foot">
+    <span>© <span id="yr">2026</span> MD. Mehedi Hasan Moon</span>
+    <span>Archivo &amp; Newsreader · <a href="https://github.com/mehedi-hasan29/mehedi-hasan29.github.io">Source</a></span>
+  </div>
+</footer>
+
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('svg').forEach(el => { if (el.pauseAnimations) el.pauseAnimations(); });
+}
+
+/* spectrum rail: marker position tracks scroll, wavelength label follows */
+(function(){
+  const marker = document.getElementById('marker');
+  const nm = document.getElementById('nm');
+  const railTop = 110, railBottomGap = 52, markerH = 56;
+  let ticking = false;
+
+  function place(){
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    const p = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
+    const span = window.innerHeight - railTop - railBottomGap - markerH;
+    const top = railTop + span * p;
+    marker.style.top = top + 'px';
+    nm.style.top = (top + markerH / 2 - 6) + 'px';
+    nm.textContent = Math.round(390 + p * 150) + ' nm';
+    ticking = false;
+  }
+  function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(place); } }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', place);
+  place();
+})();
+
+/* nav highlight + reveal */
+const links = [...document.querySelectorAll('.nav a')];
+const targets = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+if ('IntersectionObserver' in window) {
+  const spy = new IntersectionObserver(es => {
+    es.forEach(e => {
+      if (!e.isIntersecting) return;
+      links.forEach(a => a.setAttribute('aria-current',
+        a.getAttribute('href') === '#' + e.target.id ? 'true' : 'false'));
+      const accent = getComputedStyle(e.target).getPropertyValue('--accent');
+      if (accent) {
+        const m = document.getElementById('marker');
+        m.style.background = accent;
+        m.style.boxShadow = '0 0 20px 2px ' + accent;
+      }
+    });
+  }, { rootMargin: '-25% 0px -65% 0px' });
+  targets.forEach(t => spy.observe(t));
+
+  const rev = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); rev.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -8%' });
+  document.querySelectorAll('.rv').forEach(el => rev.observe(el));
+} else {
+  document.querySelectorAll('.rv').forEach(el => el.classList.add('on'));
+}
+</script>
+
+
+<script>
+(function(){
+  var sl=document.getElementById('dslider'); if(!sl) return;
+  var kT=0.025693, D0=2.8, D1=5.5, KMAX=0.03280524775850338, LO=3.601, HI=3.997;
+  var gap=function(d){ return 0.30*Math.exp(-1.83*(d-3.0)); };
+  var soc=function(d){ return Math.exp(-0.90*(d-3.0)); };
+  var fos=function(d){ return Math.exp(-1.90*(d-3.0)); };
+  var kr =function(d){ return soc(d)*soc(d)*Math.exp(-gap(d)/kT); };
+  var X=function(d){ return 44+(d-D0)/(D1-D0)*340; };
+  var el=function(i){ return document.getElementById(i); };
+  function draw(){
+    var d=parseFloat(sl.value), g=gap(d), k=kr(d)/KMAX, f=fos(d);
+    el('dout').textContent=d.toFixed(2)+' \u00C5';
+    var sep=40+(d-D0)/(D1-D0)*92;
+    el('deckA').setAttribute('cy', (110-sep/2).toFixed(1));
+    el('deckD').setAttribute('cy', (110+sep/2).toFixed(1));
+    el('dimline').setAttribute('y1',(110-sep/2).toFixed(1));
+    el('dimline').setAttribute('y2',(110+sep/2).toFixed(1));
+    el('carrier').setAttribute('cy',(110+sep/2).toFixed(1));
+    el('carrier').setAttribute('opacity', Math.max(0.12, Math.min(1, f*1.6)).toFixed(2));
+    var x=X(d);
+    el('mark').setAttribute('x1',x.toFixed(1)); el('mark').setAttribute('x2',x.toFixed(1));
+    el('dotE').setAttribute('cx',x.toFixed(1));
+    el('dotE').setAttribute('cy',(190-Math.min(g,0.45)/0.45*166).toFixed(1));
+    el('dotK').setAttribute('cx',x.toFixed(1));
+    el('dotK').setAttribute('cy',(190-k*166).toFixed(1));
+    el('oGap').textContent=g.toFixed(3)+' eV';
+    el('oK').textContent=(k*100).toFixed(0)+'%';
+    el('oF').textContent=(f*100).toFixed(0)+'%';
+    var v=el('verdict');
+    if(d<LO){ v.textContent='Gap too wide \u2014 thermal energy cannot lift triplets back to S\u2081.'; v.className='exp-verdict warn'; }
+    else if(d>HI){ v.textContent='Past the window \u2014 RISC is fast, but the transition has lost its oscillator strength. A dark emitter.'; v.className='exp-verdict warn'; }
+    else { v.textContent='In the window \u2014 gap small enough for RISC, coupling still intact.'; v.className='exp-verdict'; }
+  }
+  sl.addEventListener('input', draw); draw();
+})();
+</script>
+
+<script>
+(function(){
+  var b=document.getElementById('citeBtn'); if(!b) return;
+  b.addEventListener('click', function(){
+    var txt=b.getAttribute('data-bib'), done=function(){
+      var o=b.textContent; b.textContent='Copied'; b.classList.add('done');
+      setTimeout(function(){ b.textContent=o; b.classList.remove('done'); },1800);
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(done, fallback);
+    } else { fallback(); }
+    function fallback(){
+      var ta=document.createElement('textarea'); ta.value=txt;
+      ta.setAttribute('readonly',''); ta.style.position='absolute'; ta.style.left='-9999px';
+      document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); done(); }catch(e){}
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
+</body>
+</html>

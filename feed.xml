@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Notes — MD. Mehedi Hasan Moon</title>
+    <link>https://mehedi-hasan29.github.io/#notes</link>
+    <description>Notes on organic optoelectronics, through-space charge transfer and computational workflow.</description>
+    <language>en</language>
+    <lastBuildDate>Mon, 31 Aug 2026 09:00:00 +0000</lastBuildDate>
+    <atom:link href="https://mehedi-hasan29.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Reading a hole-electron analysis</title>
+      <link>https://mehedi-hasan29.github.io/notes/reading-a-hole-electron-analysis.html</link>
+      <guid isPermaLink="true">https://mehedi-hasan29.github.io/notes/reading-a-hole-electron-analysis.html</guid>
+      <pubDate>Sat, 22 Aug 2026 09:00:00 +0000</pubDate>
+      <description>An excitation labelled HOMO to LUMO tells you almost nothing about whether it is charge transfer. A practical Gaussian-to-Multiwfn workflow, and what the Sr, D and t indices are really measuring.</description>
+    </item>
+    <item>
+      <title>Charge transfer without a bridge</title>
+      <link>https://mehedi-hasan29.github.io/notes/charge-transfer-without-a-bridge.html</link>
+      <guid isPermaLink="true">https://mehedi-hasan29.github.io/notes/charge-transfer-without-a-bridge.html</guid>
+      <pubDate>Thu, 20 Aug 2026 09:00:00 +0000</pubDate>
+      <description>Why stacking a donor on an acceptor collapses the singlet-triplet gap, what paracyclophane gets right that a twisted biaryl does not, and where the useful window of interplanar distance actually sits.</description>
+    </item>
+  </channel>
+</rss>

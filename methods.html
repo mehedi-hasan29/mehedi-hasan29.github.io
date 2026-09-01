@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methods &amp; reproducibility &mdash; MD. Mehedi Hasan Moon</title>
+<meta name="description" content="How I set up, check and report a calculation: functionals, basis sets, frequency checks, TD-DFT choices, solvation and wavefunction analysis.">
+<link rel="canonical" href="https://mehedi-hasan29.github.io/methods.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Methods &amp; reproducibility &mdash; Mehedi Hasan Moon">
+<meta property="og:description" content="Functionals, basis sets, frequency checks, TD-DFT choices, solvation and wavefunction analysis.">
+<meta property="og:url" content="https://mehedi-hasan29.github.io/methods.html">
+<meta property="og:image" content="https://mehedi-hasan29.github.io/assets/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mehedi-hasan29.github.io/assets/og-card.png">
+<link rel="alternate" type="application/rss+xml" title="Notes" href="https://mehedi-hasan29.github.io/feed.xml">
+<meta name="author" content="MD. Mehedi Hasan Moon">
+<meta name="theme-color" content="#191339">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23141642%27/%3E%3Ccircle cx=%2711%27 cy=%2716%27 r=%275%27 fill=%27%239B87FF%27/%3E%3Ccircle cx=%2721%27 cy=%2716%27 r=%275%27 fill=%27%235CD79C%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+/* ============ spectral token system ============ */
+:root{
+  --violet:#9B87FF;
+  --indigo:#7FA6FF;
+  --cyan:#5FD0E8;
+  --teal:#4FD5C0;
+  --green:#5CD79C;
+
+  --paper:#ECEAF4;
+  --soft:#C3C2D6;
+  --muted:#9091AC;
+  --line:rgba(236,234,244,.13);
+  --line-soft:rgba(236,234,244,.07);
+  --panel:rgba(236,234,244,.035);
+
+  --display:"Archivo",system-ui,sans-serif;
+  --body:"Newsreader",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --accent:var(--violet);
+  --shell:1180px;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  min-height:100%;
+  /* the Stokes shift: violet in, green out */
+  background:linear-gradient(180deg,#191339 0%,#151642 14%,#111C3A 38%,#0D2033 60%,#0A2129 80%,#08201F 100%);
+  background-attachment:scroll;
+  color:var(--paper);
+  font-family:var(--body);
+  font-size:18px;
+  font-optical-sizing:auto;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+svg{ max-width:100%; display:block; }
+a{ color:inherit; }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:4px; border-radius:3px; }
+sub{ font-size:.66em; }
+
+.shell{ max-width:var(--shell); margin:0 auto; padding:0 40px; }
+
+.kicker{
+  font-family:var(--mono); font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin:0;
+}
+
+/* ============ spectrum rail (signature) ============ */
+.rail{
+  position:fixed; left:20px; top:110px; bottom:52px; width:3px;
+  border-radius:3px; z-index:40;
+  background:linear-gradient(180deg,#9B87FF 0%,#7FA6FF 30%,#5FD0E8 55%,#4FD5C0 78%,#5CD79C 100%);
+  opacity:.28;
+}
+.rail-marker{
+  position:fixed; left:17px; width:9px; height:56px; border-radius:9px; z-index:41;
+  background:var(--accent);
+  box-shadow:0 0 20px 2px var(--accent);
+  transition:top .12s linear, background .5s ease, box-shadow .5s ease;
+}
+.rail-nm{
+  position:fixed; left:36px; z-index:41;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.14em;
+  color:var(--muted); transition:top .12s linear;
+}
+
+/* ============ masthead ============ */
+.masthead{
+  position:sticky; top:0; z-index:50;
+  background:rgba(14,15,42,.62);
+  backdrop-filter:blur(16px) saturate(140%);
+  border-bottom:1px solid var(--line-soft);
+}
+.masthead .shell{ display:flex; align-items:center; justify-content:space-between; gap:24px; height:70px; }
+.wordmark{ text-decoration:none; display:flex; align-items:baseline; gap:12px; }
+.wordmark b{ font-family:var(--display); font-weight:700; font-size:15px;
+  font-variation-settings:"wdth" 112; letter-spacing:-.01em; }
+.wordmark span{ font-family:var(--mono); font-size:11px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); }
+.nav{ display:flex; gap:30px; }
+.nav a{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--muted); text-decoration:none; transition:color .2s;
+}
+.nav a:hover{ color:var(--paper); }
+.nav a[aria-current="true"]{ color:var(--accent); }
+
+/* ============ hero ============ */
+.hero{ padding:104px 0 96px; }
+.hero h1{
+  font-family:var(--display); font-weight:700;
+  font-size:clamp(1.9rem,3.6vw,2.85rem);
+  font-variation-settings:"wdth" 112;
+  line-height:1.14; letter-spacing:-.024em;
+  margin:26px 0 0; max-width:27ch; text-wrap:balance;
+}
+.hero h1 em{ font-style:normal; color:var(--green);
+  text-shadow:0 0 38px rgba(92,215,156,.5),0 0 12px rgba(92,215,156,.25); }
+.lede{
+  font-size:1.18rem; font-weight:300; color:var(--soft);
+  max-width:58ch; margin:32px 0 0;
+}
+.lede strong{ color:var(--paper); font-weight:500; }
+
+.actions{ display:flex; flex-wrap:wrap; gap:12px; margin-top:40px; }
+.btn{
+  font-family:var(--mono); font-size:12px; letter-spacing:.11em; text-transform:uppercase;
+  text-decoration:none; padding:13px 22px; border-radius:6px;
+  border:1px solid var(--line); color:var(--paper);
+  transition:border-color .2s,background .2s,transform .2s;
+}
+.btn:hover{ border-color:var(--accent); transform:translateY(-1px); }
+.btn-go{ background:var(--accent); border-color:var(--accent); color:#0C0A22; font-weight:500; }
+.btn-go:hover{ filter:brightness(1.1); }
+
+/* ============ Fig. 1 plate ============ */
+.plate{
+  margin:60px 0 0; padding:0; border-radius:12px;
+  border:1px solid var(--line); background:var(--panel); overflow:hidden;
+}
+.panels{ display:grid; grid-template-columns:minmax(0,1fr); }
+.pane{ padding:30px 28px; }
+.pane-label{ font-family:var(--mono); font-size:9.5px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--muted); margin:0 0 18px; }
+.plate figcaption{
+  font-family:var(--mono); font-size:11.5px; line-height:1.8; color:var(--muted);
+  padding:20px 28px 24px; border-top:1px solid var(--line-soft);
+}
+.plate figcaption b{ color:var(--green); font-weight:500; }
+
+.lvl{ stroke:var(--paper); stroke-width:2; }
+.ax{ stroke:var(--line); stroke-width:1.1; fill:none; }
+.gd{ stroke:rgba(236,234,244,.16); stroke-width:1; stroke-dasharray:3 5; }
+.band{ fill:var(--green); opacity:0; animation:band 1.1s ease .3s forwards; }
+.abs{ stroke:var(--violet); stroke-width:1.7; fill:none; }
+.pf{ stroke:#6C7196; stroke-width:1.7; fill:none; }
+.df{ stroke:var(--green); stroke-width:2.6; fill:none; opacity:0; animation:app .9s ease 2.2s forwards; }
+.isc{ stroke:var(--muted); stroke-width:1.4; fill:none; stroke-dasharray:3 5; }
+.risc{ stroke:var(--green); stroke-width:2.2; fill:none; stroke-dasharray:150; stroke-dashoffset:150;
+  animation:trace 1.3s cubic-bezier(.4,0,.2,1) .85s forwards; }
+.risc-tip{ stroke:var(--green); stroke-width:2.2; fill:none; opacity:0; animation:app .3s ease 2.1s forwards; }
+.state{ font-family:var(--mono); font-size:13px; fill:var(--paper); font-weight:500; }
+.state tspan{ font-size:9px; }
+.note{ font-family:var(--mono); font-size:9.5px; fill:var(--muted); letter-spacing:.14em; }
+.note.g{ fill:var(--green); }
+.note.v{ fill:var(--violet); }
+.note.c{ fill:var(--cyan); }
+.mol{ fill:rgba(236,234,244,.035); stroke-width:1.6; }
+.mol-d{ stroke:var(--violet); }
+.mol-a{ stroke:var(--cyan); }
+.bridge{ fill:none; stroke:#6C7196; stroke-width:1.8; }
+.tsct{ stroke:var(--green); stroke-width:1.3; stroke-dasharray:3 4; fill:none; }
+.halo{ fill:var(--green); opacity:.2; }
+@keyframes trace{ to{ stroke-dashoffset:0; } }
+@keyframes app{ to{ opacity:1; } }
+@keyframes band{ to{ opacity:.075; } }
+
+/* ============ section shell ============ */
+.section{ padding:92px 0; }
+.head{ display:flex; align-items:baseline; gap:20px; margin-bottom:52px;
+  padding-bottom:20px; border-bottom:1px solid var(--line); }
+.head h2{
+  font-family:var(--display); font-weight:700; font-size:clamp(1.05rem,2vw,1.28rem);
+  font-variation-settings:"wdth" 118; letter-spacing:.13em; text-transform:uppercase;
+  margin:0; color:var(--paper);
+}
+.head .of{ font-family:var(--mono); font-size:11px; color:var(--muted);
+  letter-spacing:.14em; margin-left:auto; }
+
+/* ============ about ============ */
+.about{ display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:76px; }
+.about p{ margin:0 0 22px; color:var(--soft); max-width:64ch; }
+.about p strong{ color:var(--paper); font-weight:500; }
+.facts{ margin:0; }
+.facts > div{ padding:14px 0; border-bottom:1px solid var(--line-soft); }
+.facts dt{ font-family:var(--mono); font-size:10px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+.facts dd{ margin:0; font-size:16px; line-height:1.5; }
+
+/* ============ focus rows ============ */
+.row{ display:grid; grid-template-columns:34px minmax(0,1fr) minmax(0,1.35fr); gap:40px;
+  padding:32px 0; border-bottom:1px solid var(--line-soft); align-items:start; }
+.row:last-child{ border-bottom:0; }
+.row .n{ font-family:var(--mono); font-size:11px; color:var(--accent); padding-top:9px; letter-spacing:.1em; }
+.row h3{ font-family:var(--display); font-weight:600; font-size:1.32rem;
+  font-variation-settings:"wdth" 108; letter-spacing:-.015em; margin:0; line-height:1.25; }
+.row p{ margin:0; color:var(--muted); font-size:16.5px; }
+
+/* ============ research entries ============ */
+.work{ padding:44px 0; border-bottom:1px solid var(--line-soft); }
+.work:last-child{ border-bottom:0; }
+.work .meta{ display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom:16px; }
+.stamp{ font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); border:1px solid var(--accent); border-radius:99px; padding:4px 12px; }
+.when{ font-family:var(--mono); font-size:11px; letter-spacing:.12em; color:var(--muted); }
+.work h3{ font-family:var(--display); font-weight:600; font-size:clamp(1.35rem,2.6vw,1.85rem);
+  font-variation-settings:"wdth" 106; letter-spacing:-.022em; line-height:1.22; margin:0 0 12px; max-width:26ch; }
+.who{ font-family:var(--mono); font-size:12px; letter-spacing:.04em; color:var(--soft); margin:0 0 18px; }
+.work p{ margin:0; color:var(--muted); max-width:66ch; font-size:16.5px; }
+.pts{ margin:16px 0 0; padding:0; list-style:none; max-width:66ch; }
+.pts li{ position:relative; padding-left:22px; margin-bottom:9px; color:var(--muted); font-size:16.5px; }
+.pts li::before{ content:""; position:absolute; left:0; top:12px; width:9px; height:1px; background:var(--accent); }
+.chips{ display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
+.chip{ font-family:var(--mono); font-size:11px; letter-spacing:.05em; padding:5px 13px;
+  border:1px solid var(--line); border-radius:6px; color:var(--muted); }
+
+/* ============ inline figures ============ */
+.fig{ margin:8px 0 44px; padding:0; border:1px solid var(--line); border-radius:12px;
+  background:var(--panel); overflow:hidden; }
+.fig-head{ display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:18px 26px; border-bottom:1px solid var(--line-soft); }
+.fig-n{ font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--accent); border:1px solid var(--accent); border-radius:99px; padding:3px 11px; }
+.fig-t{ font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; color:var(--soft); }
+.fig-tag{ font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted); margin-left:auto; }
+.fig img{ display:block; width:100%; height:auto; }
+.fig svg{ padding:26px; }
+.fig figcaption{ font-family:var(--mono); font-size:11.5px; line-height:1.8; color:var(--muted);
+  padding:18px 26px 22px; border-top:1px solid var(--line-soft); }
+.fig figcaption b{ color:var(--green); font-weight:500; }
+
+/* ============ notes ============ */
+.notes a{ display:block; text-decoration:none; padding:30px 0;
+  border-bottom:1px solid var(--line-soft); transition:padding-left .25s; }
+.notes a:last-child{ border-bottom:0; }
+.notes a:hover{ padding-left:12px; }
+.notes h3{ font-family:var(--display); font-weight:600; font-size:1.35rem;
+  font-variation-settings:"wdth" 106; letter-spacing:-.018em; margin:10px 0 8px; }
+.notes p{ margin:0; color:var(--muted); max-width:62ch; font-size:16.5px; }
+.notes .go{ font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--accent); margin-top:14px; display:inline-block; }
+
+/* ============ toolkit ============ */
+.kit > div{ display:grid; grid-template-columns:210px minmax(0,1fr); gap:40px;
+  padding:22px 0; border-bottom:1px solid var(--line-soft); align-items:baseline; }
+.kit > div:last-child{ border-bottom:0; }
+.kit dt{ font-family:var(--mono); font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--accent); }
+.kit dd{ margin:0; font-family:var(--mono); font-size:13.5px; line-height:2; color:var(--soft); }
+.kit dd i{ font-style:normal; color:var(--muted); padding:0 9px; }
+
+/* ============ timeline ============ */
+.tl{ position:relative; padding-left:38px; }
+.tl::before{ content:""; position:absolute; left:5px; top:8px; bottom:8px; width:1px; background:var(--line); }
+.tl article{ position:relative; padding-bottom:42px; }
+.tl article:last-child{ padding-bottom:0; }
+.tl article::before{ content:""; position:absolute; left:-38px; top:9px; width:11px; height:11px;
+  border-radius:99px; background:#0D1B33; border:2px solid var(--accent); }
+.tl .when{ display:block; margin-bottom:7px; }
+.tl h3{ font-family:var(--display); font-weight:600; font-size:1.2rem;
+  font-variation-settings:"wdth" 106; letter-spacing:-.012em; margin:0 0 6px; }
+.tl .who{ margin:0 0 8px; }
+.tl p{ margin:0; color:var(--muted); max-width:64ch; font-size:16.5px; }
+
+/* ============ honors ============ */
+.awards{ display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+.awards article{ border:1px solid var(--line); border-radius:10px; padding:28px; background:var(--panel); }
+.awards h3{ font-family:var(--display); font-weight:600; font-size:1.08rem;
+  font-variation-settings:"wdth" 106; margin:12px 0 7px; }
+.awards p{ margin:0; color:var(--muted); font-size:15.5px; }
+
+/* ============ contact ============ */
+.contact{ padding:110px 0 90px; text-align:center; border-top:1px solid var(--line); }
+.contact h2{ font-family:var(--display); font-weight:700;
+  font-size:clamp(2.1rem,5.4vw,3.5rem); font-variation-settings:"wdth" 116;
+  letter-spacing:-.035em; line-height:1.04; margin:24px auto 20px; max-width:16ch; }
+.contact p{ max-width:52ch; margin:0 auto; color:var(--muted); }
+.contact .actions{ justify-content:center; }
+.foot{ border-top:1px solid var(--line-soft); padding:28px 0 40px;
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px;
+  font-family:var(--mono); font-size:11px; letter-spacing:.09em; color:var(--muted); }
+.foot a{ color:var(--muted); text-decoration:none; }
+.foot a:hover{ color:var(--paper); }
+
+/* ============ reveal ============ */
+.rv{ opacity:0; transform:translateY(18px); transition:opacity .7s ease,transform .7s ease; }
+.rv.on{ opacity:1; transform:none; }
+
+/* ============ responsive ============ */
+@media (max-width:1080px){
+  .rail,.rail-marker,.rail-nm{ display:none; }
+  .about{ grid-template-columns:1fr; gap:44px; }
+}
+@media (max-width:860px){
+  .nav{ display:none; }
+  .row{ grid-template-columns:1fr; gap:12px; padding:26px 0; }
+  .row .n{ padding-top:0; }
+  .kit > div{ grid-template-columns:1fr; gap:10px; }
+  .awards{ grid-template-columns:1fr; }
+}
+@media (max-width:600px){
+  body{ font-size:17px; }
+  .shell{ padding:0 22px; }
+  .hero{ padding:64px 0 60px; }
+  .section{ padding:62px 0; }
+  .plate{ padding:18px 16px 14px; }
+  .head{ flex-wrap:wrap; gap:10px; }
+  .head .of{ margin-left:0; }
+}
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  *,*::before,*::after{ animation-duration:.001ms !important; animation-delay:0ms !important;
+    transition-duration:.001ms !important; }
+  .rv{ opacity:1; transform:none; }
+  .risc{ stroke-dashoffset:0; }
+  .df,.risc-tip{ opacity:1; }
+  .band{ opacity:.075; }
+}
+
+/* ============ inline figures (Fig. 2, Fig. 3) ============ */
+.fig{
+  margin:38px 0 0; padding:0; border:1px solid var(--line);
+  border-radius:12px; background:var(--panel); overflow:hidden;
+}
+.fig img{ display:block; width:100%; height:auto; }
+.fig .frame{ padding:26px; }
+.fig figcaption{
+  font-family:var(--mono); font-size:11.5px; line-height:1.8; color:var(--muted);
+  padding:18px 26px 22px; border-top:1px solid var(--line-soft);
+}
+.fig figcaption b{ color:var(--accent); font-weight:500; }
+.fig figcaption em{ font-style:normal; color:var(--soft); }
+
+.hole{ stroke:var(--indigo); fill:var(--indigo); }
+.elec{ stroke:#FF8A6B; fill:#FF8A6B; }
+.deck{ fill:rgba(236,234,244,.04); stroke:rgba(236,234,244,.28); stroke-width:1.4; }
+.dline{ stroke:var(--paper); stroke-width:1.2; stroke-dasharray:4 4; fill:none; }
+
+/* ============ notes ============ */
+.notes{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+.note-card{
+  display:block; text-decoration:none; padding:32px 30px;
+  border:1px solid var(--line); border-radius:12px; background:var(--panel);
+  transition:border-color .22s, transform .22s, background .22s;
+}
+.note-card:hover{ border-color:var(--accent); transform:translateY(-3px); }
+.note-card h3{
+  font-family:var(--display); font-weight:600; font-size:1.3rem;
+  font-variation-settings:"wdth" 106; letter-spacing:-.018em;
+  line-height:1.26; margin:14px 0 12px;
+}
+.note-card p{ margin:0; color:var(--muted); font-size:16px; }
+.note-card .go{
+  display:block; margin-top:22px; font-family:var(--mono); font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--accent);
+}
+
+/* ============ article pages ============ */
+.skip{ position:absolute; left:-9999px; top:0; z-index:99; background:var(--green);
+  color:#0C0A22; padding:10px 18px; border-radius:0 0 6px 0; font-family:var(--mono); font-size:12px; }
+.skip:focus{ left:0; }
+.article{ max-width:760px; margin:0 auto; padding:76px 40px 40px; }
+.back{
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); text-decoration:none;
+}
+.back:hover{ color:var(--paper); }
+.article h1{
+  font-family:var(--display); font-weight:700; font-size:clamp(1.9rem,4vw,2.7rem);
+  font-variation-settings:"wdth" 110; letter-spacing:-.028em; line-height:1.14;
+  margin:26px 0 20px; text-wrap:balance;
+}
+.byline{
+  font-family:var(--mono); font-size:11px; letter-spacing:.12em; color:var(--muted);
+  padding-bottom:30px; border-bottom:1px solid var(--line); margin-bottom:44px;
+}
+.article h2{
+  font-family:var(--display); font-weight:600; font-size:1.32rem;
+  font-variation-settings:"wdth" 106; letter-spacing:-.018em;
+  margin:52px 0 16px; color:var(--paper);
+}
+.article p{ color:var(--soft); margin:0 0 22px; }
+.article ul,.article ol{ color:var(--soft); margin:0 0 22px; padding-left:22px; }
+.article li{ margin-bottom:11px; }
+.article li::marker{ color:var(--accent); }
+.article strong{ color:var(--paper); font-weight:500; }
+.article code{
+  font-family:var(--mono); font-size:.86em; color:var(--cyan);
+  background:rgba(95,208,232,.09); padding:2px 6px; border-radius:4px;
+}
+.article pre{
+  font-family:var(--mono); font-size:13px; line-height:1.75; color:var(--soft);
+  background:rgba(0,0,0,.28); border:1px solid var(--line);
+  border-radius:10px; padding:20px 22px; overflow-x:auto; margin:0 0 24px;
+}
+.article pre code{ background:none; padding:0; color:inherit; }
+.pull{
+  border-left:2px solid var(--accent); padding:4px 0 4px 24px;
+  margin:34px 0; color:var(--paper); font-size:1.1rem; line-height:1.6;
+}
+.caveat{
+  border:1px solid var(--line); border-radius:10px; padding:22px 24px;
+  background:var(--panel); color:var(--muted); font-size:16px; margin:34px 0;
+}
+.caveat b{ color:var(--accent); font-weight:500; font-family:var(--mono);
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  display:block; margin-bottom:8px; }
+.endnote{
+  margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
+  font-family:var(--mono); font-size:12px; color:var(--muted); line-height:1.9;
+}
+.endnote a{ color:var(--accent); text-decoration:none; }
+
+@media (max-width:860px){
+  .notes{ grid-template-columns:1fr; }
+}
+@media (max-width:600px){
+  .article{ padding:48px 22px 30px; }
+  .fig .frame{ padding:16px; }
+  .fig figcaption{ padding:16px 18px 20px; }
+}
+
+@media print{
+  .skip,.masthead,.nav,.foot{ display:none !important; }
+  html,body{ background:#fff !important; color:#111 !important; font-size:10.5pt; }
+  .article{ max-width:none; padding:0; }
+  h1,h2{ color:#000 !important; }
+  p,li{ color:#222 !important; }
+  .pull{ border-left-color:#999 !important; color:#000 !important; }
+  .caveat{ background:none !important; border-color:#bbb !important; color:#333 !important; }
+  pre{ background:#f4f4f4 !important; border-color:#ccc !important; color:#111 !important; }
+  code{ background:none !important; color:#111 !important; }
+  a{ color:#000 !important; }
+  .endnote{ color:#555 !important; }
+}
+</style>
+</head>
+<body style="--accent:var(--cyan)">
+
+<a class="skip" href="#main">Skip to content</a>
+<header class="masthead">
+  <div class="shell">
+    <a class="wordmark" href="index.html"><b>Mehedi Hasan Moon</b><span>Physics &#183; SUST</span></a>
+    <nav class="nav"><a href="index.html#kit">Toolkit</a><a href="index.html#notes">Notes</a></nav>
+  </div>
+</header>
+
+<article class="article" id="main">
+  <a class="back" href="index.html#kit">&larr; Site</a>
+  <h1>Methods &amp; reproducibility</h1>
+  <p class="byline">How I set up, check and report a calculation</p>
+
+  <p>This page exists so that anyone reading a number I have produced can see how it was produced. None of it is novel &mdash; it is ordinary practice &mdash; but writing it down makes the assumptions visible, and it means a reviewer or a supervisor does not have to ask.</p>
+
+  <h2>Ground-state geometry</h2>
+
+  <p>Structures are optimised in <strong>Gaussian&nbsp;16</strong>. For the &pi;-stacked systems the functional has to include dispersion, because the whole architecture depends on two aromatic units held at van der Waals contact and a functional without dispersion will not reproduce that separation. The current triad series uses:</p>
+
+  <pre><code>#p opt freq wb97xd/Def2SVP geom=connectivity</code></pre>
+
+  <p>&omega;B97XD is a range-separated hybrid with empirical dispersion, which matters twice over here: the dispersion term fixes the stacking distance, and the range separation is what makes the same functional usable for charge-transfer excitations later.</p>
+
+  <p>The earlier paracyclophane work used a wavefunction method instead, where the interdeck distance is short enough that I wanted a treatment of correlation that does not depend on an empirical dispersion correction:</p>
+
+  <pre><code>#p opt freq mp2/6-31g(d)</code></pre>
+
+  <p><code>freq</code> is not optional in either case. An optimisation converges to a stationary point, not necessarily to a minimum, and on a flexible stacked system it is entirely possible to land on a saddle. I check that every reported geometry has no imaginary frequencies before anything is computed on top of it.</p>
+
+  <h2>Excited states</h2>
+
+  <p>Excitation energies come from TD-DFT on the optimised geometry. Two choices here move the numbers enough that they belong in any methods section rather than in supplementary material:</p>
+
+  <ul>
+    <li><strong>Functional.</strong> Conventional global hybrids underestimate charge-transfer excitation energies, sometimes badly, because the electron and hole are spatially separated and the functional does not recover the correct &minus;1/R asymptotic behaviour. A range-separated hybrid is the standard remedy and the reason &omega;B97XD is used throughout rather than only for the geometry.</li>
+    <li><strong>Tamm&ndash;Dancoff.</strong> TDA is often applied to avoid triplet instabilities, but it systematically raises triplet energies, which inflates the computed &#916;E<sub>ST</sub>. Since &#916;E<sub>ST</sub> is the quantity the whole design turns on, whether TDA was used is not a detail.</li>
+  </ul>
+
+  <p>Where a result depends on the ordering of closely spaced states, I repeat it with additional functionals. If the ordering survives, it is a property of the system; if it does not, it was an artifact and should not be reported as a finding.</p>
+
+  <h2>Solvation</h2>
+
+  <p>Where a comparison with measured spectra is intended, calculations are repeated with a polarisable continuum model. A continuum treats the solvent as a dielectric and captures the bulk electrostatic response, which is usually enough for a CT state that shifts with polarity &mdash; but it does not describe specific interactions such as hydrogen bonding, and I do not claim it does.</p>
+
+  <h2>Wavefunction analysis</h2>
+
+  <p>An excitation energy on its own says very little. To assign character I use <strong>Multiwfn</strong>. The Gaussian job has to print enough configuration coefficients first, which is not the default:</p>
+
+  <pre><code># TD(NStates=10) &lt;functional&gt;/&lt;basis&gt; IOp(9/40=4)
+formchk molecule.chk molecule.fch</code></pre>
+
+  <p><code>IOp(9/40=4)</code> prints coefficients down to 10<sup>&minus;4</sup>; the default of 2 keeps only those above 10<sup>&minus;2</sup>, which can discard a meaningful fraction of a delocalised CT transition. From there, hole&ndash;electron distribution analysis gives S<sub>r</sub>, D, H and t &mdash; overlap, centroid separation, extent, and whether the separation is real rather than nominal. For a donor&ndash;acceptor system the inter-fragment analysis is the decisive one: it reports how much charge actually moved between the fragments I defined.</p>
+
+  <p>Where a per-atom question arises rather than a spatial one, I use a Hirshfeld partition of the relevant orbitals. Both analyses get exported as cube files and rendered as isosurfaces, because summary indices average away exactly the bimodal cases worth noticing.</p>
+
+  <p>The workflow is written up in more detail in the note on <a href="notes/reading-a-hole-electron-analysis.html">reading a hole&ndash;electron analysis</a>.</p>
+
+  <h2>What I record</h2>
+
+  <ul>
+    <li>The full route line, program version and basis set for every reported number.</li>
+    <li>The output confirming a true minimum, not just a converged optimisation.</li>
+    <li>Which functional produced which result, when more than one was used.</li>
+    <li>Input files kept alongside outputs, so a calculation can be repeated rather than reconstructed.</li>
+  </ul>
+
+  <div class="caveat">
+    <b>What I do not claim</b>
+    Vertical excitation energies are not 0&ndash;0 energies and should not be compared directly with band maxima. A continuum solvation model is not a solvent shell. Oscillator strengths from TD-DFT indicate relative brightness, not absolute quantum yields. And a calculated &#916;E<sub>ST</sub> is a necessary condition for TADF, not a sufficient one &mdash; the rate also depends on spin&ndash;orbit coupling, which a gap alone does not report.
+  </div>
+
+  <div class="endnote">
+    Corrections and disagreements welcome &mdash; <a href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a>
+  </div>
+</article>
+
+<footer class="shell">
+  <div class="foot">
+    <span>&copy; <span class="yr">2026</span> MD. Mehedi Hasan Moon</span>
+    <span><a href="index.html">Back to site</a></span>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.yr').forEach(function(e){ e.textContent = new Date().getFullYear(); });
+</script>
+</body>
+</html>
