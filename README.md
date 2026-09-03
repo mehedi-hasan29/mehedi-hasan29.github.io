@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/31675529/README.md)
 <!--
   GitHub PROFILE README
   Save this as README.md at the root of a repository named exactly  mehedi-hasan29
@@ -12,7 +11,7 @@
 
 Three quarters of the excitons in an OLED are triplets, and in a conventional emitter they are dark. I design **π-stacked donor–acceptor triads** for thermally activated delayed fluorescence — rigid, U-shaped geometries that clamp donor and acceptor face to face so charge transfer happens *through space* rather than along a conjugated bridge. Separating the frontier orbitals shrinks the exchange integral; once ΔE<sub>ST</sub> drops below ~0.1 eV, ambient thermal energy alone lifts those triplets back into the emissive channel.
 
-**[Website](https://mehedi-hasan29.github.io)** · **[CV](https://mehedi-hasan29.github.io/cv.html)** · **[ORCID](https://orcid.org/0009-0007-4128-3237)** · **[Email](mailto:mehedi39@student.sust.edu)**
+**[Website](https://mehedi-hasan29.github.io)** · **[CV](https://mehedi-hasan29.github.io/cv.html)** · **[ORCID](https://orcid.org/0009-0007-4128-3237)** · **[ResearchGate](https://www.researchgate.net/profile/Mehedi-Moon-2)** · **[Email](mailto:mehedi39@student.sust.edu)**
 
 ---
 
