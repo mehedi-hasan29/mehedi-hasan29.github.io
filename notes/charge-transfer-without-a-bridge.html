@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Charge transfer without a bridge — Mehedi Hasan Moon</title>
-<meta name="description" content="Why stacking a donor on an acceptor collapses the singlet-triplet gap, and where the useful window of interplanar distance actually sits.">
+<title>Charge transfer without a bridge, by Mehedi Hasan Moon</title>
+<meta name="description" content="Why stacking a donor on an acceptor shrinks the singlet-triplet gap. Where the useful window of distance sits.">
 <link rel="canonical" href="https://mehedi-hasan29.github.io/notes/charge-transfer-without-a-bridge.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Charge transfer without a bridge &mdash; Mehedi Hasan Moon">
+<meta property="og:title" content="Charge transfer without a bridge, by Mehedi Hasan Moon">
 <meta property="og:description" content="Why stacking a donor on an acceptor collapses the singlet-triplet gap, and where the useful window of interplanar distance sits.">
 <meta property="og:url" content="https://mehedi-hasan29.github.io/notes/charge-transfer-without-a-bridge.html">
 <meta property="og:image" content="https://mehedi-hasan29.github.io/assets/og-card.png">
@@ -225,7 +225,7 @@ sub{ font-size:.66em; }
 .work p{ margin:0; color:var(--muted); max-width:66ch; font-size:16.5px; }
 .pts{ margin:16px 0 0; padding:0; list-style:none; max-width:66ch; }
 .pts li{ position:relative; padding-left:22px; margin-bottom:9px; color:var(--muted); font-size:16.5px; }
-.pts li::before{ content:""; position:absolute; left:0; top:12px; width:9px; height:1px; background:var(--accent); }
+.pts li::before{ content:""; position:absolute; left:1px; top:10px; width:5px; height:5px; border-radius:99px; background:var(--accent); }
 .chips{ display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
 .chip{ font-family:var(--mono); font-size:11px; letter-spacing:.05em; padding:5px 13px;
   border:1px solid var(--line); border-radius:6px; color:var(--muted); }
@@ -465,104 +465,106 @@ sub{ font-size:.66em; }
 <a class="skip" href="#main">Skip to content</a>
 <header class="masthead">
   <div class="shell">
-    <a class="wordmark" href="../index.html"><b>Mehedi Hasan Moon</b><span>Physics · SUST</span></a>
+    <a class="wordmark" href="../index.html"><b>Mehedi Hasan Moon</b><span>Physics, SUST</span></a>
     <nav class="nav"><a href="../index.html#notes">All notes</a></nav>
   </div>
 </header>
 
 <article class="article" id="main">
-  <a class="back" href="../index.html#notes">← Notes</a>
+  <a class="back" href="../index.html#notes">Back to notes</a>
   <h1>Charge transfer without a bridge</h1>
-  <p class="byline">Through-space charge transfer · 8 min read</p>
+  <p class="byline">Through-space charge transfer. 8 min read.</p>
 
-  <p>Every organic light-emitting diode starts with a bookkeeping problem. Electrical injection produces singlet and triplet excitons in a ratio fixed by spin statistics: one singlet for every three triplets. A conventional fluorescent emitter can only radiate from the singlet, so three quarters of the excitons it makes are dark before the molecule has done anything wrong.</p>
+  <p>Every OLED starts with a bookkeeping problem. Electrical injection makes singlet and triplet excitons. Spin statistics fix the ratio at one singlet to three triplets. A normal fluorescent emitter only radiates from the singlet. So three quarters of its excitons are dark from the start.</p>
 
-  <p>Thermally activated delayed fluorescence is the attempt to get that 75% back. If the lowest triplet T<sub>1</sub> sits close enough in energy to the lowest singlet S<sub>1</sub>, ambient thermal energy can drive the triplet back up to the singlet — reverse intersystem crossing — where it radiates as delayed fluorescence. The whole design problem reduces to one quantity.</p>
+  <p>Thermally activated delayed fluorescence tries to win back that 75%. Suppose the lowest triplet T<sub>1</sub> sits close to the lowest singlet S<sub>1</sub>. Then room-temperature heat can push the triplet back up. This step is called reverse intersystem crossing. The exciton then emits from S<sub>1</sub> as delayed fluorescence. The whole design problem comes down to one quantity.</p>
 
   <h2>The gap is an overlap integral in disguise</h2>
 
-  <p>The singlet–triplet splitting is, to a good first approximation, twice the exchange integral between the orbitals involved in the excitation:</p>
+  <p>The singlet-triplet splitting is roughly twice an exchange integral. That integral runs over the orbitals in the excitation:</p>
 
   <pre><code>ΔE_ST = E(S₁) − E(T₁) ≈ 2K
 
 K = ∫∫ φ_H(r₁) φ_L(r₁) · (1/r₁₂) · φ_H(r₂) φ_L(r₂) dr₁ dr₂</code></pre>
 
-  <p>Read that integrand carefully. It contains the product <code>φ_H · φ_L</code> evaluated at the same point in space, twice. If the highest occupied and lowest unoccupied orbitals occupy the same region, the product is large everywhere and so is K. If they occupy different regions, the product is close to zero almost everywhere and K collapses along with it.</p>
+  <p>It holds only when S<sub>1</sub> and T<sub>1</sub> share one orbital pair.</p>
 
-  <div class="pull">The gap is not really an energy you tune. It is a spatial overlap you engineer, and the energy follows.</div>
+  <p>Read the integrand carefully. It holds the product <code>φ_H · φ_L</code> at one point in space, twice. If HOMO and LUMO share a region, that product is large. Then K is large too. If they live in different regions, the product is near zero. Then K collapses with it.</p>
 
-  <p>So the design brief is: separate the frontier orbitals in space, while keeping enough electronic communication that the transition still carries oscillator strength. Those two goals pull in opposite directions, and essentially every TADF architecture is a different compromise between them.</p>
+  <div class="pull">You do not really tune the gap as an energy. You engineer a spatial overlap, and the energy follows.</div>
+
+  <p>So the brief is simple to state. Separate the frontier orbitals in space. But keep enough coupling for the transition to stay bright. These two goals pull against each other. Almost every TADF design is a different compromise between them.</p>
 
   <h2>The usual answer, and what it costs</h2>
 
-  <p>The standard approach is to bond a donor to an acceptor and twist the connecting bond towards 90°. At a large dihedral, conjugation across the bond is suppressed, the HOMO retreats onto the donor and the LUMO onto the acceptor, and ΔE<sub>ST</sub> falls. This works, and most of the well-known TADF emitters are built this way.</p>
+  <p>The standard approach bonds a donor to an acceptor. Then it twists the linking bond towards 90°. At a large twist, conjugation across the bond fades. The HOMO retreats onto the donor. The LUMO retreats onto the acceptor. ΔE<sub>ST</sub> falls. This works, and most well-known TADF emitters use it.</p>
 
-  <p>It also brings problems that are structural rather than electronic:</p>
+  <p>It also brings structural problems, not electronic ones:</p>
 
   <ul>
-    <li><strong>The twist is soft.</strong> The torsional potential around a single bond is shallow. At room temperature the molecule samples a distribution of dihedral angles, and since ΔE<sub>ST</sub> depends steeply on that angle, the ensemble contains a distribution of gaps. Emission broadens, and the population that happens to sit at an unfavourable angle does not undergo RISC efficiently.</li>
-    <li><strong>Floppy modes open non-radiative channels.</strong> Low-frequency torsions couple the excited state to the ground state and give the exciton somewhere to go that is not light.</li>
-    <li><strong>Some conjugation always leaks through.</strong> Even at 90° the through-bond pathway is suppressed, not eliminated, and hyperconjugation keeps a residual coupling alive.</li>
+    <li><strong>The twist is soft.</strong> The torsional potential around a single bond is shallow. At room temperature, the molecule samples a spread of angles. ΔE<sub>ST</sub> depends steeply on that angle. So the ensemble holds a spread of gaps. Emission broadens. Molecules stuck at a bad angle undergo RISC poorly.</li>
+    <li><strong>Floppy modes open dark channels.</strong> Low-frequency torsions couple the excited state to the ground state. That gives the exciton a way out that is not light.</li>
+    <li><strong>Some conjugation always leaks through.</strong> Even at 90°, the through-bond path is weakened, not removed. Hyperconjugation keeps some coupling alive.</li>
   </ul>
 
   <h2>Stack them instead</h2>
 
-  <p>The alternative is to stop connecting donor and acceptor through the π-system at all, and instead hold them face to face on separate π-planes. Coupling then happens across the gap between the planes — through space rather than through bonds. The orbitals are separated by construction, not by a torsional compromise, and the separation is a distance you can design rather than an angle the molecule negotiates with thermal energy.</p>
+  <p>The alternative skips the shared &pi;-system entirely. Donor and acceptor sit face to face on separate &pi;-planes. Coupling then crosses the gap between the planes. It goes through space, not through bonds. The orbitals are separated by design, not by a torsional compromise. The separation becomes a distance you can design. It is no longer an angle the molecule bargains over with heat.</p>
 
-  <p>Paracyclophanes are the archetype. In [2.2]paracyclophane two benzene decks are clamped face to face by two ethylene bridges, which forces the deck separation to roughly 3.0&ndash;3.1&nbsp;&#197;. That is inside ordinary van der Waals contact &mdash; graphite layers sit around 3.4&nbsp;&#197; &mdash; and the strain shows in the rings themselves, which bow out of planarity. Lengthen the bridges to three atoms, as in [3.3]paracyclophane, and the rings relax back towards planarity while the decks stay inside van der Waals contact &mdash; a less strained and more synthetically forgiving scaffold that still holds the two &pi; systems in close communication.</p>
+  <p>Paracyclophanes are the classic example. In [2.2]paracyclophane, two ethylene bridges clamp two benzene decks face to face. This forces the decks about 2.8 to 3.1&nbsp;&#197; apart. The value depends on which atoms are measured. That is inside normal van der Waals contact. Graphite layers sit around 3.4&nbsp;&#197;. The strain shows in the rings, which bow out of plane. Lengthen the bridges to three atoms, as in [3.3]paracyclophane. The rings relax towards flatness. The decks still stay inside van der Waals contact. That scaffold is less strained and easier to make. It still keeps the two &pi; systems in close contact.</p>
 
-  <p>Either way, mount a donor on one deck and an acceptor on the other and you have a pair that physically cannot rotate away from each other. That rigidity is the reason the architecture is worth the synthetic effort: it removes the conformational distribution that blurs twisted emitters, and it means whatever coupling survives is genuinely a stacking interaction rather than a residual through-bond pathway wearing a disguise.</p>
+  <p>Now put a donor on one deck and an acceptor opposite. The pair physically cannot rotate apart. That rigidity is why the synthesis is worth the effort. It removes the spread of shapes that blurs twisted emitters. And any coupling left is truly a stacking interaction. It is not a leftover through-bond path in disguise.</p>
 
-  <p>And note what the bridges are made of. In a paracyclophane they are saturated &mdash; sp<sup>3</sup> carbons that hold the decks in position without conducting &pi; density between them. The charge transfer really does go through space. The bridge is structural.</p>
+  <p>Note what the bridges are made of. In a paracyclophane they are saturated sp<sup>3</sup> carbons. They hold the decks in place. They do not carry &pi; density between them. So the charge transfer really does go through space. The bridge is only structural.</p>
 
   <h2>Except when the bridge stops being structural</h2>
 
-  <p>That last sentence is where I got caught, and it is worth spelling out because the failure is not obvious from the design.</p>
+  <p>That last sentence is where I got caught. The failure hides in the design. So it is worth spelling out.</p>
 
-  <p>In a series of five donor&ndash;acceptor [3.3]paracyclophanes I worked on &mdash; benzene donor, benzothiadiazole acceptor, bridges of the form &minus;CH<sub>2</sub>&minus;X&minus;CH<sub>2</sub>&minus; with X = CH<sub>2</sub>, C=O, C=NH, CF<sub>2</sub> or C=S &mdash; four of the five behaved exactly as the picture above predicts. Same structurally conserved HOMO&rarr;LUMO emission, 442&ndash;471&nbsp;nm, oscillator strength between 0.029 and 0.035. The variation across those four did not even track bridge electronegativity monotonically, which is already a hint that the bridge is not simply modulating the deck-to-deck interaction.</p>
+  <p>I worked on a series of five donor-acceptor [3.3]paracyclophanes. Each had a benzene donor and a benzothiadiazole acceptor. The bridges had the form &minus;CH<sub>2</sub>&minus;X&minus;CH<sub>2</sub>&minus;. X was CH<sub>2</sub>, C=O, C=NH, CF<sub>2</sub> or C=S. Four of the five behaved as the picture above predicts. Each kept the same HOMO&rarr;LUMO emission, at 442 to 471&nbsp;nm. Oscillator strengths sat between 0.029 and 0.035. The variation did not even track bridge electronegativity in order. That was already a hint. The bridge was not just tuning the deck-to-deck interaction.</p>
 
-  <p>The thiocarbonyl member broke. Its emission oscillator strength collapsed by a factor of 212&ndash;251 relative to the rest of the series.</p>
+  <p>The thiocarbonyl member broke the pattern. Its emission oscillator strength fell 212 to 251-fold against the rest.</p>
 
   <div class="pull">The emissive transition had not been damaged. It had been demoted.</div>
 
-  <p>The charge-transfer state was still there, still structurally conserved, still with the oscillator strength it should have had. It was simply no longer S<sub>1</sub>. A dark state localised <em>on the bridge</em> &mdash; a sulfur lone pair promoted into a &pi;* orbital, an n&rarr;&pi;* transition that has nothing to do with the donor or the acceptor &mdash; had dropped below it, pushing the emissive state up to S<sub>3</sub>. Emission happens from the lowest excited state, so the molecule went dark while every property of the state you designed remained intact.</p>
+  <p>The charge-transfer state was still there. It kept its donor-to-acceptor character. Its total intensity was conserved. It was simply no longer S<sub>1</sub>. Two dark states sat <em>on the bridge</em> instead. Each promoted a sulfur lone pair into a &pi;* orbital. These n&rarr;&pi;* transitions have nothing to do with the donor or acceptor. They dropped below the bright state and pushed it up to S<sub>3</sub>. Emission comes from the lowest excited state. So the molecule went dark. Yet every designed property of the bright state stayed intact.</p>
 
-  <p>Two details made that conclusion hold up. First, the drop in brightness was fully accounted for by suppression of the radiative rate constant alone, by a factor of 260&ndash;349, with no need to invoke a non-radiative decay channel to balance the books. Second, the reordering reproduced under two further range-separated functionals, so it was not an artifact of one functional's treatment of charge transfer.</p>
+  <p>Two details made that conclusion hold. First, the radiative rate alone explains the lost brightness. It fell by a factor of 260 to 349. No non-radiative channel was needed to balance the books. Second, two more range-separated functionals reproduced the reordering. So it was not an artifact of one functional.</p>
 
-  <p>There is a further consequence worth flagging rather than claiming. Because the intruding states are n&rarr;&pi;* in character, El&ndash;Sayed's rules make an additional intersystem-crossing pathway plausible &mdash; the orbital angular momentum change that a spin flip needs is exactly what an n&rarr;&pi;*/&pi;&rarr;&pi;* pairing supplies. That is a reasonable expectation, not a measured result.</p>
+  <p>One more consequence is worth flagging, not claiming. The intruding states have n&rarr;&pi;* character. So El-Sayed's rules make an extra intersystem-crossing path plausible. A spin flip needs a change in orbital angular momentum. An n&rarr;&pi;*/&pi;&rarr;&pi;* pairing supplies exactly that. This is a reasonable expectation, not a measured result.</p>
 
-  <p>The design lesson generalises past thioketones: any bridge carrying a heteroatom lone pair or a low-lying &pi;* is a candidate to introduce its own excited state into the region you are trying to control. You can engineer the deck-to-deck separation beautifully and still lose the emitter to a state that lives somewhere you were not looking.</p>
+  <p>The lesson reaches beyond thioketones. Any bridge with a heteroatom lone pair can cause this. So can any bridge with a low-lying &pi;*. It can bring its own excited state into your region. You can engineer the deck separation beautifully. You can still lose the emitter to a state you never watched.</p>
 
   <h2>There is a window, and both edges are bad</h2>
 
-  <p>Interplanar distance is the master variable, and the relationship is not monotonic in anything useful.</p>
+  <p>Interplanar distance is the master variable. Its effect is not monotonic in anything useful.</p>
 
-  <p><strong>Too far apart</strong> and the wavefunctions stop overlapping altogether. ΔE<sub>ST</sub> becomes gratifyingly small, but the transition dipole between the CT states also vanishes — the emitter is dim, and the spin–orbit coupling that has to mediate RISC becomes vanishingly weak. A small gap with no coupling across it is not a TADF emitter; it is a molecule with a long-lived dark state.</p>
+  <p><strong>Too far apart</strong>, and the wavefunctions stop overlapping. ΔE<sub>ST</sub> becomes pleasingly small. But the transition dipole between the CT states vanishes too. The emitter is dim. The spin-orbit coupling that drives RISC becomes very weak. A small gap with no coupling is not a TADF emitter. It is a molecule with a long-lived dark state.</p>
 
-  <p><strong>Too close</strong> and the deck orbitals mix strongly enough that the frontier orbitals delocalise across both rings. The separation you engineered disappears, the exchange integral recovers, and the gap opens back up.</p>
+  <p><strong>Too close</strong>, and the deck orbitals mix strongly. The frontier orbitals spread across both rings. The engineered separation disappears. The exchange integral recovers. The gap opens up again.</p>
 
-  <p>The useful region sits in between, and in practice it is narrow. This is also where dispersion correction stops being a formality in the calculation and becomes the thing that determines your answer: a functional without it will not reproduce the equilibrium stacking distance, and if the geometry is wrong by a few tenths of an ångström then every excited-state property computed on top of it is wrong too.</p>
+  <p>The useful region sits in between, and it is narrow. Here dispersion correction stops being a formality. It decides your answer. A functional without it misses the stacking distance. A geometry off by tenths of an &aring;ngstr&ouml;m spoils the rest. Every excited-state property inherits the error.</p>
 
   <div class="caveat">
     <b>A note on functionals</b>
-    Charge-transfer excitation energies are a known weak point of conventional TD-DFT with global hybrids, which tend to underestimate them badly because the electron and hole are far apart and the functional does not recover the correct −1/R asymptotic behaviour. Range-separated hybrids are the standard remedy. Separately, the Tamm–Dancoff approximation is often applied to avoid triplet instabilities, but it systematically raises triplet energies, which inflates the computed ΔE<sub>ST</sub>. Both choices move the number you care about, so both belong in the methods section rather than the supplementary information.
+    Charge-transfer energies are a known weak point of TD-DFT with global hybrids. These functionals tend to underestimate them badly. The electron and hole sit far apart. The functional misses the correct −1/R long-range behaviour. Range-separated hybrids are the standard fix. The Tamm-Dancoff approximation is a separate issue. It is often used to avoid triplet instabilities. TDA gives higher triplet energies than full TD-DFT. Full TD-DFT can put triplets too low near an instability. So the choice can move &#916;E<sub>ST</sub> a lot. In my emitter, it moved a local triplet strongly. It barely changed the charge-transfer gap. Both choices move the number you care about. So both belong in the methods, not the supplement.
   </div>
 
   <h2>What actually limits the device</h2>
 
-  <p>A small gap is necessary but nowhere near sufficient. The rate that matters is <code>k_RISC</code>, and it depends on spin–orbit coupling between the states as much as on the energy separating them.</p>
+  <p>A small gap is needed but far from enough. The rate that matters is <code>k_RISC</code>. It depends on spin-orbit coupling as much as on the gap.</p>
 
-  <p>Here the field's accepted picture is slightly counterintuitive. Spin–orbit coupling between a singlet CT state and a triplet CT state of the same spatial character is close to zero — the two states differ only in spin, and the operator that flips spin needs a change in orbital angular momentum to work with. What rescues the process is a locally excited triplet lying nearby in energy: vibronic coupling mixes it into the CT manifold and provides the orbital character that the spin flip requires.</p>
+  <p>The accepted picture here is a little counterintuitive. Consider a singlet CT state and a triplet CT state. If they share spatial character, their spin-orbit coupling is near zero. They differ only in spin. The spin-flip operator needs a change in orbital angular momentum. A nearby locally excited triplet rescues the process. Vibronic coupling mixes it into the CT states. It supplies the orbital character the spin flip needs.</p>
 
-  <p>The practical consequence is that designing a TADF emitter is a three-state problem, not a two-state one. You are positioning <sup>1</sup>CT, <sup>3</sup>CT and <sup>3</sup>LE relative to each other. Optimising ΔE<sub>ST</sub> alone can produce a molecule with a beautifully small gap and a RISC rate too slow to matter — and slow RISC means triplets accumulate under drive current, which is exactly the condition that produces triplet–triplet annihilation and the efficiency roll-off the whole exercise was meant to avoid.</p>
+  <p>So TADF design is a three-state problem, not a two-state one. You place <sup>1</sup>CT, <sup>3</sup>CT and <sup>3</sup>LE relative to each other. Chasing ΔE<sub>ST</sub> alone can backfire. You may get a tiny gap but useless RISC. Slow RISC lets triplets pile up under drive current. That causes triplet-triplet annihilation. That causes the efficiency roll-off TADF was meant to avoid.</p>
 
-  <p>Which is the argument for building the geometry deliberately rather than discovering it. If the scaffold fixes the separation, you can move the electronic structure around it and know that the thing you changed is the thing that mattered.</p>
+  <p>This argues for building the geometry on purpose, not discovering it. Let the scaffold fix the separation. Then change the electronic structure around it. Then you know the change you made is what mattered.</p>
 
-  <p>Which is also the argument for never labelling a state from its orbital composition alone. Catching this required looking at where the hole and electron actually sat, state by state &mdash; the subject of the <a href="reading-a-hole-electron-analysis.html" style="color:var(--accent)">companion note on hole&ndash;electron analysis</a>.</p>
+  <p>It also argues against labelling a state from orbital composition alone. I only caught this by checking where hole and electron sat. I did that state by state. That is the subject of the <a href="reading-a-hole-electron-analysis.html" style="color:var(--accent)">companion note on hole-electron analysis</a>.</p>
 
   <div class="endnote">
-    Written alongside my work on π-stacked donor–acceptor systems in the Organic Optoelectronics Lab at SUST.<br>
-    Corrections and disagreements welcome — <a href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a>
+    Written alongside my work on &pi;-stacked donor-acceptor systems at SUST.<br>
+    Corrections and disagreements are welcome: <a href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a>
   </div>
 </article>
 

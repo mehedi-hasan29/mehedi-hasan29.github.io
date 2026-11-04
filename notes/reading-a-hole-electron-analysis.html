@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reading a hole–electron analysis — Mehedi Hasan Moon</title>
-<meta name="description" content="A practical Gaussian-to-Multiwfn workflow for assigning excited-state character, and what the Sr, D and t indices are really measuring.">
+<title>Reading a hole-electron analysis, by Mehedi Hasan Moon</title>
+<meta name="description" content="A practical Gaussian to Multiwfn workflow for excited-state character. What the Sr, D and t indices really measure.">
 <link rel="canonical" href="https://mehedi-hasan29.github.io/notes/reading-a-hole-electron-analysis.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Reading a hole-electron analysis &mdash; Mehedi Hasan Moon">
+<meta property="og:title" content="Reading a hole-electron analysis, by Mehedi Hasan Moon">
 <meta property="og:description" content="A Gaussian-to-Multiwfn workflow for assigning excited-state character, and what the Sr, D and t indices really measure.">
 <meta property="og:url" content="https://mehedi-hasan29.github.io/notes/reading-a-hole-electron-analysis.html">
 <meta property="og:image" content="https://mehedi-hasan29.github.io/assets/og-card.png">
@@ -225,7 +225,7 @@ sub{ font-size:.66em; }
 .work p{ margin:0; color:var(--muted); max-width:66ch; font-size:16.5px; }
 .pts{ margin:16px 0 0; padding:0; list-style:none; max-width:66ch; }
 .pts li{ position:relative; padding-left:22px; margin-bottom:9px; color:var(--muted); font-size:16.5px; }
-.pts li::before{ content:""; position:absolute; left:0; top:12px; width:9px; height:1px; background:var(--accent); }
+.pts li::before{ content:""; position:absolute; left:1px; top:10px; width:5px; height:5px; border-radius:99px; background:var(--accent); }
 .chips{ display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
 .chip{ font-family:var(--mono); font-size:11px; letter-spacing:.05em; padding:5px 13px;
   border:1px solid var(--line); border-radius:6px; color:var(--muted); }
@@ -510,35 +510,35 @@ sub{ font-size:.66em; }
 <a class="skip" href="#main">Skip to content</a>
 <header class="masthead">
   <div class="shell">
-    <a class="wordmark" href="../index.html"><b>Mehedi Hasan Moon</b><span>Physics · SUST</span></a>
+    <a class="wordmark" href="../index.html"><b>Mehedi Hasan Moon</b><span>Physics, SUST</span></a>
     <nav class="nav"><a href="../index.html#notes">All notes</a></nav>
   </div>
 </header>
 
 <article class="article" id="main">
-  <a class="back" href="../index.html#notes">← Notes</a>
-  <h1>Reading a hole–electron analysis</h1>
-  <p class="byline">Method · 7 min read</p>
+  <a class="back" href="../index.html#notes">Back to notes</a>
+  <h1>Reading a hole-electron analysis</h1>
+  <p class="byline">Method. 7 min read.</p>
 
-  <p>A TD-DFT output will happily tell you that state 1 is 92% HOMO → LUMO. That sentence contains almost no physics. It tells you which two orbitals dominate the transition, but not where those orbitals live, not whether charge actually moved, and not whether the state is the charge-transfer state you designed the molecule to have.</p>
+  <p>TD-DFT may say state 1 is 92% HOMO → LUMO. That sentence holds almost no physics. It names the two orbitals that dominate. It does not say where they live. It does not say whether charge moved. It does not say if this is your designed charge-transfer state.</p>
 
-  <p>For a stacked donor–acceptor system this matters more than usual, because the failure mode is specific and easy to miss: you get a state that is nominally HOMO → LUMO, sits at a plausible energy, and turns out on inspection to be a local excitation confined to one deck. It will have a large singlet–triplet gap and it will not do what you want. The orbital labels give you no warning.</p>
+  <p>For stacked donor-acceptor systems, this matters more than usual. The failure is specific and easy to miss. You get a state that is nominally HOMO → LUMO. It sits at a plausible energy. On inspection, it is a local excitation on one deck. Its singlet-triplet gap is large. It will not do what you want. The orbital labels give no warning.</p>
 
-  <p>Hole–electron analysis is the tool that answers the question directly. Instead of describing the transition through orbital pairs, it constructs two real-space densities — where the excitation removed density (the hole) and where it deposited density (the electron) — and then measures the relationship between them.</p>
+  <p>Hole-electron analysis answers the question directly. It skips orbital pairs. Instead it builds two real-space densities. The hole shows where density was removed. The electron shows where density arrived. Then it measures how the two relate.</p>
 
   <h2>Getting the data out of Gaussian</h2>
 
-  <p>Two things are needed: the wavefunction, and the configuration coefficients that define the excitation.</p>
+  <p>You need two things. One is the wavefunction. The other is the configuration coefficients that define the excitation.</p>
 
-  <p>Gaussian truncates the printed CI coefficients by default, and the truncation is aggressive enough to distort the reconstructed densities. Force it to print more:</p>
+  <p>By default, Gaussian cuts off the printed CI coefficients. The cut is harsh enough to distort the densities. Force it to print more:</p>
 
   <pre><code># TD(NStates=10) &lt;functional&gt;/&lt;basis&gt; IOp(9/40=4)</code></pre>
 
-  <p><code>IOp(9/40=4)</code> prints coefficients down to 10<sup>−4</sup>. The default of 2 keeps only those above 10<sup>−2</sup>, which for a delocalised CT state can discard a meaningful fraction of the transition. Then convert the checkpoint file:</p>
+  <p>By default, Gaussian prints only coefficients above 0.1. <code>IOp(9/40=4)</code> lowers this to 0.0001. For a delocalised CT state, the default loses real transition weight. Then convert the checkpoint file:</p>
 
   <pre><code>formchk molecule.chk molecule.fch</code></pre>
 
-  <p>You now have <code>molecule.fch</code> (the orbitals) and <code>molecule.log</code> (the excitation coefficients). Multiwfn needs both.</p>
+  <p>Now you have <code>molecule.fch</code>, with the orbitals. You also have <code>molecule.log</code>, with the excitation coefficients. Multiwfn needs both.</p>
 
   <h2>The Multiwfn path</h2>
 
@@ -551,22 +551,22 @@ sub{ font-size:.66em; }
   → give the path to molecule.log
   → choose the excited state to analyse</code></pre>
 
-  <p>Multiwfn reads the coefficients, builds the hole and electron distributions, and reports a block of indices. Those indices are the point of the exercise.</p>
+  <p>Multiwfn reads the coefficients and builds the hole and electron distributions. It then reports a block of indices. Those indices are the whole point.</p>
 
   <h2>What the numbers mean</h2>
 
   <ul>
-    <li><strong>S<sub>r</sub></strong> — the overlap between the hole and electron distributions, formed from the integral of √(ρ<sub>hole</sub> · ρ<sub>elec</sub>). It answers "do these two densities occupy the same space?" A local excitation gives a large S<sub>r</sub>; a well-separated charge-transfer state gives a small one. This is the index most directly connected to the exchange integral, and therefore to ΔE<sub>ST</sub>.</li>
-    <li><strong>D index</strong> — the distance between the centroid of the hole and the centroid of the electron. Large D means charge physically moved across the molecule. For a stacked system, D should be comparable to the interplanar separation if the transfer really is deck-to-deck.</li>
-    <li><strong>H index</strong> — the average spatial extent of the two distributions. On its own it is descriptive; its value is as the reference against which D is judged.</li>
-    <li><strong>t index</strong> — defined as D minus the extent of the distributions along the separation axis. The sign is what you read. <strong>t &gt; 0</strong> means the hole and electron are genuinely separated, with a real gap between them. <strong>t &lt; 0</strong> means their centroids are apart but the distributions still overlap — the state is only partially charge-transfer, however large D looked.</li>
+    <li><strong>S<sub>r</sub></strong> is the overlap of the hole and electron distributions. It comes from the integral of √(ρ<sub>hole</sub> · ρ<sub>elec</sub>). It asks whether the two densities share the same space. A local excitation gives a large S<sub>r</sub>. A well-separated charge-transfer state gives a small one. This index links most directly to the exchange integral. So it links most directly to ΔE<sub>ST</sub>.</li>
+    <li><strong>D index</strong> is the distance between the hole and electron centroids. A large D means charge really moved across the molecule. In a stacked system, D should match the interplanar separation. That holds if the transfer is truly deck to deck.</li>
+    <li><strong>H index</strong> is the average spatial extent of the two distributions. Alone, it only describes. Its real use is as the yardstick for judging D.</li>
+    <li><strong>t index</strong> is D minus the extent along the separation axis. Read its sign. <strong>t &gt; 0</strong> means hole and electron are truly apart, with a real gap. <strong>t &lt; 0</strong> means the centroids are apart but the densities still overlap. Then the state is only partly charge-transfer, however large D looked.</li>
   </ul>
 
-  <div class="pull">D tells you the centroids moved. t tells you whether anything actually separated. It is entirely possible to have a large D and a negative t, and that state will not behave like a CT state.</div>
+  <div class="pull">D tells you the centroids moved. t tells you if anything truly separated. A large D with a negative t is possible. That state will not act like a CT state.</div>
 
-  <div class="sandbox">
+<div class="sandbox">
     <div class="sb-top"><h3>Try it: S<sub>r</sub>, D and t</h3><span>Interactive</span></div>
-    <p class="sb-intro">Two model densities &mdash; the hole in blue, the electron in orange &mdash; with the shared region in green. Move them apart, change how diffuse they are, and watch which index notices.</p>
+    <p class="sb-intro">Two model densities. The hole is blue and the electron orange. Their shared region is green. Move them apart or change their spread. Watch which index notices.</p>
 
     <div class="sb-plot">
       <svg viewBox="0 0 560 236" role="img" aria-label="Two density curves whose separation and width you control, with the overlap region shaded and the resulting indices shown below.">
@@ -600,77 +600,77 @@ sub{ font-size:.66em; }
     </div>
 
     <dl class="sb-out">
-      <div><dt>S<sub>r</sub></dt><dd id="sbSr">&mdash;</dd></div>
-      <div><dt>D</dt><dd id="sbD2">&mdash;</dd></div>
-      <div><dt>H</dt><dd id="sbHi">&mdash;</dd></div>
-      <div><dt>t</dt><dd id="sbT">&mdash;</dd></div>
+      <div><dt>S<sub>r</sub></dt><dd id="sbSr">&nbsp;</dd></div>
+      <div><dt>D</dt><dd id="sbD2">&nbsp;</dd></div>
+      <div><dt>H</dt><dd id="sbHi">&nbsp;</dd></div>
+      <div><dt>t</dt><dd id="sbT">&nbsp;</dd></div>
     </dl>
     <p class="sb-verdict" id="sbV"></p>
   </div>
 
 
-  <h2>Which fragment gave, and which received</h2>
+    <h2>Which fragment gave, and which received</h2>
 
-  <p>For a donor–acceptor system, the more decisive analysis is inter-fragment charge transfer. Define the donor and acceptor as atom groups and Multiwfn will report how much charge moved between them, as a percentage of the excitation.</p>
+  <p>For donor-acceptor systems, inter-fragment charge transfer is more decisive. Define the donor and acceptor as atom groups. Multiwfn then reports how much charge moved between them. It gives this as a percentage of the excitation.</p>
 
-  <p>This is the number that settles the argument. A state described as CT should show most of its density transferring from the donor fragment to the acceptor fragment. If the analysis instead shows the bulk of the transfer happening within a single fragment, the state is a local excitation and the CT label was wishful.</p>
+  <p>This number settles the argument. A true CT state moves most density from donor to acceptor. Sometimes most of the transfer stays inside one fragment. Then the state is a local excitation. The CT label was wishful thinking.</p>
 
   <h2>Look at it as well</h2>
 
-  <p>Multiwfn will export cube files for the hole and electron densities. Render them as isosurfaces — VMD is the usual choice — and put them side by side.</p>
+  <p>Multiwfn exports cube files for the hole and electron densities. Render them as isosurfaces. VMD is the usual choice. Put them side by side.</p>
 
-  <p>The picture catches things the indices average away. Two states can return similar S<sub>r</sub> and D while one has a cleanly separated hole and electron and the other has a hole smeared across both fragments with a centroid that happens to land in a convenient place. The indices are summary statistics, and summary statistics hide bimodality. It costs ten minutes to look.</p>
+  <p>The picture catches what the indices average away. Two states can give similar S<sub>r</sub> and D values. One may have a cleanly separated hole and electron. The other may smear its hole across both fragments. Its centroid may just land somewhere convenient. The indices are summary statistics. Summary statistics hide two-peaked shapes. Looking costs ten minutes.</p>
 
-  <h2>A worked case: the state that wasn't there</h2>
+  <h2>A worked case: the state that was not there</h2>
 
   <p>Here is the situation this analysis exists for.</p>
 
-  <p>In a series of five donor&ndash;acceptor [3.3]paracyclophanes, four members emitted normally &mdash; a conserved HOMO&rarr;LUMO charge-transfer transition around 442&ndash;471&nbsp;nm with oscillator strength near 0.03. The fifth, carrying a thiocarbonyl bridge, showed an emission oscillator strength two orders of magnitude lower.</p>
+  <p>I studied a series of five donor-acceptor [3.3]paracyclophanes. Four members emitted normally. Each kept a HOMO&rarr;LUMO charge-transfer transition around 442 to 471&nbsp;nm. Their oscillator strengths sat near 0.03. The fifth carried a thiocarbonyl bridge. Its emission oscillator strength was two orders of magnitude lower.</p>
 
-  <p>The tempting reading is that the CT state was damaged: the bridge perturbed the donor&ndash;acceptor coupling, the transition dipole shrank, brightness fell. That reading is wrong, and nothing in the excitation energies or the orbital labels distinguishes it from the right one.</p>
+  <p>The tempting reading is that the CT state was damaged. The bridge upset the coupling, the dipole shrank and brightness fell. That reading is wrong. Yet nothing in the energies or orbital labels shows it.</p>
 
-  <p>What the character analysis showed is that the CT transition was completely intact &mdash; same composition, same oscillator strength as its siblings. It had simply been displaced from S<sub>1</sub> to S<sub>3</sub> by a state that had nothing to do with the donor or the acceptor: a bridge-localised n&rarr;&pi;* excitation, a sulfur lone pair promoted into a &pi;* orbital, sitting on the linker. Emission comes from the lowest excited state, so the molecule went dark with its designed transition in perfect working order a couple of states up.</p>
+  <p>The character analysis showed the CT transition fully intact. It kept its donor-to-acceptor character. Its total intensity was conserved. It had simply moved from S<sub>1</sub> to S<sub>3</sub>. Two states displaced it, and both ignored the donor and acceptor. Both were bridge-localised n&rarr;&pi;* excitations. In each, a sulfur lone pair went into a &pi;* orbital. Emission comes from the lowest excited state. So the molecule went dark. Its designed transition still worked, two states higher.</p>
 
-  <div class="pull">You cannot see that in an energy. You see it the moment you ask where the hole is.</div>
+  <div class="pull">You cannot see that in an energy. You see it once you ask where the hole is.</div>
 
-  <p>A hole on the bridge sulfur and an electron on the bridge &pi;* is unmistakable next to a hole on the donor deck and an electron on the acceptor deck. The two states do not resemble each other at all &mdash; but their orbital labels are similarly unhelpful, and their excitation energies are close enough to swap order when you change the bridge.</p>
+  <p>Picture the hole on bridge sulfur, the electron on its &pi;*. Next to a donor hole and an acceptor electron, it is unmistakable. The two states look nothing alike. But their orbital labels are equally unhelpful. And their energies are close enough to swap when the bridge changes.</p>
 
-  <h2>Atom-resolved population analysis, when densities aren't enough</h2>
+  <h2>Atom-resolved population analysis, when densities are not enough</h2>
 
-  <p>Hole&ndash;electron distributions are spatial. Sometimes the question is per-atom, and then a Hirshfeld partition of the relevant orbitals is the sharper tool.</p>
+  <p>Hole-electron distributions are spatial. Sometimes the question is per atom. Then a Hirshfeld partition of the key orbitals is the sharper tool.</p>
 
-  <p>In the same series it revealed something the isosurfaces alone would have smoothed over: the two bridge sulfurs, which are equivalent by the molecule's nominal symmetry, contributed <em>unequally</em> to the bridge-localised orbitals. Genuine symmetry breaking &mdash; present already at the vertical Franck&ndash;Condon geometry, and amplified after optimising the S<sub>1</sub> structure.</p>
+  <p>In the same series, it showed something the isosurfaces had smoothed over. The two bridge sulfurs are equivalent by nominal symmetry. Yet they contributed <em>unequally</em> to individual bridge-localised orbitals. The geometry shows no measurable asymmetry, though. I report this descriptively. The present data do not settle its origin.</p>
 
-  <p>That is the kind of result worth pausing on, because the instinct is to assume a converged calculation on a symmetric molecule produces symmetric orbitals. When it does not, the asymmetry is either physics or a broken calculation, and you have to establish which. Reproducing the effect under additional range-separated functionals is what turns it from a suspicion into a finding.</p>
+  <p>A result like that deserves a pause. We expect symmetric molecules to give symmetric orbitals. When they do not, it is either physics or a broken calculation. You have to find out which.</p>
 
   <h2>Do it for the triplet too</h2>
 
-  <p>Most people run this analysis on S<sub>1</sub> and stop, which throws away half of what the method can tell you.</p>
+  <p>Most people run this on S<sub>1</sub> and stop. That throws away half of what the method offers.</p>
 
-  <p>Run it on the low-lying triplets as well, and compare the character. If T<sub>1</sub> comes back as a local excitation on one fragment while S<sub>1</sub> is charge-transfer, the two states are not simply spin partners — they differ in spatial character, and the energy separation you computed is not the barrier a thermally activated process actually sees.</p>
+  <p>Run it on the low-lying triplets too, and compare. Say T<sub>1</sub> is a local excitation on one fragment. Say S<sub>1</sub> is charge-transfer. Then they are not simple spin partners. They differ in spatial character. Your computed gap is not the barrier the thermal process sees.</p>
 
-  <p>That comparison is also where the analysis stops being descriptive and starts being predictive. Reverse intersystem crossing between a <sup>1</sup>CT and a <sup>3</sup>CT state of identical spatial character is spin–orbit forbidden to a good approximation; the process is generally understood to be mediated by a nearby locally-excited triplet mixing in through vibronic coupling. So finding a <sup>3</sup>LE state close in energy to your CT manifold is not a contaminant in the results. It may be the reason the emitter works at all.</p>
+  <p>Here the analysis turns from descriptive to predictive. Take a <sup>1</sup>CT and a <sup>3</sup>CT state of the same spatial character. Reverse intersystem crossing between them is roughly spin-orbit forbidden. A nearby locally excited triplet is thought to mediate it. It mixes in through vibronic coupling. So a <sup>3</sup>LE state near your CT states is not a contaminant. It may be why the emitter works at all.</p>
 
   <h2>A short checklist</h2>
 
   <ol>
-    <li>TD-DFT with <code>IOp(9/40=4)</code>, and a functional appropriate for CT states rather than whichever hybrid was used for the geometry.</li>
-    <li><code>formchk</code> the checkpoint.</li>
-    <li>Multiwfn → 18 → 1, for S<sub>1</sub> and for the low triplets.</li>
-    <li>Record S<sub>r</sub>, D, H and t for each state, in a table, in the same units.</li>
+    <li>Run TD-DFT with <code>IOp(9/40=4)</code>. Use a range-separated functional suited to CT states.</li>
+    <li>Run <code>formchk</code> on the checkpoint.</li>
+    <li>In Multiwfn, choose 18 then 1, for S<sub>1</sub> and the low triplets.</li>
+    <li>Record S<sub>r</sub>, D, H and t for each state. Use one table and the same units.</li>
     <li>Run the inter-fragment analysis with donor and acceptor defined explicitly.</li>
-    <li>Export the cubes and actually look at the isosurfaces.</li>
-    <li>Check enough states, not just S<sub>1</sub>. The transition you designed may not be the lowest one any more.</li>
-    <li>Only then assign the state a label.</li>
+    <li>Export the cubes and really look at the isosurfaces.</li>
+    <li>Check enough states, not just S<sub>1</sub>. Your designed transition may no longer be lowest.</li>
+    <li>Only then give the state a label.</li>
   </ol>
 
-  <p>The discipline this enforces is worth more than any individual index. It stops you from carrying an assumption about what a state is through an entire study, and finding out at the writing-up stage that the molecule was doing something else.</p>
+  <p>The discipline matters more than any single index. It stops you carrying a wrong assumption through a whole study. Otherwise you may learn the truth only while writing up.</p>
 
-  <p>The architecture side of this &mdash; why donor and acceptor get stacked in the first place, and what the bridge is supposed to be doing &mdash; is in the <a href="charge-transfer-without-a-bridge.html" style="color:var(--accent)">companion note on through-space charge transfer</a>.</p>
+  <p>Why stack donor and acceptor at all? And what should the bridge do? That side is in the <a href="charge-transfer-without-a-bridge.html" style="color:var(--accent)">companion note on through-space charge transfer</a>.</p>
 
   <div class="endnote">
-    Workflow notes from my computational work in the Organic Optoelectronics Lab at SUST.<br>
-    Corrections welcome — <a href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a>
+    Workflow notes from my computational work at SUST.<br>
+    Corrections are welcome: <a href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a>
   </div>
 </article>
 
@@ -715,10 +715,10 @@ sub{ font-size:.66em; }
     g('sbSr').textContent=Sr.toFixed(3); g('sbD2').textContent=D.toFixed(2);
     g('sbHi').textContent=H.toFixed(2); g('sbT').textContent=(tt>=0?'+':'')+tt.toFixed(2);
     var v=g('sbV');
-    if(tt<=0 && Sr>0.75){ v.textContent='Local excitation \u2014 hole and electron sit in the same region. A large \u0394E_ST follows.'; v.className='sb-verdict warn'; }
-    else if(tt<=0){ v.textContent='The electron cloud still envelops the hole \u2014 t is negative despite a nonzero D. Not a clean CT state.'; v.className='sb-verdict warn'; }
-    else if(Sr>0.45){ v.textContent='Centroids apart, yet the densities still share a lot of space. Partial charge transfer at best.'; v.className='sb-verdict warn'; }
-    else { v.textContent='Genuine charge transfer \u2014 small S_r, positive t, hole and electron on separate ground.'; v.className='sb-verdict'; }
+    if(tt<=0 && Sr>0.75){ v.textContent='Local excitation. Hole and electron share one region. A large \u0394E_ST follows.'; v.className='sb-verdict warn'; }
+    else if(tt<=0){ v.textContent='The electron cloud still wraps the hole. t is negative despite a nonzero D. Not clean CT.'; v.className='sb-verdict warn'; }
+    else if(Sr>0.45){ v.textContent='Centroids apart, yet the densities still share much space. Partial charge transfer at best.'; v.className='sb-verdict warn'; }
+    else { v.textContent='Genuine charge transfer. Small S_r and positive t. Hole and electron sit apart.'; v.className='sb-verdict'; }
   }
   [sep,wh,we].forEach(function(el){ el.addEventListener('input',draw); });
   document.querySelectorAll('.sb-presets button').forEach(function(b){

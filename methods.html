@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Methods &amp; reproducibility &mdash; MD. Mehedi Hasan Moon</title>
-<meta name="description" content="How I set up, check and report a calculation: functionals, basis sets, frequency checks, TD-DFT choices, solvation and wavefunction analysis.">
+<title>Methods and reproducibility, by MD. Mehedi Hasan Moon</title>
+<meta name="description" content="How I set up, check and report a calculation. Functionals, basis sets, frequency checks and wavefunction analysis.">
 <link rel="canonical" href="https://mehedi-hasan29.github.io/methods.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Methods &amp; reproducibility &mdash; Mehedi Hasan Moon">
-<meta property="og:description" content="Functionals, basis sets, frequency checks, TD-DFT choices, solvation and wavefunction analysis.">
+<meta property="og:title" content="Methods and reproducibility, by Mehedi Hasan Moon">
+<meta property="og:description" content="Functionals, basis sets, frequency checks and wavefunction analysis.">
 <meta property="og:url" content="https://mehedi-hasan29.github.io/methods.html">
 <meta property="og:image" content="https://mehedi-hasan29.github.io/assets/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -225,7 +225,7 @@ sub{ font-size:.66em; }
 .work p{ margin:0; color:var(--muted); max-width:66ch; font-size:16.5px; }
 .pts{ margin:16px 0 0; padding:0; list-style:none; max-width:66ch; }
 .pts li{ position:relative; padding-left:22px; margin-bottom:9px; color:var(--muted); font-size:16.5px; }
-.pts li::before{ content:""; position:absolute; left:0; top:12px; width:9px; height:1px; background:var(--accent); }
+.pts li::before{ content:""; position:absolute; left:1px; top:10px; width:5px; height:5px; border-radius:99px; background:var(--accent); }
 .chips{ display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
 .chip{ font-family:var(--mono); font-size:11px; letter-spacing:.05em; padding:5px 13px;
   border:1px solid var(--line); border-radius:6px; color:var(--muted); }
@@ -457,76 +457,78 @@ sub{ font-size:.66em; }
 <a class="skip" href="#main">Skip to content</a>
 <header class="masthead">
   <div class="shell">
-    <a class="wordmark" href="index.html"><b>Mehedi Hasan Moon</b><span>Physics &#183; SUST</span></a>
+    <a class="wordmark" href="index.html"><b>Mehedi Hasan Moon</b><span>Physics, SUST</span></a>
     <nav class="nav"><a href="index.html#kit">Toolkit</a><a href="index.html#notes">Notes</a></nav>
   </div>
 </header>
 
 <article class="article" id="main">
-  <a class="back" href="index.html#kit">&larr; Site</a>
-  <h1>Methods &amp; reproducibility</h1>
+  <a class="back" href="index.html#kit">Back to site</a>
+  <h1>Methods and reproducibility</h1>
   <p class="byline">How I set up, check and report a calculation</p>
 
-  <p>This page exists so that anyone reading a number I have produced can see how it was produced. None of it is novel &mdash; it is ordinary practice &mdash; but writing it down makes the assumptions visible, and it means a reviewer or a supervisor does not have to ask.</p>
+  <p>This page shows how each of my numbers was made. Nothing here is new. It is ordinary practice. But writing it down makes the assumptions visible. Then a reviewer or supervisor does not have to ask.</p>
 
   <h2>Ground-state geometry</h2>
 
-  <p>Structures are optimised in <strong>Gaussian&nbsp;16</strong>. For the &pi;-stacked systems the functional has to include dispersion, because the whole architecture depends on two aromatic units held at van der Waals contact and a functional without dispersion will not reproduce that separation. The current triad series uses:</p>
+  <p>I optimise structures in <strong>Gaussian&nbsp;16</strong>. For &pi;-stacked systems, the functional must include dispersion. These designs rest on two aromatic units at van der Waals contact. A functional without dispersion will miss that separation. For STF-DBTS I use:</p>
 
-  <pre><code>#p opt freq wb97xd/Def2SVP geom=connectivity</code></pre>
+  <pre><code>#p opt=(readfc,maxstep=10) wb97xd/Def2SVP scrf=(cpcm,solvent=toluene)</code></pre>
 
-  <p>&omega;B97XD is a range-separated hybrid with empirical dispersion, which matters twice over here: the dispersion term fixes the stacking distance, and the range separation is what makes the same functional usable for charge-transfer excitations later.</p>
+  <p>That is the route of my final STF-DBTS minimum, in CPCM toluene. A separate frequency job confirmed it.</p>
 
-  <p>The earlier paracyclophane work used a wavefunction method instead, where the interdeck distance is short enough that I wanted a treatment of correlation that does not depend on an empirical dispersion correction:</p>
+  <p>&omega;B97XD is a range-separated hybrid with empirical dispersion. That helps twice here. The dispersion term fixes the stacking distance. The range separation suits the later charge-transfer excitations.</p>
+
+  <p>The earlier paracyclophane work used a wavefunction method instead. Its interdeck distance is short. So I wanted correlation without an empirical dispersion term:</p>
 
   <pre><code>#p opt freq mp2/6-31g(d)</code></pre>
 
-  <p><code>freq</code> is not optional in either case. An optimisation converges to a stationary point, not necessarily to a minimum, and on a flexible stacked system it is entirely possible to land on a saddle. I check that every reported geometry has no imaginary frequencies before anything is computed on top of it.</p>
+  <p><code>freq</code> is never optional. An optimisation finds a stationary point, not always a minimum. A flexible stacked system can easily land on a saddle. So I check every reported geometry for imaginary frequencies first. Only then do I compute anything on top of it.</p>
 
   <h2>Excited states</h2>
 
-  <p>Excitation energies come from TD-DFT on the optimised geometry. Two choices here move the numbers enough that they belong in any methods section rather than in supplementary material:</p>
+  <p>Excitation energies come from TD-DFT on the optimised geometry. Two choices move the numbers a lot. So they belong in the methods, not the supplement:</p>
 
   <ul>
-    <li><strong>Functional.</strong> Conventional global hybrids underestimate charge-transfer excitation energies, sometimes badly, because the electron and hole are spatially separated and the functional does not recover the correct &minus;1/R asymptotic behaviour. A range-separated hybrid is the standard remedy and the reason &omega;B97XD is used throughout rather than only for the geometry.</li>
-    <li><strong>Tamm&ndash;Dancoff.</strong> TDA is often applied to avoid triplet instabilities, but it systematically raises triplet energies, which inflates the computed &#916;E<sub>ST</sub>. Since &#916;E<sub>ST</sub> is the quantity the whole design turns on, whether TDA was used is not a detail.</li>
+    <li><strong>Functional.</strong> Global hybrids underestimate charge-transfer energies, sometimes badly. The electron and hole sit far apart. The functional misses the correct &minus;1/R long-range behaviour. A range-separated hybrid is the standard fix. That is why I use &omega;B97XD throughout, not only for geometry.</li>
+    <li><strong>Tamm-Dancoff.</strong> TDA is often used to avoid triplet instabilities. TDA gives higher triplet energies than full TD-DFT. Full TD-DFT can put triplets too low near an instability. So the choice can move &#916;E<sub>ST</sub> a lot. In my emitter, it moved a local triplet strongly. It barely changed the charge-transfer gap. The whole design turns on &#916;E<sub>ST</sub>. So whether TDA was used is not a detail.</li>
   </ul>
 
-  <p>Where a result depends on the ordering of closely spaced states, I repeat it with additional functionals. If the ordering survives, it is a property of the system; if it does not, it was an artifact and should not be reported as a finding.</p>
+  <p>Some results depend on the order of closely spaced states. Those I repeat with more functionals. If the order survives, it belongs to the system. If not, it was an artifact. Then I do not report it as a finding.</p>
 
   <h2>Solvation</h2>
 
-  <p>Where a comparison with measured spectra is intended, calculations are repeated with a polarisable continuum model. A continuum treats the solvent as a dielectric and captures the bulk electrostatic response, which is usually enough for a CT state that shifts with polarity &mdash; but it does not describe specific interactions such as hydrogen bonding, and I do not claim it does.</p>
+  <p>For comparison with measured spectra, I add a polarisable continuum model. A continuum treats the solvent as a dielectric. It captures the bulk electrostatic response. That is usually enough for a CT state that shifts with polarity. It does not describe specific contacts like hydrogen bonds. I do not claim it does.</p>
 
   <h2>Wavefunction analysis</h2>
 
-  <p>An excitation energy on its own says very little. To assign character I use <strong>Multiwfn</strong>. The Gaussian job has to print enough configuration coefficients first, which is not the default:</p>
+  <p>An excitation energy alone says very little. To assign character, I use <strong>Multiwfn</strong>. First the Gaussian job must print enough configuration coefficients. That is not the default:</p>
 
   <pre><code># TD(NStates=10) &lt;functional&gt;/&lt;basis&gt; IOp(9/40=4)
 formchk molecule.chk molecule.fch</code></pre>
 
-  <p><code>IOp(9/40=4)</code> prints coefficients down to 10<sup>&minus;4</sup>; the default of 2 keeps only those above 10<sup>&minus;2</sup>, which can discard a meaningful fraction of a delocalised CT transition. From there, hole&ndash;electron distribution analysis gives S<sub>r</sub>, D, H and t &mdash; overlap, centroid separation, extent, and whether the separation is real rather than nominal. For a donor&ndash;acceptor system the inter-fragment analysis is the decisive one: it reports how much charge actually moved between the fragments I defined.</p>
+  <p>By default, Gaussian prints only coefficients above 0.1. <code>IOp(9/40=4)</code> lowers this to 0.0001. The default can drop real weight from a delocalised CT transition. Next, hole-electron analysis gives S<sub>r</sub>, D, H and t. These are overlap, centroid separation, extent, and whether separation is real. For donor-acceptor systems, the inter-fragment analysis decides. It reports how much charge moved between my defined fragments.</p>
 
-  <p>Where a per-atom question arises rather than a spatial one, I use a Hirshfeld partition of the relevant orbitals. Both analyses get exported as cube files and rendered as isosurfaces, because summary indices average away exactly the bimodal cases worth noticing.</p>
+  <p>Some questions are per atom, not spatial. For those I use a Hirshfeld partition of the key orbitals. I export both analyses as cube files and render isosurfaces. Summary indices hide the two-peaked cases worth noticing.</p>
 
-  <p>The workflow is written up in more detail in the note on <a href="notes/reading-a-hole-electron-analysis.html">reading a hole&ndash;electron analysis</a>.</p>
+  <p>The note on <a href="notes/reading-a-hole-electron-analysis.html">reading a hole-electron analysis</a> covers this workflow in more detail.</p>
 
   <h2>What I record</h2>
 
   <ul>
-    <li>The full route line, program version and basis set for every reported number.</li>
-    <li>The output confirming a true minimum, not just a converged optimisation.</li>
-    <li>Which functional produced which result, when more than one was used.</li>
-    <li>Input files kept alongside outputs, so a calculation can be repeated rather than reconstructed.</li>
+    <li>The route line, program version and basis set for every number.</li>
+    <li>The output showing a true minimum, not just a converged optimisation.</li>
+    <li>Which functional gave which result, when I used more than one.</li>
+    <li>Input files kept beside outputs, so any calculation can be rerun.</li>
   </ul>
 
   <div class="caveat">
     <b>What I do not claim</b>
-    Vertical excitation energies are not 0&ndash;0 energies and should not be compared directly with band maxima. A continuum solvation model is not a solvent shell. Oscillator strengths from TD-DFT indicate relative brightness, not absolute quantum yields. And a calculated &#916;E<sub>ST</sub> is a necessary condition for TADF, not a sufficient one &mdash; the rate also depends on spin&ndash;orbit coupling, which a gap alone does not report.
+    Vertical excitation energies are not 0-0 energies. Do not compare them directly with band maxima. A continuum solvation model is not a solvent shell. TD-DFT oscillator strengths show relative brightness, not absolute quantum yields. A small calculated &#916;E<sub>ST</sub> is needed for TADF, but not enough. The rate also depends on spin-orbit coupling. A gap alone does not report that.
   </div>
 
   <div class="endnote">
-    Corrections and disagreements welcome &mdash; <a href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a>
+    Corrections and disagreements are welcome: <a href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a>
   </div>
 </article>
 

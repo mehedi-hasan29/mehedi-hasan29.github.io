@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How far apart are the decks?, by Mehedi Hasan Moon</title>
+<meta name="description" content="What deck separation in a paracyclophane really means. Why [2.2] has no single value. What to state before comparing two numbers.">
+<link rel="canonical" href="https://mehedi-hasan29.github.io/notes/how-far-apart-are-the-decks.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How far apart are the decks?, by Mehedi Hasan Moon">
+<meta property="og:description" content="What deck separation in a paracyclophane really means. Why [2.2] has no single value. What to state before comparing two numbers.">
+<meta property="og:url" content="https://mehedi-hasan29.github.io/notes/how-far-apart-are-the-decks.html">
+<meta property="og:image" content="https://mehedi-hasan29.github.io/assets/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mehedi-hasan29.github.io/assets/og-card.png">
+<link rel="alternate" type="application/rss+xml" title="Notes" href="https://mehedi-hasan29.github.io/feed.xml">
+<meta name="author" content="MD. Mehedi Hasan Moon">
+<meta name="theme-color" content="#191339">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23141642%27/%3E%3Ccircle cx=%2711%27 cy=%2716%27 r=%275%27 fill=%27%239B87FF%27/%3E%3Ccircle cx=%2721%27 cy=%2716%27 r=%275%27 fill=%27%235CD79C%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+/* ============ spectral token system ============ */
+:root{
+  --violet:#9B87FF;
+  --indigo:#7FA6FF;
+  --cyan:#5FD0E8;
+  --teal:#4FD5C0;
+  --green:#5CD79C;
+
+  --paper:#ECEAF4;
+  --soft:#C3C2D6;
+  --muted:#9091AC;
+  --line:rgba(236,234,244,.13);
+  --line-soft:rgba(236,234,244,.07);
+  --panel:rgba(236,234,244,.035);
+
+  --display:"Archivo",system-ui,sans-serif;
+  --body:"Newsreader",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --accent:var(--violet);
+  --shell:1180px;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  min-height:100%;
+  /* the Stokes shift: violet in, green out */
+  background:linear-gradient(180deg,#191339 0%,#151642 14%,#111C3A 38%,#0D2033 60%,#0A2129 80%,#08201F 100%);
+  background-attachment:scroll;
+  color:var(--paper);
+  font-family:var(--body);
+  font-size:18px;
+  font-optical-sizing:auto;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+svg{ max-width:100%; display:block; }
+a{ color:inherit; }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:4px; border-radius:3px; }
+sub{ font-size:.66em; }
+
+.shell{ max-width:var(--shell); margin:0 auto; padding:0 40px; }
+
+.kicker{
+  font-family:var(--mono); font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin:0;
+}
+
+/* ============ spectrum rail (signature) ============ */
+.rail{
+  position:fixed; left:20px; top:110px; bottom:52px; width:3px;
+  border-radius:3px; z-index:40;
+  background:linear-gradient(180deg,#9B87FF 0%,#7FA6FF 30%,#5FD0E8 55%,#4FD5C0 78%,#5CD79C 100%);
+  opacity:.28;
+}
+.rail-marker{
+  position:fixed; left:17px; width:9px; height:56px; border-radius:9px; z-index:41;
+  background:var(--accent);
+  box-shadow:0 0 20px 2px var(--accent);
+  transition:top .12s linear, background .5s ease, box-shadow .5s ease;
+}
+.rail-nm{
+  position:fixed; left:36px; z-index:41;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.14em;
+  color:var(--muted); transition:top .12s linear;
+}
+
+/* ============ masthead ============ */
+.masthead{
+  position:sticky; top:0; z-index:50;
+  background:rgba(14,15,42,.62);
+  backdrop-filter:blur(16px) saturate(140%);
+  border-bottom:1px solid var(--line-soft);
+}
+.masthead .shell{ display:flex; align-items:center; justify-content:space-between; gap:24px; height:70px; }
+.wordmark{ text-decoration:none; display:flex; align-items:baseline; gap:12px; }
+.wordmark b{ font-family:var(--display); font-weight:700; font-size:15px;
+  font-variation-settings:"wdth" 112; letter-spacing:-.01em; }
+.wordmark span{ font-family:var(--mono); font-size:11px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); }
+.nav{ display:flex; gap:30px; }
+.nav a{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--muted); text-decoration:none; transition:color .2s;
+}
+.nav a:hover{ color:var(--paper); }
+.nav a[aria-current="true"]{ color:var(--accent); }
+
+/* ============ hero ============ */
+.hero{ padding:104px 0 96px; }
+.hero h1{
+  font-family:var(--display); font-weight:700;
+  font-size:clamp(1.9rem,3.6vw,2.85rem);
+  font-variation-settings:"wdth" 112;
+  line-height:1.14; letter-spacing:-.024em;
+  margin:26px 0 0; max-width:27ch; text-wrap:balance;
+}
+.hero h1 em{ font-style:normal; color:var(--green);
+  text-shadow:0 0 38px rgba(92,215,156,.5),0 0 12px rgba(92,215,156,.25); }
+.lede{
+  font-size:1.18rem; font-weight:300; color:var(--soft);
+  max-width:58ch; margin:32px 0 0;
+}
+.lede strong{ color:var(--paper); font-weight:500; }
+
+.actions{ display:flex; flex-wrap:wrap; gap:12px; margin-top:40px; }
+.btn{
+  font-family:var(--mono); font-size:12px; letter-spacing:.11em; text-transform:uppercase;
+  text-decoration:none; padding:13px 22px; border-radius:6px;
+  border:1px solid var(--line); color:var(--paper);
+  transition:border-color .2s,background .2s,transform .2s;
+}
+.btn:hover{ border-color:var(--accent); transform:translateY(-1px); }
+.btn-go{ background:var(--accent); border-color:var(--accent); color:#0C0A22; font-weight:500; }
+.btn-go:hover{ filter:brightness(1.1); }
+
+/* ============ Fig. 1 plate ============ */
+.plate{
+  margin:60px 0 0; padding:0; border-radius:12px;
+  border:1px solid var(--line); background:var(--panel); overflow:hidden;
+}
+.panels{ display:grid; grid-template-columns:minmax(0,1fr); }
+.pane{ padding:30px 28px; }
+.pane-label{ font-family:var(--mono); font-size:9.5px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--muted); margin:0 0 18px; }
+.plate figcaption{
+  font-family:var(--mono); font-size:11.5px; line-height:1.8; color:var(--muted);
+  padding:20px 28px 24px; border-top:1px solid var(--line-soft);
+}
+.plate figcaption b{ color:var(--green); font-weight:500; }
+
+.lvl{ stroke:var(--paper); stroke-width:2; }
+.ax{ stroke:var(--line); stroke-width:1.1; fill:none; }
+.gd{ stroke:rgba(236,234,244,.16); stroke-width:1; stroke-dasharray:3 5; }
+.band{ fill:var(--green); opacity:0; animation:band 1.1s ease .3s forwards; }
+.abs{ stroke:var(--violet); stroke-width:1.7; fill:none; }
+.pf{ stroke:#6C7196; stroke-width:1.7; fill:none; }
+.df{ stroke:var(--green); stroke-width:2.6; fill:none; opacity:0; animation:app .9s ease 2.2s forwards; }
+.isc{ stroke:var(--muted); stroke-width:1.4; fill:none; stroke-dasharray:3 5; }
+.risc{ stroke:var(--green); stroke-width:2.2; fill:none; stroke-dasharray:150; stroke-dashoffset:150;
+  animation:trace 1.3s cubic-bezier(.4,0,.2,1) .85s forwards; }
+.risc-tip{ stroke:var(--green); stroke-width:2.2; fill:none; opacity:0; animation:app .3s ease 2.1s forwards; }
+.state{ font-family:var(--mono); font-size:13px; fill:var(--paper); font-weight:500; }
+.state tspan{ font-size:9px; }
+.note{ font-family:var(--mono); font-size:9.5px; fill:var(--muted); letter-spacing:.14em; }
+.note.g{ fill:var(--green); }
+.note.v{ fill:var(--violet); }
+.note.c{ fill:var(--cyan); }
+.mol{ fill:rgba(236,234,244,.035); stroke-width:1.6; }
+.mol-d{ stroke:var(--violet); }
+.mol-a{ stroke:var(--cyan); }
+.bridge{ fill:none; stroke:#6C7196; stroke-width:1.8; }
+.tsct{ stroke:var(--green); stroke-width:1.3; stroke-dasharray:3 4; fill:none; }
+.halo{ fill:var(--green); opacity:.2; }
+@keyframes trace{ to{ stroke-dashoffset:0; } }
+@keyframes app{ to{ opacity:1; } }
+@keyframes band{ to{ opacity:.075; } }
+
+/* ============ section shell ============ */
+.section{ padding:92px 0; }
+.head{ display:flex; align-items:baseline; gap:20px; margin-bottom:52px;
+  padding-bottom:20px; border-bottom:1px solid var(--line); }
+.head h2{
+  font-family:var(--display); font-weight:700; font-size:clamp(1.05rem,2vw,1.28rem);
+  font-variation-settings:"wdth" 118; letter-spacing:.13em; text-transform:uppercase;
+  margin:0; color:var(--paper);
+}
+.head .of{ font-family:var(--mono); font-size:11px; color:var(--muted);
+  letter-spacing:.14em; margin-left:auto; }
+
+/* ============ about ============ */
+.about{ display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:76px; }
+.about p{ margin:0 0 22px; color:var(--soft); max-width:64ch; }
+.about p strong{ color:var(--paper); font-weight:500; }
+.facts{ margin:0; }
+.facts > div{ padding:14px 0; border-bottom:1px solid var(--line-soft); }
+.facts dt{ font-family:var(--mono); font-size:10px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+.facts dd{ margin:0; font-size:16px; line-height:1.5; }
+
+/* ============ focus rows ============ */
+.row{ display:grid; grid-template-columns:34px minmax(0,1fr) minmax(0,1.35fr); gap:40px;
+  padding:32px 0; border-bottom:1px solid var(--line-soft); align-items:start; }
+.row:last-child{ border-bottom:0; }
+.row .n{ font-family:var(--mono); font-size:11px; color:var(--accent); padding-top:9px; letter-spacing:.1em; }
+.row h3{ font-family:var(--display); font-weight:600; font-size:1.32rem;
+  font-variation-settings:"wdth" 108; letter-spacing:-.015em; margin:0; line-height:1.25; }
+.row p{ margin:0; color:var(--muted); font-size:16.5px; }
+
+/* ============ research entries ============ */
+.work{ padding:44px 0; border-bottom:1px solid var(--line-soft); }
+.work:last-child{ border-bottom:0; }
+.work .meta{ display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom:16px; }
+.stamp{ font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); border:1px solid var(--accent); border-radius:99px; padding:4px 12px; }
+.when{ font-family:var(--mono); font-size:11px; letter-spacing:.12em; color:var(--muted); }
+.work h3{ font-family:var(--display); font-weight:600; font-size:clamp(1.35rem,2.6vw,1.85rem);
+  font-variation-settings:"wdth" 106; letter-spacing:-.022em; line-height:1.22; margin:0 0 12px; max-width:26ch; }
+.who{ font-family:var(--mono); font-size:12px; letter-spacing:.04em; color:var(--soft); margin:0 0 18px; }
+.work p{ margin:0; color:var(--muted); max-width:66ch; font-size:16.5px; }
+.pts{ margin:16px 0 0; padding:0; list-style:none; max-width:66ch; }
+.pts li{ position:relative; padding-left:22px; margin-bottom:9px; color:var(--muted); font-size:16.5px; }
+.pts li::before{ content:""; position:absolute; left:1px; top:10px; width:5px; height:5px; border-radius:99px; background:var(--accent); }
+.chips{ display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
+.chip{ font-family:var(--mono); font-size:11px; letter-spacing:.05em; padding:5px 13px;
+  border:1px solid var(--line); border-radius:6px; color:var(--muted); }
+
+/* ============ inline figures ============ */
+.fig{ margin:8px 0 44px; padding:0; border:1px solid var(--line); border-radius:12px;
+  background:var(--panel); overflow:hidden; }
+.fig-head{ display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:18px 26px; border-bottom:1px solid var(--line-soft); }
+.fig-n{ font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--accent); border:1px solid var(--accent); border-radius:99px; padding:3px 11px; }
+.fig-t{ font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; color:var(--soft); }
+.fig-tag{ font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted); margin-left:auto; }
+.fig img{ display:block; width:100%; height:auto; }
+.fig svg{ padding:26px; }
+.fig figcaption{ font-family:var(--mono); font-size:11.5px; line-height:1.8; color:var(--muted);
+  padding:18px 26px 22px; border-top:1px solid var(--line-soft); }
+.fig figcaption b{ color:var(--green); font-weight:500; }
+
+/* ============ notes ============ */
+.notes a{ display:block; text-decoration:none; padding:30px 0;
+  border-bottom:1px solid var(--line-soft); transition:padding-left .25s; }
+.notes a:last-child{ border-bottom:0; }
+.notes a:hover{ padding-left:12px; }
+.notes h3{ font-family:var(--display); font-weight:600; font-size:1.35rem;
+  font-variation-settings:"wdth" 106; letter-spacing:-.018em; margin:10px 0 8px; }
+.notes p{ margin:0; color:var(--muted); max-width:62ch; font-size:16.5px; }
+.notes .go{ font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--accent); margin-top:14px; display:inline-block; }
+
+/* ============ toolkit ============ */
+.kit > div{ display:grid; grid-template-columns:210px minmax(0,1fr); gap:40px;
+  padding:22px 0; border-bottom:1px solid var(--line-soft); align-items:baseline; }
+.kit > div:last-child{ border-bottom:0; }
+.kit dt{ font-family:var(--mono); font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--accent); }
+.kit dd{ margin:0; font-family:var(--mono); font-size:13.5px; line-height:2; color:var(--soft); }
+.kit dd i{ font-style:normal; color:var(--muted); padding:0 9px; }
+
+/* ============ timeline ============ */
+.tl{ position:relative; padding-left:38px; }
+.tl::before{ content:""; position:absolute; left:5px; top:8px; bottom:8px; width:1px; background:var(--line); }
+.tl article{ position:relative; padding-bottom:42px; }
+.tl article:last-child{ padding-bottom:0; }
+.tl article::before{ content:""; position:absolute; left:-38px; top:9px; width:11px; height:11px;
+  border-radius:99px; background:#0D1B33; border:2px solid var(--accent); }
+.tl .when{ display:block; margin-bottom:7px; }
+.tl h3{ font-family:var(--display); font-weight:600; font-size:1.2rem;
+  font-variation-settings:"wdth" 106; letter-spacing:-.012em; margin:0 0 6px; }
+.tl .who{ margin:0 0 8px; }
+.tl p{ margin:0; color:var(--muted); max-width:64ch; font-size:16.5px; }
+
+/* ============ honors ============ */
+.awards{ display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+.awards article{ border:1px solid var(--line); border-radius:10px; padding:28px; background:var(--panel); }
+.awards h3{ font-family:var(--display); font-weight:600; font-size:1.08rem;
+  font-variation-settings:"wdth" 106; margin:12px 0 7px; }
+.awards p{ margin:0; color:var(--muted); font-size:15.5px; }
+
+/* ============ contact ============ */
+.contact{ padding:110px 0 90px; text-align:center; border-top:1px solid var(--line); }
+.contact h2{ font-family:var(--display); font-weight:700;
+  font-size:clamp(2.1rem,5.4vw,3.5rem); font-variation-settings:"wdth" 116;
+  letter-spacing:-.035em; line-height:1.04; margin:24px auto 20px; max-width:16ch; }
+.contact p{ max-width:52ch; margin:0 auto; color:var(--muted); }
+.contact .actions{ justify-content:center; }
+.foot{ border-top:1px solid var(--line-soft); padding:28px 0 40px;
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px;
+  font-family:var(--mono); font-size:11px; letter-spacing:.09em; color:var(--muted); }
+.foot a{ color:var(--muted); text-decoration:none; }
+.foot a:hover{ color:var(--paper); }
+
+/* ============ reveal ============ */
+.rv{ opacity:0; transform:translateY(18px); transition:opacity .7s ease,transform .7s ease; }
+.rv.on{ opacity:1; transform:none; }
+
+/* ============ responsive ============ */
+@media (max-width:1080px){
+  .rail,.rail-marker,.rail-nm{ display:none; }
+  .about{ grid-template-columns:1fr; gap:44px; }
+}
+@media (max-width:860px){
+  .nav{ display:none; }
+  .row{ grid-template-columns:1fr; gap:12px; padding:26px 0; }
+  .row .n{ padding-top:0; }
+  .kit > div{ grid-template-columns:1fr; gap:10px; }
+  .awards{ grid-template-columns:1fr; }
+}
+@media (max-width:600px){
+  body{ font-size:17px; }
+  .shell{ padding:0 22px; }
+  .hero{ padding:64px 0 60px; }
+  .section{ padding:62px 0; }
+  .plate{ padding:18px 16px 14px; }
+  .head{ flex-wrap:wrap; gap:10px; }
+  .head .of{ margin-left:0; }
+}
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  *,*::before,*::after{ animation-duration:.001ms !important; animation-delay:0ms !important;
+    transition-duration:.001ms !important; }
+  .rv{ opacity:1; transform:none; }
+  .risc{ stroke-dashoffset:0; }
+  .df,.risc-tip{ opacity:1; }
+  .band{ opacity:.075; }
+}
+
+/* ============ inline figures (Fig. 2, Fig. 3) ============ */
+.fig{
+  margin:38px 0 0; padding:0; border:1px solid var(--line);
+  border-radius:12px; background:var(--panel); overflow:hidden;
+}
+.fig img{ display:block; width:100%; height:auto; }
+.fig .frame{ padding:26px; }
+.fig figcaption{
+  font-family:var(--mono); font-size:11.5px; line-height:1.8; color:var(--muted);
+  padding:18px 26px 22px; border-top:1px solid var(--line-soft);
+}
+.fig figcaption b{ color:var(--accent); font-weight:500; }
+.fig figcaption em{ font-style:normal; color:var(--soft); }
+
+.hole{ stroke:var(--indigo); fill:var(--indigo); }
+.elec{ stroke:#FF8A6B; fill:#FF8A6B; }
+.deck{ fill:rgba(236,234,244,.04); stroke:rgba(236,234,244,.28); stroke-width:1.4; }
+.dline{ stroke:var(--paper); stroke-width:1.2; stroke-dasharray:4 4; fill:none; }
+
+/* ============ notes ============ */
+.notes{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+.note-card{
+  display:block; text-decoration:none; padding:32px 30px;
+  border:1px solid var(--line); border-radius:12px; background:var(--panel);
+  transition:border-color .22s, transform .22s, background .22s;
+}
+.note-card:hover{ border-color:var(--accent); transform:translateY(-3px); }
+.note-card h3{
+  font-family:var(--display); font-weight:600; font-size:1.3rem;
+  font-variation-settings:"wdth" 106; letter-spacing:-.018em;
+  line-height:1.26; margin:14px 0 12px;
+}
+.note-card p{ margin:0; color:var(--muted); font-size:16px; }
+.note-card .go{
+  display:block; margin-top:22px; font-family:var(--mono); font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--accent);
+}
+
+/* ============ article pages ============ */
+.skip{ position:absolute; left:-9999px; top:0; z-index:99; background:var(--green);
+  color:#0C0A22; padding:10px 18px; border-radius:0 0 6px 0; font-family:var(--mono); font-size:12px; }
+.skip:focus{ left:0; }
+.article{ max-width:760px; margin:0 auto; padding:76px 40px 40px; }
+.back{
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); text-decoration:none;
+}
+.back:hover{ color:var(--paper); }
+.article h1{
+  font-family:var(--display); font-weight:700; font-size:clamp(1.9rem,4vw,2.7rem);
+  font-variation-settings:"wdth" 110; letter-spacing:-.028em; line-height:1.14;
+  margin:26px 0 20px; text-wrap:balance;
+}
+.byline{
+  font-family:var(--mono); font-size:11px; letter-spacing:.12em; color:var(--muted);
+  padding-bottom:30px; border-bottom:1px solid var(--line); margin-bottom:44px;
+}
+.article h2{
+  font-family:var(--display); font-weight:600; font-size:1.32rem;
+  font-variation-settings:"wdth" 106; letter-spacing:-.018em;
+  margin:52px 0 16px; color:var(--paper);
+}
+.article p{ color:var(--soft); margin:0 0 22px; }
+.article ul,.article ol{ color:var(--soft); margin:0 0 22px; padding-left:22px; }
+.article li{ margin-bottom:11px; }
+.article li::marker{ color:var(--accent); }
+.article strong{ color:var(--paper); font-weight:500; }
+.article code{
+  font-family:var(--mono); font-size:.86em; color:var(--cyan);
+  background:rgba(95,208,232,.09); padding:2px 6px; border-radius:4px;
+}
+.article pre{
+  font-family:var(--mono); font-size:13px; line-height:1.75; color:var(--soft);
+  background:rgba(0,0,0,.28); border:1px solid var(--line);
+  border-radius:10px; padding:20px 22px; overflow-x:auto; margin:0 0 24px;
+}
+.article pre code{ background:none; padding:0; color:inherit; }
+.pull{
+  border-left:2px solid var(--accent); padding:4px 0 4px 24px;
+  margin:34px 0; color:var(--paper); font-size:1.1rem; line-height:1.6;
+}
+.caveat{
+  border:1px solid var(--line); border-radius:10px; padding:22px 24px;
+  background:var(--panel); color:var(--muted); font-size:16px; margin:34px 0;
+}
+.caveat b{ color:var(--accent); font-weight:500; font-family:var(--mono);
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  display:block; margin-bottom:8px; }
+.endnote{
+  margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
+  font-family:var(--mono); font-size:12px; color:var(--muted); line-height:1.9;
+}
+.endnote a{ color:var(--accent); text-decoration:none; }
+
+@media (max-width:860px){
+  .notes{ grid-template-columns:1fr; }
+}
+@media (max-width:600px){
+  .article{ padding:48px 22px 30px; }
+  .fig .frame{ padding:16px; }
+  .fig figcaption{ padding:16px 18px 20px; }
+}
+
+@media print{
+  .skip,.masthead,.nav,.foot{ display:none !important; }
+  html,body{ background:#fff !important; color:#111 !important; font-size:10.5pt; }
+  .article{ max-width:none; padding:0; }
+  h1,h2{ color:#000 !important; }
+  p,li{ color:#222 !important; }
+  .pull{ border-left-color:#999 !important; color:#000 !important; }
+  .caveat{ background:none !important; border-color:#bbb !important; color:#333 !important; }
+  pre{ background:#f4f4f4 !important; border-color:#ccc !important; color:#111 !important; }
+  code{ background:none !important; color:#111 !important; }
+  a{ color:#000 !important; }
+  .endnote{ color:#555 !important; }
+}
+
+/* ---- reading progress ---- */
+.progress{ position:fixed; top:0; left:0; height:2px; width:0%; z-index:60;
+  background:linear-gradient(90deg,var(--violet),var(--cyan),var(--green));
+  transition:width .08s linear; }
+.byline .dot{ opacity:.5; padding:0 6px; }
+@media print{ .progress{ display:none !important; } }
+</style>
+</head>
+<body style="--accent:var(--green)">
+
+<div class="progress" aria-hidden="true"></div>
+<a class="skip" href="#main">Skip to content</a>
+<header class="masthead">
+  <div class="shell">
+    <a class="wordmark" href="../index.html"><b>Mehedi Hasan Moon</b><span>Physics, SUST</span></a>
+    <nav class="nav"><a href="../index.html#notes">All notes</a></nav>
+  </div>
+</header>
+
+<article class="article" id="main">
+  <a class="back" href="../index.html#notes">Back to notes</a>
+  <h1>How far apart are the decks?</h1>
+  <p class="byline">Paracyclophane geometry. 7 min read.</p>
+
+  <p>I was describing my [3.3]paracyclophane work. I wrote that longer bridges push the two decks further apart. It felt natural. A longer tether should hold things further away. And every textbook stresses how strained [2.2]paracyclophane is.</p>
+
+  <p>So I opened my own optimised geometry to get a number. The centroid-centroid separation was 3.118&nbsp;&#197;. My sentence was wrong.</p>
+
+  <p>It took longer to see the deeper problem. My sentence asked: <em>are [3.3] decks further apart than [2.2] decks?</em> That question has no answer yet. Three or four other things must be fixed first. A better number alone would not fix the reasoning.</p>
+
+  <h2>[2.2]paracyclophane does not have a deck separation</h2>
+
+  <p>The two benzene rings in [2.2]paracyclophane are not flat. The ethylene bridges are too short to span them comfortably. So the rings bow. The bridgehead carbons pull towards each other. The four unbridged carbons splay away. Each deck is boat-shaped. One boat does not sit at a single distance from another.</p>
+
+  <p>That is why the literature gives more than one number. A 2020 review in <i>Angewandte Chemie</i> gives a mean of 3.09&nbsp;&#197;. It also says the bridges hold the bridgehead carbons at 2.83&nbsp;&#197;. One computational study asks if the transannular interaction is repulsive or attractive. It quotes 2.798&nbsp;&#197; between opposing bridgehead carbons. It quotes 3.102&nbsp;&#197; from the non-bridging carbons. That is one molecule and one structure. Yet the two distances differ by three tenths of an &#197;ngstr&ouml;m. A third study used an optimised geometry, not an experimental one. It reports an interplanar distance of 3.153&nbsp;&#197;.</p>
+
+  <p>None of these numbers disagree. They answer different questions. Quoting <em>the</em> [2.2] separation means quietly choosing one. That choice moves the number more than my claimed effect.</p>
+
+  <div class="pull">The decks do not have one separation. They have a set of distances. Which one you quote is a choice, not a measurement.</div>
+
+  <h2>What my own structure gives</h2>
+
+  <p>My series is a donor-acceptor [3.3]paracyclophane. A benzene deck faces a benzothiadiazole deck. Two &minus;CH<sub>2</sub>&minus;X&minus;CH<sub>2</sub>&minus; bridges hold them cofacial. X is CH<sub>2</sub>, C=O, C=NH, CF<sub>2</sub> or C=S. I optimised all five at MP2/6-31G(d) in the gas phase. Their centroid separation spans only 3.12 to 3.16&nbsp;&#197;. For the thiocarbonyl member:</p>
+
+  <pre><code>centroid-centroid separation   3.118 Å
+closest interdeck contact      2.980 Å
+deck planes, angle between     2.57°</code></pre>
+
+  <p>It would be easy to call these decks flat, unlike [2.2]. That is not true. Each deck bows towards the other. This boat-boat fold is typical of [3.3] hetero-cyclophanes. It is milder than in [2.2], but it is measurable. The decks are parallel to within 2.57&deg;. So a centroid separation is a fair summary. But it is not the only distance. The closest contact is 0.14&nbsp;&#197; shorter. My structure has the same problem as [2.2], only milder. The number still needs its definition.</p>
+
+  <h2>Against other [3.3] structures</h2>
+
+  <p>My value is also short for its own family. One dithia[3.3]paracyclophane was solved by X-ray crystallography. It is 5,8-dibromo-14,17-difluoro-2,11-dithia[3.3]paracyclophane. Its centroid-centroid distance is 3.3066(18)&nbsp;&#197;. Its rings are 1.53(15)&deg; from parallel.</p>
+
+  <p>Beside that, 3.118&nbsp;&#197; looks tight. But three things differ at once. Mine is a gas-phase optimisation, and theirs is a crystal structure. Mine has a benzothiadiazole on one deck, not a second benzene. Mine comes from MP2, not from diffraction. Any one of these could explain the gap. So the honest claim is narrow. My structure is tighter than that one structure. It does not show that [3.3] paracyclophanes are tighter than thought.</p>
+
+  <h2>What to state before comparing two such numbers</h2>
+
+  <ul>
+    <li><strong>Which distance.</strong> Centroid-centroid, plane to plane, closest contact, or bridgehead to bridgehead. On a bowed deck, these are four different quantities. They do not track each other.</li>
+    <li><strong>Gas phase or crystal.</strong> A lone-molecule optimisation answers a different question. A room-temperature X-ray structure answers another. Packing can squeeze or stretch a stack. Thermal motion blurs what diffraction sees.</li>
+    <li><strong>What made the geometry.</strong> Dispersion sets the interdeck separation. So a method without dispersion gets exactly this wrong. MP2, a dispersion-corrected functional and a bare global hybrid will disagree. Most of that disagreement lands on this one coordinate.</li>
+    <li><strong>What is on the decks.</strong> Two benzenes differ from a benzene and a benzothiadiazole. Substituted versions differ again. Electrostatics between the decks shifts the distance, whatever the bridge.</li>
+  </ul>
+
+  <div class="caveat">
+    <b>On the van der Waals reference</b>
+    Both [2.2] and [3.3] decks are said to sit in close contact. The usual reference is van der Waals contact, about 3.4&nbsp;&#197;. That is two carbon van der Waals radii. It is also close to graphite's interlayer spacing. It is a useful rough marker and nothing more. It is defined for two isolated carbon atoms. It is not defined for two &pi; systems in a covalent clamp. It says nothing about what the orbitals do at that distance.
+  </div>
+
+  <h2>Why this is not pedantry</h2>
+
+  <p>In my own series, the deck separation barely moves. It changes by 0.04&nbsp;&#197; across five bridges. Yet the thiocarbonyl member's emission oscillator strength falls over two-hundred-fold. So deck distance does not control the photophysics there. My thesis reaches the same answer from another molecule. Along its soft donor-acceptor torsion, stacking distance tracks neither quantity. Not the exchange integral, and not the transition dipole.</p>
+
+  <p>So distance does not control everything. The reason for care is different. Geometric claims get reused. They become comparisons, design rules and reasons for the next calculation. A number without its definition, phase and method cannot carry that weight. A bridge-length claim without those three is not a weak claim. It is not yet a claim.</p>
+
+  <p>I did not need a better number. I needed a better question. Not which scaffold holds its decks further apart. Instead, what does my structure do, measured one stated way?</p>
+
+  <h2>Where these numbers come from</h2>
+
+  <ul>
+    <li>3.118&nbsp;&#197;, 2.980&nbsp;&#197; and 2.57&deg;. My own MP2/6-31G(d) gas-phase optimisation of the thiocarbonyl (X = C=S) member.</li>
+    <li>The 3.12 to 3.16&nbsp;&#197; range, deck bowing and brightness collapse. Moon, Uddin and Chawdhury, manuscript under review.</li>
+    <li>3.09&nbsp;&#197; ring-to-ring and 2.83&nbsp;&#197; bridgehead for [2.2]paracyclophane. Hassan et al., <i>Regioselective Functionalization of [2.2]Paracyclophanes</i>, <i>Angew. Chem. Int. Ed.</i> 2020.</li>
+    <li>2.798&nbsp;&#197; and 3.102&nbsp;&#197;. <i>The Transannular Interaction in [2.2]Paracyclophane: Repulsive or Attractive?</i>, <i>ChemPhysChem</i>, DOI 10.1002/cphc.200200597.</li>
+    <li>3.153&nbsp;&#197; optimised interplanar distance, at B3LYP/6-311++G**. Majerz and Dziembowska, <i>Substituent effect on inter-ring interaction in paracyclophanes</i>, <i>Mol. Divers.</i> 24, 11, 2020, DOI 10.1007/s11030-019-09926-7.</li>
+    <li>3.3066(18)&nbsp;&#197; and 1.53(15)&deg;. Hao and Wu, <i>5,8-Dibromo-14,17-difluoro-2,11-dithia[3.3]paracyclophane</i>, <i>Acta Cryst.</i> E 66, o2119, 2010, DOI 10.1107/S1600536810028904.</li>
+  </ul>
+
+  <div class="endnote">
+    Written alongside my work on &pi;-stacked donor-acceptor systems at SUST.<br>
+    Corrections and disagreements are welcome: <a href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a>
+  </div>
+</article>
+
+<footer class="shell">
+  <div class="foot">
+    <span>&copy; <span class="yr">2026</span> MD. Mehedi Hasan Moon</span>
+    <span><a href="../index.html">Back to site</a></span>
+  </div>
+</footer>
+
+<script>document.querySelectorAll('.yr').forEach(e => e.textContent = new Date().getFullYear());</script>
+
+<script>
+(function(){
+  var bar=document.querySelector('.progress'), art=document.getElementById('main');
+  if(!bar||!art) return;
+  var tick=false;
+  function upd(){
+    var top=art.offsetTop, h=art.offsetHeight - window.innerHeight;
+    var p=h>0 ? (window.scrollY-top)/h : 1;
+    bar.style.width=(Math.min(1,Math.max(0,p))*100).toFixed(2)+'%';
+    tick=false;
+  }
+  window.addEventListener('scroll',function(){ if(!tick){ tick=true; requestAnimationFrame(upd); } },{passive:true});
+  window.addEventListener('resize',upd); upd();
+})();
+</script>
+
+</body>
+</html>

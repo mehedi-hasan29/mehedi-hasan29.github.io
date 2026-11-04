@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CV &mdash; MD. Mehedi Hasan Moon</title>
-<meta name="description" content="Curriculum vitae: MS Physics at Shahjalal University of Science and Technology, computational work on TADF emitters and through-space charge transfer.">
+<title>CV of MD. Mehedi Hasan Moon</title>
+<meta name="description" content="CV of an MS Physics student at SUST. Computational work on TADF emitters.">
 <link rel="canonical" href="https://mehedi-hasan29.github.io/cv.html">
 <meta property="og:type" content="profile">
-<meta property="og:title" content="CV &mdash; MD. Mehedi Hasan Moon">
-<meta property="og:description" content="MS Physics, SUST. Computational work on TADF emitters and through-space charge transfer.">
+<meta property="og:title" content="CV of MD. Mehedi Hasan Moon">
+<meta property="og:description" content="MS Physics, SUST. Computational work on TADF emitters.">
 <meta property="og:url" content="https://mehedi-hasan29.github.io/cv.html">
 <meta property="og:image" content="https://mehedi-hasan29.github.io/assets/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -224,7 +224,7 @@ sub{ font-size:.66em; }
 .work p{ margin:0; color:var(--muted); max-width:66ch; font-size:16.5px; }
 .pts{ margin:16px 0 0; padding:0; list-style:none; max-width:66ch; }
 .pts li{ position:relative; padding-left:22px; margin-bottom:9px; color:var(--muted); font-size:16.5px; }
-.pts li::before{ content:""; position:absolute; left:0; top:12px; width:9px; height:1px; background:var(--accent); }
+.pts li::before{ content:""; position:absolute; left:1px; top:10px; width:5px; height:5px; border-radius:99px; background:var(--accent); }
 .chips{ display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
 .chip{ font-family:var(--mono); font-size:11px; letter-spacing:.05em; padding:5px 13px;
   border:1px solid var(--line); border-radius:6px; color:var(--muted); }
@@ -491,6 +491,47 @@ sub{ font-size:.66em; }
   .cv h2{ color:#000 !important; border-color:#ccc !important; }
   .cv-item,.cv-skills > div{ break-inside:avoid; border-color:#ddd !important; }
 }
+
+/* ============ CV, research layout (after Stanford sample CV 2) ============ */
+.cvr{ max-width:820px; }
+.cvr-top{ text-align:center; margin:6px 0 30px; }
+.cvr-top h1{ font-family:var(--display); font-weight:500; font-size:clamp(1.6rem,4vw,2.2rem);
+  letter-spacing:.16em; text-transform:uppercase; margin:0 0 12px; }
+.cvr-top p{ font-family:var(--mono); font-size:12px; line-height:1.9; color:var(--muted); margin:0; }
+.cvr-top a{ color:var(--accent); text-decoration:none; }
+.cvr-top .sep{ display:inline-block; width:22px; }
+.cvr-dl{ display:flex; justify-content:center; gap:10px; margin-top:18px; }
+.cvr-dl a{ font-family:var(--mono); font-size:11px; letter-spacing:.11em; text-transform:uppercase;
+  padding:9px 16px; border-radius:6px; border:1px solid var(--line); color:var(--paper); text-decoration:none; }
+.cvr-dl a.pri{ background:var(--accent); border-color:var(--accent); color:#0B1020; }
+.cvr h2{ font-family:var(--mono); font-weight:500; font-size:12px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--paper); width:min(55%,420px); padding-bottom:6px; border-bottom:1px solid var(--accent);
+  margin:34px 0 16px; }
+.cvr .ent{ margin:0 0 14px; }
+.cvr .row{ display:flex; justify-content:space-between; align-items:baseline; gap:18px; padding:0; margin:0; border:0; }
+.cvr .row .when{ font-family:var(--mono); font-size:11.5px; color:var(--muted); white-space:nowrap; }
+.cvr .row b{ font-family:var(--display); font-weight:600; color:var(--paper); }
+.cvr .lead{ color:var(--soft); font-size:15.5px; margin:0; }
+.cvr .sub{ font-style:italic; color:var(--soft); font-size:14.5px; margin:2px 0 6px; }
+.cvr .det{ color:var(--muted); font-size:15.5px; margin:3px 0 0 20px; }
+.cvr .lab{ color:var(--paper); font-weight:600; margin:10px 0 4px; font-size:15.5px; }
+.cvr .abs{ color:var(--muted); font-size:15.5px; line-height:1.7; text-align:justify; margin:0 0 0 20px; }
+.cvr .cit{ color:var(--muted); font-size:15.5px; margin:0 0 10px 20px; padding-left:24px; text-indent:-24px; }
+.cvr .cit b{ color:var(--paper); }
+.cvr ul{ margin:6px 0 0 20px; padding-left:18px; color:var(--muted); font-size:15.5px; }
+.cvr li{ margin-bottom:5px; }
+.cvr li::marker{ color:var(--accent); }
+@media (max-width:620px){
+  .cvr .row{ flex-direction:column; gap:2px; }
+  .cvr h2{ width:100%; }
+  .cvr .abs{ text-align:left; }
+}
+@media print{
+  .cvr-dl{ display:none !important; }
+  .cvr h2,.cvr .row b,.cvr .lab,.cvr .cit b,.cvr-top h1{ color:#000 !important; }
+  .cvr h2{ border-color:#000 !important; }
+  .cvr .ent{ break-inside:avoid; }
+}
 </style>
 </head>
 <body style="--accent:var(--cyan)">
@@ -498,165 +539,129 @@ sub{ font-size:.66em; }
 <a class="skip" href="#main">Skip to content</a>
 <header class="masthead">
   <div class="shell">
-    <a class="wordmark" href="index.html"><b>Mehedi Hasan Moon</b><span>Physics &#183; SUST</span></a>
+    <a class="wordmark" href="index.html"><b>Mehedi Hasan Moon</b><span>Physics, SUST</span></a>
     <nav class="nav"><a href="index.html">Site</a><a href="methods.html">Methods</a></nav>
   </div>
 </header>
 
-<article class="article cv" id="main">
-  <a class="back" href="index.html">&larr; Site</a>
+<article class="article cvr" id="main">
+  <a class="back" href="index.html">Back to site</a>
 
-  <div class="cv-head">
-    <div>
-      <h1>MD. Mehedi Hasan Moon</h1>
-      <p class="meta">Graduate student, Department of Physics<br>
-        Shahjalal University of Science and Technology, Sylhet-3114, Bangladesh<br>
-        <a href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a> &#183;
-        <a href="https://orcid.org/0009-0007-4128-3237">ORCID 0009-0007-4128-3237</a> &#183;
-        <a href="https://github.com/mehedi-hasan29">github.com/mehedi-hasan29</a></p>
-    </div>
-    <a class="cv-dl" href="assets/Mehedi-Hasan-Moon-CV.pdf" download>Download PDF</a>
+  <div class="cvr-top">
+    <h1>MD. Mehedi Hasan Moon</h1>
+    <p>Department of Physics, Shahjalal University of Science and Technology, Sylhet 3114, Bangladesh</p>
+    <p><a href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a><span class="sep"></span><a href="https://mehedi-hasan29.github.io">mehedi-hasan29.github.io</a><span class="sep"></span><a href="https://orcid.org/0009-0007-4128-3237">ORCID 0009-0007-4128-3237</a></p>
+    <div class="cvr-dl"><a class="pri" href="assets/Mehedi-Hasan-Moon-CV.pdf" download>Download PDF</a></div>
   </div>
 
   <h2>Education</h2>
-  <div class="cv-item">
-    <div class="cv-when">Jun 2025 &mdash;<br>ongoing</div>
-    <div>
-      <h3>M.S. in Physics (Mixed Mode)</h3>
-      <p class="org">Shahjalal University of Science and Technology, Sylhet</p>
-      <p>Thesis: <em>Computational Design and Characterization of &pi;-Stacked Donor&ndash;Acceptor Triads for TADF OLED Applications.</em> Supervisor: Prof. Dr. Nazia Chawdhury.</p>
-    </div>
+  <div class="ent">
+    <div class="row"><span><b>Shahjalal University of Science and Technology</b>, Sylhet, Bangladesh</span><span class="when">2025 to present</span></div>
+    <p class="det">M.S. in Physics (Mixed Mode)</p>
   </div>
-  <div class="cv-item">
-    <div class="cv-when">Jan 2019 &mdash;<br>Apr 2025</div>
-    <div>
-      <h3>B.Sc. (Honours) in Physics</h3>
-      <p class="org">Shahjalal University of Science and Technology, Sylhet &#183; CGPA 3.04 / 4.00</p>
-      <p>Project: <em>Numerical solution of a boundary value problem of the Legendre differential equation for P&#8324; using the finite difference method.</em> Supervisor: Prof. Dr. Mohammed Sujaul Haque Chowdhury.</p>
-    </div>
+  <div class="ent">
+    <div class="row"><span><b>Shahjalal University of Science and Technology</b>, Sylhet, Bangladesh</span><span class="when">2019 to 2025</span></div>
+    <p class="det">B.Sc. (Honours) in Physics. CGPA 3.04 out of 4.00.</p>
+    <p class="det">Project: <em>Numerical solution of a boundary value problem of the Legendre differential equation for P&#8324; using the finite difference method.</em></p>
+    <p class="det">Supervisor: Prof. Dr. Mohammed Sujaul Haque Chowdhury</p>
   </div>
 
-  <h2>Research experience</h2>
-  <div class="cv-item">
-    <div class="cv-when">11 Mar 2026 &mdash;<br>present</div>
-    <div>
-      <h3>Research Student &#183; M.S. thesis</h3>
-      <p class="org">Organic Optoelectronics Lab, Dept. of Physics, SUST &mdash; Supervisor: Prof. Dr. Nazia Chawdhury</p>
-      <ul>
-        <li>Investigating intramolecular &pi;-stacked donor&ndash;acceptor triads with rigid U-shaped geometries that enable through-space charge transfer.</li>
-        <li>Studying thermally activated delayed fluorescence as a route to the efficiency roll-off problem in OLED devices.</li>
-        <li>Ground-state configuration and geometry optimisation in Gaussian&nbsp;16 with dispersion-corrected functionals.</li>
-        <li>Hole&ndash;electron distribution analysis in Multiwfn to characterise electronic transitions.</li>
-        <li>Optimising molecular architecture to hold &#916;E<sub>ST</sub> below 0.1&nbsp;eV for efficient reverse intersystem crossing.</li>
-      </ul>
-    </div>
+  <h2>M.S. Thesis</h2>
+  <p class="lead"><strong>Title:</strong> &ldquo;Local-Excitation Interference, Not Donor&ndash;Acceptor Distance, Controls the Radiative Strength of a Through-Space Charge-Transfer TADF Emitter&rdquo;</p>
+  <p class="lab">Abstract:</p>
+  <p class="abs">This thesis asks if exchange coupling and radiative strength respond alike. The test case is STF-DBTS, a through-space charge-transfer TADF emitter. Calculations use &omega;B97X-D/def2-SVP with continuum toluene solvation. Local triplets split the triplet charge-transfer configuration over twelve states. Only a diabatic gap measures the exchange splitting, +50.6&nbsp;meV. It is built alike on both spin manifolds. Along the fluorene-acceptor torsion, the exchange integral varies two-fold. It tracks HOMO-LUMO overlap (r&nbsp;=&nbsp;0.92). Interference with a small acridine-local excitation sets the S<sub>1</sub> transition dipole. At one conformer, the gap falls 19% but the dipole falls 45%. These results point to overlap and local-excitation admixture as design variables.</p>
+  <p class="lab">Advisor:</p>
+  <p class="det">Prof. Dr. Nazia Chawdhury (Physics, SUST)</p>
+
+  <h2>Publications</h2>
+  <p class="lab" style="margin-top:0">Manuscripts under review</p>
+  <p class="cit"><b>MD. Mehedi Hasan Moon</b>, Mohammad Afsar Uddin and Nazia Chawdhury. &ldquo;Bridge-Dependent Emission Tuning and Radiative-Rate Suppression in a Donor&ndash;Acceptor [3.3]Paracyclophane Series: A Gas-Phase TD-DFT Study.&rdquo; <em>Under review, 2026.</em></p>
+  <p class="det" style="margin:-4px 0 12px 44px;font-size:13.5px">ORCID: MD. M. H. Moon <a href="https://orcid.org/0009-0007-4128-3237" style="color:var(--accent)">0009-0007-4128-3237</a>, M. A. Uddin <a href="https://orcid.org/0000-0002-3217-5513" style="color:var(--accent)">0000-0002-3217-5513</a>, N. Chawdhury <a href="https://orcid.org/0000-0002-6189-9238" style="color:var(--accent)">0000-0002-6189-9238</a></p>
+
+  <h2>Presentations</h2>
+  <p class="cit"><b>MD. Mehedi Hasan Moon</b> and Nazia Chawdhury. &ldquo;Local-Excitation Interference, Not Donor&ndash;Acceptor Distance, Controls the Radiative Strength of a Through-Space Charge-Transfer TADF Emitter.&rdquo; International Conference of Physical Sciences (ICPS-2026), SUST, Sylhet, Bangladesh, December 2026. <em>Oral presentation, accepted.</em></p>
+
+  <h2>Research Experience</h2>
+  <div class="ent">
+    <div class="row"><b>Research Student, M.S. Thesis</b><span class="when">Mar 2026 to present</span></div>
+    <p class="sub">Organic Optoelectronics Lab, Department of Physics, SUST. Advisor: Prof. Dr. Nazia Chawdhury.</p>
+    <ul>
+      <li>Characterised STF-DBTS, a reported through-space charge-transfer TADF emitter.</li>
+      <li>Showed the singlet-triplet gap must be built diabatically on both spin manifolds.</li>
+      <li>Computed the HOMO-LUMO exchange integral in PySCF on a relaxed torsional scan.</li>
+      <li>Traced the S<sub>1</sub> transition dipole to interference with an acridine-local excitation.</li>
+    </ul>
   </div>
-  <div class="cv-item">
-    <div class="cv-when">11 May 2025 &mdash;<br>11 Mar 2026</div>
-    <div>
-      <h3>Research Assistant</h3>
-      <p class="org">Dept. of Physics, SUST</p>
-      <p>Computational work on organic emitters &mdash; geometry optimisation, excited-state calculations and wavefunction analysis supporting the group's TADF programme.</p>
-    </div>
+  <div class="ent">
+    <div class="row"><b>Research Assistant</b><span class="when">May 2025 to Mar 2026</span></div>
+    <p class="sub">Department of Physics, SUST</p>
+    <ul>
+      <li>Ran geometry optimisations and excited-state calculations on organic emitters.</li>
+      <li>Assigned excited-state character with wavefunction analysis.</li>
+    </ul>
   </div>
-  <div class="cv-item">
-    <div class="cv-when">2025 &mdash;<br>ongoing</div>
-    <div>
-      <h3>Time-Dependent Neutrino Emission from Neutron-Capture Processes: A Framework for Coupling SkyNet with MESA</h3>
-      <p class="org">Dept. of Physics, SUST &mdash; Supervisor: Anock Somadder, Associate Professor</p>
-      <p>Coupling a nuclear reaction network to a stellar evolution code so that neutrino emission can be followed as a time-resolved output rather than estimated afterwards.</p>
-    </div>
+  <div class="ent">
+    <div class="row"><b>Research Project, Nuclear Astrophysics</b><span class="when">2025 to present</span></div>
+    <p class="sub">Department of Physics, SUST. Supervisor: Anock Somadder, Associate Professor.</p>
+    <ul>
+      <li>Coupling the SkyNet reaction network to the MESA stellar evolution code.</li>
+      <li>Goal: time-resolved neutrino emission from neutron-capture burning.</li>
+    </ul>
   </div>
-  <div class="cv-item">
-    <div class="cv-when">Jun 2023 &mdash;<br>Dec 2023</div>
-    <div>
-      <h3>Undergraduate project</h3>
-      <p class="org">Dept. of Physics, SUST &mdash; Supervisor: Prof. Dr. Mohammed Sujaul Haque Chowdhury</p>
-      <p>Numerical solution of a boundary value problem of the Legendre differential equation for P&#8324; by the finite difference method.</p>
-    </div>
+  <div class="ent">
+    <div class="row"><b>Undergraduate Research Project</b><span class="when">Jun 2023 to Dec 2023</span></div>
+    <p class="sub">Department of Physics, SUST. Supervisor: Prof. Dr. Mohammed Sujaul Haque Chowdhury.</p>
+    <ul>
+      <li>Solved a Legendre boundary value problem for P&#8324; by finite differences.</li>
+    </ul>
   </div>
 
-  <h2>Manuscripts</h2>
-  <div class="cv-item">
-    <div class="cv-when">Under review</div>
-    <div>
-      <h3>Bridge-Dependent Emission Tuning and Radiative-Rate Suppression in a Donor&ndash;Acceptor [3.3]Paracyclophane Series: A Gas-Phase TD-DFT Study</h3>
-      <p class="org">MD. Mehedi Hasan Moon, Nazia Chawdhury &mdash; Dept. of Physics, SUST</p>
-    </div>
+  <h2>Teaching Experience</h2>
+  <div class="ent">
+    <p class="lead"><em>Supplementary Instructor</em>, physics and mathematics</p>
+    <p class="det">Taught secondary and post-secondary students. Designed lesson plans around practical, hands-on learning. Gave coursework feedback aimed at real improvement.</p>
   </div>
 
-  <h2>Research interests</h2>
-  <div class="cv-item">
-    <div class="cv-when">Primary</div>
-    <div><p>Organic optoelectronics, through-space charge transfer, TADF emitters.</p></div>
-  </div>
-  <div class="cv-item">
-    <div class="cv-when">Secondary</div>
-    <div><p>Organic photovoltaics, charge-carrier mobility in &pi;-stacked systems, exciton dissociation and transport, donor&ndash;acceptor bulk heterojunctions.</p></div>
-  </div>
-  <div class="cv-item">
-    <div class="cv-when">Technical</div>
-    <div><p>Computational materials science, density functional theory, molecular structure&ndash;property relationships.</p></div>
-  </div>
-  <div class="cv-item">
-    <div class="cv-when">Broader</div>
-    <div><p>Organic semiconductors, &pi;-stacked functional materials, solar energy, energy storage, heat transfer, nonlinear optics.</p></div>
+  <h2>Academic Service</h2>
+  <div class="ent">
+    <div class="row"><span><em>Convener</em>, International Conference for Advances in Physics, SUST</span><span class="when">Dec 2025</span></div>
+    <p class="det">Led the organising committee for international participants. Covered logistics, scheduling and technical sessions with faculty.</p>
   </div>
 
-  <h2>Technical skills</h2>
-  <dl class="cv-skills">
-    <div><dt>Computational software</dt><dd>ORCA 6.0 <i>/</i> Gaussian 16 <i>/</i> Multiwfn</dd></div>
-    <div><dt>Theoretical frameworks</dt><dd>Density functional theory <i>/</i> TD-DFT <i>/</i> PCM solvation</dd></div>
-    <div><dt>Programming</dt><dd>Python <i>/</i> C++ <i>/</i> Bash and shell scripting <i>/</i> Mathematica</dd></div>
-    <div><dt>Libraries</dt><dd>Matplotlib</dd></div>
-    <div><dt>Environment</dt><dd>Linux <i>/</i> Git &amp; GitHub <i>/</i> Zotero <i>/</i> Word, Excel, PowerPoint</dd></div>
-    <div><dt>Languages</dt><dd>Bengali &mdash; native <i>/</i> English</dd></div>
-  </dl>
-
-  <h2>Training</h2>
-  <div class="cv-item">
-    <div class="cv-when">7 Jan 2026</div>
-    <div>
-      <h3>Research Workshop: The Path to Academic Excellence</h3>
-      <p class="org">SUST Research Society (SUSTRS) &mdash; participant</p>
-      <p>Research ethics and integrity, strategies for publishing in Q1/Q2 journals, structuring research papers, and citation management with Zotero.</p>
-    </div>
+  <h2>Professional Development</h2>
+  <div class="ent">
+    <div class="row"><span><em>Participant</em>, Research Workshop: The Path to Academic Excellence</span><span class="when">Jan 2026</span></div>
+    <p class="det">SUST Research Society (SUSTRS). Research ethics, journal publishing, paper structure and Zotero.</p>
   </div>
 
-  <h2>Teaching</h2>
-  <div class="cv-item">
-    <div class="cv-when">Supplementary<br>instruction</div>
-    <div>
-      <h3>Supplementary Instructor &#183; physics and mathematics</h3>
-      <p class="org">Secondary and post-secondary students</p>
-      <p>Designed and delivered lesson plans built around experiential learning and practical application, and assessed coursework with feedback aimed at measurable improvement.</p>
-    </div>
+  <h2>Honors and Awards</h2>
+  <div class="ent">
+    <div class="row"><span>Government Scholarship, Secondary School Certificate</span><span class="when">2015</span></div>
+    <p class="det">Awarded on Secondary School Certificate results.</p>
+  </div>
+  <div class="ent">
+    <div class="row"><span>Government Scholarship, Junior School Certificate</span><span class="when">2012</span></div>
+    <p class="det">Awarded on Junior School Certificate results.</p>
   </div>
 
-  <h2>Institutional service</h2>
-  <div class="cv-item">
-    <div class="cv-when">18 Dec 2025</div>
-    <div>
-      <h3>Convener</h3>
-      <p class="org">International Conference for Advances in Physics, Dept. of Physics, SUST</p>
-      <p>Led the organising committee across logistics, scheduling and technical sessions for international participants, working with department faculty to deliver the conference's academic programme.</p>
-    </div>
-  </div>
+  <h2>Research Interests</h2>
+  <p class="det">Excited states of organic emitters, especially TADF and through-space charge transfer.</p>
+  <p class="det">Structure-property relationships in &pi;-stacked donor-acceptor systems.</p>
+  <p class="det">Electronic structure methods: DFT, TD-DFT and wavefunction analysis.</p>
+  <p class="det">Organic optoelectronic devices, including OLEDs and organic photovoltaics.</p>
 
-  <h2>Honours and awards</h2>
-  <div class="cv-item">
-    <div class="cv-when">2015</div>
-    <div><h3>Government Scholarship</h3><p class="org">Awarded on Secondary School Certificate results</p></div>
-  </div>
-  <div class="cv-item">
-    <div class="cv-when">2012</div>
-    <div><h3>Government Scholarship</h3><p class="org">Awarded on Junior School Certificate results</p></div>
-  </div>
+  <h2>Technical Skills</h2>
+  <p class="det"><strong>Software:</strong> Gaussian 16, ORCA 6.0, Multiwfn, PySCF</p>
+  <p class="det"><strong>Methods:</strong> DFT, TD-DFT, MP2, CPCM solvation, NTO and hole-electron analysis</p>
+  <p class="det"><strong>Programming:</strong> Python (Matplotlib), C++, Bash scripting, Mathematica</p>
+  <p class="det"><strong>Tools:</strong> Linux, Git and GitHub, Zotero, Microsoft Office</p>
 
-  <div class="endnote">
-    References available on request.<br>
-    <a href="mailto:mehedi39@student.sust.edu">mehedi39@student.sust.edu</a>
-  </div>
+  <h2>Languages</h2>
+  <p class="det"><strong>Bengali</strong> (native)</p>
+  <p class="det"><strong>English</strong></p>
+
+  <h2>References</h2>
+  <p class="det">Available on request.</p>
 </article>
 
 <footer class="shell">
